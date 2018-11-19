@@ -1,0 +1,28 @@
+<!DOCTYPE html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=0"><title>watch</title><script type=text/javascript src=https://img.isaveu.cn/js/reconnecting-websocket.min.js></script><link href=./static/css/app.f6e17172a5b3857aa0734d04dfa3e916.css rel=stylesheet></head><body><div id=app></div><script>apiready = function(){
+            var uzgetuisdk = api.require('pushGeTui');
+            uzgetuisdk.initialize(function(ret) {
+                var value = "";
+                switch (ret.type) {
+                    case 'cid':
+                        // value = 'cid:' + ret.cid;
+                        window.localStorage.setItem("Cid", ret.cid);
+                        break;
+                    case 'payload':
+                        value = 'payload:' + ret.payload;
+                        break;
+                    case 'occurError':
+                        value = 'occurError';
+                        break;
+                    case'onNotificationMessageClicked':
+                        value = 'onNotificationMessageClicked' + ret.onNotificationMessageClicked
+                        break;
+                    case'onNotificationMessageArrived':
+                        value = 'onNotificationMessageArrived' + ret.onNotificationMessageArrived
+                        break;
+                }
+            });
+            var pedometer = api.require('pedometer');
+            pedometer.startCount(function(ret) {
+                // alert(ret.steps);
+            });
+        }</script><script type=text/javascript src=./static/js/manifest.eee9ff43a09de586215f.js></script><script type=text/javascript src=./static/js/vendor.56333456b9a9f7292ca7.js></script><script type=text/javascript src=./static/js/app.910846365b85a81a3268.js></script></body></html>
