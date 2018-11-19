@@ -6,7 +6,7 @@
     <author email="steven@ihuizong.cn" href="https://www.ihuizong.cn">
         Developer
     </author>
-    <content src="index.html"/>
+    <content src=".web/index.html"/>
     <access origin="*"/>
     <preference name="pageBounce" value="false"/>
     <preference name="appBackground" value="rgba(0,0,0,0.0)"/>
@@ -17,7 +17,7 @@
     <preference name="autoLaunch" value="true"/>
     <preference name="fullScreen" value="false"/>
     <preference name="autoUpdate" value="true"/>
-    <preference name="smartUpdate" value="false"/>
+    <preference name="smartUpdate" value="true"/>
     <preference name="debug" value="false"/>
     <preference name="statusBarAppearance" value="false"/>
     <permission name="readPhoneState"/>
