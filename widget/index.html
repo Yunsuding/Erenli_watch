@@ -98,24 +98,15 @@
                     });
                     break;
                 case 'watch_login'://手表绑定
-                    alert(data.access_token);
                     $api.setStorage("access_token", data.access_token);
                     $api.setStorage("user_id", data.user_id);
-                    alert(data.user_id);
                     var newtime = getNowFormatDate();
                     $api.setStorage("login_time", newtime);
-                    ws.send('{"type":"watch_login_on","user_id":"'+data.user_id+'"}');
                     api.openWin({
                         name: 'main',
                         url: './web/index.html',
-                        bounces: true,
-                        rect: {
-                            x: 0,
-                            y: 0,
-                            w: 'auto',
-                            h: mainPos.h
-                        }
                     });
+                    ws.send('{"type":"watch_login_on","user_id":"'+data.user_id+'"}');
                     break;
                 case 'call'://呼叫服务
                     // alert(data.msg);
@@ -123,13 +114,6 @@
                         api.openWin({
                             name: 'call',
                             url: './web/call.html',
-                            bounces: true,
-                            rect: {
-                                x: 0,
-                                y: 0,
-                                w: 'auto',
-                                h: mainPos.h
-                            },
                             pageParam: {
                                 cont_id:data.data.service_cont_id,
                                 name:data.data.data[0].name,
