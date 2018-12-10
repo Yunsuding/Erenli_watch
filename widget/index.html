@@ -80,6 +80,7 @@
             var data = eval("(" + e.data + ")");
             var type = data.type || '';
             var token = $api.getStorage("access_token");
+            alert(type);
             switch (type) {
                 // Events.php中返回的init类型的消息，将client_id发给后台进行uid绑定
                 case 'init':
@@ -103,23 +104,20 @@
                     ws.send('{"type":"watch_login_on","user_id":"'+data.user_id+'"}');
                     break;
                 case 'call'://呼叫服务
+                    alert(alert(JSON.stringify(data)));
                     if(data.data.data.length > 0){
-                        alert(alert(JSON.stringify(data)));
                         goCall(data);
                     }else if(data.data.data.length == 0){
                         data.data.data[0].name = '异常';
-                        alert(alert(JSON.stringify(data)));
                         goCall(data);
                     }
                     break;
                 case 'pager'://呼叫器呼叫
-                    console.log(data);
+                    alert(alert(JSON.stringify(data)));
                     if(data.data.data.length > 0){
-                        alert(alert(JSON.stringify(data)));
                         goCall(data);
                     }else if(data.data.data.length == 0){
                         data.data.data[0].name = '异常';
-                        alert(alert(JSON.stringify(data)));
                         goCall(data);
                     }
                     break;
@@ -177,13 +175,13 @@
     }
 
     function goIndex() {
-        api.openFrame({
+        api.openWin({
             name: 'index',
             url: './web/index.html',
         });
     }
     function goCall(data) {
-        api.openFrame({
+        api.openWin({
             name: 'call',
             url: './web/call.html',
             pageParam: {

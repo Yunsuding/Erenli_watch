@@ -95,12 +95,9 @@
 		                title: '提示',
 		                msg: '登录成功',
 		            }, function(ret, err) {
-		            	api.openFrame({
+		            	api.openWin({
 	                        name: 'index',
-	                        url: './index.html',
-	                        pageParam: {
-	                            name: 'test'
-	                        }
+	                        url: './index.html'
 	                    });
 		            });
 		        } else {
