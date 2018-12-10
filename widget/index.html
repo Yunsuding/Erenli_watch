@@ -104,22 +104,22 @@
                     ws.send('{"type":"watch_login_on","user_id":"'+data.user_id+'"}');
                     break;
                 case 'call'://呼叫服务
-                    alert(alert(JSON.stringify(data)));
+                    alert(JSON.stringify(data));
                     if(data.data.data.length > 0){
                         goCall(data);
                     }else if(data.data.data.length == 0){
                         data.data.data[0].name = '异常';
-                        alert(alert(JSON.stringify(data)));
+                        alert(JSON.stringify(data));
                         goCall(data);
                     }
                     break;
                 case 'pager'://呼叫器呼叫
-                    alert(alert(JSON.stringify(data)));
+                    alert(JSON.stringify(data));
                     if(data.data.data.length > 0){
                         goCall(data);
                     }else if(data.data.data.length == 0){
                         data.data.data[0].name = '异常';
-                        alert(alert(JSON.stringify(data)));
+                        alert(JSON.stringify(data));
                         goCall(data);
                     }
                     break;
