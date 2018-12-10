@@ -25,29 +25,29 @@
         connect();  //发起WebSocket
         var main = $api.byId('main');
         var mainPos = $api.offset(main);
-        // var uzgetuisdk = api.require('pushGeTui');
-        // uzgetuisdk.initialize(function (ret) {
-        //     var value = "";
-        //     switch (ret.type) {
-        //         case 'cid':
-        //             // value = 'cid:' + ret.cid;
-        //             window.localStorage.setItem("Cid", ret.cid);
-        //             $api.setStorage('Cid', ret.cid);
-        //             break;
-        //         case 'payload':
-        //             value = 'payload:' + ret.payload;
-        //             break;
-        //         case 'occurError':
-        //             value = 'occurError';
-        //             break;
-        //         case'onNotificationMessageClicked':
-        //             value = 'onNotificationMessageClicked' + ret.onNotificationMessageClicked
-        //             break;
-        //         case'onNotificationMessageArrived':
-        //             value = 'onNotificationMessageArrived' + ret.onNotificationMessageArrived
-        //             break;
-        //         }
-        // });
+        var uzgetuisdk = api.require('pushGeTui');
+        uzgetuisdk.initialize(function (ret) {
+            var value = "";
+            switch (ret.type) {
+                case 'cid':
+                    // value = 'cid:' + ret.cid;
+                    // window.localStorage.setItem("Cid", ret.cid);
+                    $api.setStorage('Cid', ret.cid);
+                    break;
+                case 'payload':
+                    value = 'payload:' + ret.payload;
+                    break;
+                case 'occurError':
+                    value = 'occurError';
+                    break;
+                case'onNotificationMessageClicked':
+                    value = 'onNotificationMessageClicked' + ret.onNotificationMessageClicked
+                    break;
+                case'onNotificationMessageArrived':
+                    value = 'onNotificationMessageArrived' + ret.onNotificationMessageArrived
+                    break;
+                }
+        });
         var pedometer = api.require('pedometer');
         pedometer.startCount(function (ret) {
             // alert(ret.steps);
@@ -213,26 +213,35 @@
                     break;
                 // 服务端ping客户端
                 case 'ping':
-                    var user_id = window.localStorage.getItem("user_id");
+                    var user_id = $api.getStorage('user_id');
                     // console.log("type:pong");
                     ws.send('{"type":"pong","user_id":"'+user_id+'"}');
                     break;
                 // 当mvc框架调用GatewayClient发消息时直接alert出来
                 case 'watch_login_out':
-                    if(data.getui_id != window.localStorage.getItem('Cid')){
-                        localStorage.removeItem('access_token');
-                        localStorage.removeItem('user_id');
-                        localStorage.removeItem('login_time');
+                var Cid = $api.getStorage('Cid');
+                    if(data.getui_id != Cid){
+                        $api.rmStorage('access_token');
+                        $api.rmStorage('user_id');
+                        $api.rmStorage('login_time');
+                        $api.rmStorage('username');
                         ws.send('{"type":"watch_login_out_ok","getui_id":"'+data.getui_id+'"');
-                        window.location.href = '#/login';
+                        api.openWin({
+                            name: 'login',
+                            url: './web/login.html'
+                        });
                     }
                     break;
                 case 'watch_Login_exit':
-                    localStorage.removeItem('access_token');
-                    localStorage.removeItem('user_id');
-                    localStorage.removeItem('login_time');
+                    $api.rmStorage('access_token');
+                    $api.rmStorage('user_id');
+                    $api.rmStorage('login_time');
+                    $api.rmStorage('username');
                     ws.send('{"type":"watch_Login_exit_ok","getui_id":"'+data.getui_id+'"');
-                    window.location.href = '#/login';
+                    api.openWin({
+                            name: 'login',
+                            url: './web/login.html'
+                        });
                     break;
                 // 登录到别的手表后，进行登出
                 default :
