@@ -24,9 +24,11 @@
     apiready = function(){
         initPushGeTui();  // 初始化个推
         var Cid = $api.getStorage('Cid');
+        alert(Cid);
         if(!Cid || Cid != 'undefined'){
             fetchClientId();
         }
+        alert(Cid);
         initPedometer();  //开启计步
         connect();  //发起WebSocket
         var access_token = $api.getStorage('access_token');
@@ -73,6 +75,7 @@
                             access_token: token
                         }
                     },function(ret,err){
+                        alert(JSON.stringify(ret));
                         ws.send('{"type":"watch_login_init"}');
                     });
                     break;
@@ -156,7 +159,7 @@
         alert(JSON.stringify(data));
         var name = '';
         if(data.data.data.length == 0){
-            name = '异常';
+            name = '投诉或建议';
         }else{
             name = data.data.data[0].name;
         }
@@ -201,7 +204,9 @@
             }
         });
     }
-    
+
+
+    // 重新获取Cid
     function fetchClientId() {
         var uzgetuisdk = api.require('pushGeTui');
         uzgetuisdk.fetchClientId(function(ret, err) {

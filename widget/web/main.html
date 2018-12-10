@@ -17,7 +17,7 @@
 		<ul class="all-operation">
 			<li class="operation-detail">
 				<img src="../image/zht.png">
-				<p class="operation-text" id="Zht">状态</p>
+				<p class="operation-text" tapmode onclick="fnZht();">状态</p>
 			</li>
 			<li class="operation-detail">
 				<img src="../image/rili.png">
@@ -29,13 +29,14 @@
 			</li>
 			<li class="operation-detail">
 				<img src="../image/xiaban.png">
-				<p class="operation-text" id="Xiabn">下班</p>
+				<p class="operation-text" tapmode onclick="fnLoginOut();">下班</p>
 			</li>
 		</ul>
 	</div> 
 </body>
 
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/js.js"></script>
 <script type="text/javascript">
     apiready = function(){
         api.addEventListener({
@@ -46,5 +47,56 @@
             });
         });
     };
+    // 点击状态
+    function fnZht() {
+
+    }
+    // 点击下班
+    function fnLoginOut() {
+        api.confirm({
+            title: '下班提示',
+            msg: '您确定要下班了吗？',
+            buttons: ['确定', '取消']
+        }, function(ret, err) {
+            var index = ret.buttonIndex;
+            if(index == 1){
+                api.ajax({
+                    url: getUrl('login_out'),
+                    method: 'post',
+                    data: {
+                        values:{
+                            user_id:$api.getStorage('user_id'),
+                            getui_id:$api.getStorage('Cid'),
+                            client_id:$api.getStorage('clientId'),
+                            access_token:$api.getStorage('access_token')
+                        }
+                    }
+                }, function(ret, err) {
+                    if (ret.code == 0) {
+                        // 保存用户信息
+                        $api.rmStorage('access_token');
+                        $api.rmStorage('user_id');
+                        $api.rmStorage('login_time');
+                        $api.rmStorage('username');
+                        api.alert({
+                            title: '提示',
+                            msg: '您下班啦~',
+                        }, function(ret, err) {
+                            api.openWin({
+                                name: 'login',
+                                url: './login.html'
+                            });
+                        });
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'middle'
+                        });
+                    }
+                });
+			}
+        });
+    }
 </script>
 </html>
