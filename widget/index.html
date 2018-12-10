@@ -22,7 +22,6 @@
 <script type="text/javascript">
     var domain = 'demo.isaveu.cn';
     apiready = function(){
-        connect();  //发起WebSocket
         var main = $api.byId('main');
         var mainPos = $api.offset(main);
         var uzgetuisdk = api.require('pushGeTui');
@@ -52,7 +51,7 @@
         pedometer.startCount(function (ret) {
             // alert(ret.steps);
         });
-
+        connect();  //发起WebSocket
         var access_token = $api.getStorage('access_token');
         // 判断当前用户是否登录了
         if (access_token) {
@@ -102,93 +101,27 @@
                     $api.setStorage("user_id", data.user_id);
                     var newtime = getNowFormatDate();
                     $api.setStorage("login_time", newtime);
-                    api.openWin({
-                        name: 'main',
-                        url: './web/index.html',
-                    });
+                    goIndex();
                     ws.send('{"type":"watch_login_on","user_id":"'+data.user_id+'"}');
                     break;
                 case 'call'://呼叫服务
                     // alert(data.msg);
                     if(data.data.data.length > 0){
-                        api.openFrame({
-                            name: 'call',
-                            url: './web/call.html',
-                            pageParam: {
-                                cont_id:data.data.service_cont_id,
-                                name:data.data.data[0].name,
-                                num:data.data.data.length,
-                                box:data.data.box_name
-                            }
-                        });
-                        // window.location.href = window.location.href + '?cont_id=' + data.data.service_cont_id + '&name=' + data.data.data[0].name + '&num=' + data.data.data.length + '&box=' + data.data.box_name;
+                        alert(data);
+                        goCall(data);
+                    }else if(data.data.data.length == 0){
+                        data.data.data[0].name = '异常';
+                        goCall(data);
                     }
-                    if(data.data.data.length == 0){
-                        // window.location.href = window.location.href + '?cont_id=' + data.data.service_cont_id + '&name=' + '异常' + '&num=' + data.data.data.length + '&box=' + data.data.box_name;
-                        api.openFrame({
-                            name: 'call',
-                            url: './web/call.html',
-                            bounces: true,
-                            rect: {
-                                x: 0,
-                                y: 0,
-                                w: 'auto',
-                                h: mainPos.h
-                            },
-                            pageParam: {
-                                cont_id: data.data.service_cont_id,
-                                name:'异常',
-                                num:data.data.data.length,
-                                box:data.data.box_name
-                            }
-                        });
-                    }
-                    console.log(data);
                     break;
                 case 'pager'://呼叫器呼叫
-                    // alert(data.msg);
                     console.log(data);
                     if(data.data.data.length > 0){
-                        // console.log(111)
-                        // window.location.href = window.location.href + '?cont_id=' + data.data.service_cont_id + '&name=' + data.data.data[0].name + '&num=' + data.data.data.length + '&box=' + data.data.box_name;
-                        api.openFrame({
-                            name: 'call',
-                            url: './web/call.html',
-                            bounces: true,
-                            rect: {
-                                x: 0,
-                                y: 0,
-                                w: 'auto',
-                                h: mainPos.h
-                            },
-                            pageParam: {
-                                cont_id:data.data.service_cont_id,
-                                name:data.data.data[0].name,
-                                num:data.data.data.length,
-                                box:data.data.box_name
-                            }
-                        });
-                    }
-                    if(data.data.data.length == 0){
-                        api.openFrame({
-                            name: 'call',
-                            url: './web/call.html',
-                            bounces: true,
-                            rect: {
-                                x: 0,
-                                y: 0,
-                                w: 'auto',
-                                h: mainPos.h
-                            },
-                            pageParam: {
-                                cont_id: data.data.service_cont_id,
-                                name:'异常',
-                                num:data.data.data.length,
-                                box:data.data.box_name
-                            }
-                        });
-                        // console.log(222)
-                        // window.location.href = window.location.href + '?cont_id=' + data.data.service_cont_id + '&name=' + '异常' + '&num=' + data.data.data.length + '&box=' + data.data.box_name;
+                        alert(data);
+                        goCall(data);
+                    }else if(data.data.data.length == 0){
+                        data.data.data[0].name = '异常';
+                        goCall(data);
                     }
                     break;
                 case 'alarm'://报警
@@ -239,11 +172,28 @@
             console.log("出现错误");
         };
     }
-
-
     // 服务端发来消息时
     function onmessage(e) {
 
+    }
+
+    function goIndex() {
+        api.openWin({
+            name: 'index',
+            url: './web/index.html',
+        });
+    }
+    function goCall(data) {
+        api.openFrame({
+            name: 'call',
+            url: './web/call.html',
+            pageParam: {
+                cont_id: data.data.service_cont_id,
+                name:data.data.data[0].name,
+                num:data.data.data.length,
+                box:data.data.box_name
+            }
+        });
     }
 </script>
 </html>
