@@ -33,10 +33,13 @@
 <script type="text/javascript">
     apiready = function(){
         var pageParam = api.pageParam;
+        alert(JSON.stringify(pageParam.name));
         templates(pageParam.name);
     };
 
     function templates(data) {
+
+        alert(JSON.stringify(data));
         var evalText = doT.template($("#evaluationtmpl").text());
         $("#evaluation").html(evalText(data));
     }
