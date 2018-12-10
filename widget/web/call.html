@@ -33,10 +33,9 @@
 <script type="text/javascript">
 	var box = $api.byId('call-box');
 	var name = $api.byId('call-box');
-	box.innerHTML = api.pageParam('box');
-	name.innerHTML = api.pageParam('name');
     apiready = function(){
-        
+        box.innerHTML = api.pageParam.box;
+        name.innerHTML = api.pageParam.name;
     };
 </script>
 </html>
