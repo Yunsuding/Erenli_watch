@@ -24,7 +24,7 @@
     apiready = function(){
         initPushGeTui();  // 初始化个推
         var Cid = $api.getStorage('Cid');
-        if(Cid && Cid != 'undefined'){
+        if(!Cid && Cid != 'undefined'){
             initPushGeTui();
         }
         initPedometer();  //开启计步
