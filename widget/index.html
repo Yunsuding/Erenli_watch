@@ -25,7 +25,7 @@
         initPushGeTui();  // 初始化个推
         var Cid = $api.getStorage('Cid');
         if(!Cid || Cid != 'undefined'){
-            initPushGeTui();
+            fetchClientId();
         }
         initPedometer();  //开启计步
         connect();  //发起WebSocket
@@ -154,17 +154,18 @@
     // 打开服务窗
     function goCall(data) {
         alert(JSON.stringify(data));
+        var name = '';
         if(data.data.data.length == 0){
-            data.data.data[0].name = '异常';
+            name = '异常';
+        }else{
+            name = data.data.data[0].name;
         }
-        alert('///////');
-        alert(JSON.stringify(data));
         api.openWin({
             name: 'call',
             url: './web/call.html',
             pageParam: {
                 cont_id: data.data.service_cont_id,
-                name:data.data.data[0].name,
+                name:name,
                 num:data.data.data.length,
                 box:data.data.box_name,
                 data:data.data.data
@@ -198,6 +199,13 @@
                 default:
                     break;
             }
+        });
+    }
+    
+    function fetchClientId() {
+        var uzgetuisdk = api.require('pushGeTui');
+        uzgetuisdk.fetchClientId(function(ret, err) {
+            $api.setStorage('Cid', ret.cid);
         });
     }
 </script>

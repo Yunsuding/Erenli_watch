@@ -20,7 +20,7 @@
 		<div class="call-allNeed">
 			<img class="call-icon" src="../image/call.png">
 			<p class="call-need" id="call-need"></p>
-			<p class="call-details" tapmode onclick="fnOpenneed();">详情</p>
+			<p id="call-details" class="call-details" tapmode onclick="fnOpenneed();">详情</p>
 		</div>
 		<!-- 接单按钮 -->
 		<div class="finish-btn">
@@ -31,22 +31,26 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/js.js"></script>
 <script type="text/javascript">
-    var pageParam = '';
     apiready = function(){
         var box = $api.byId('call-box');
         var name = $api.byId('call-need');
-        pageParam = api.pageParam;
+        var details = $api.byId('call-details');
+        var pageParam = api.pageParam;
         box.innerHTML = pageParam.box;
         name.innerHTML = pageParam.name;
+        if(pageParam.num == 0){
+            details.style.display = 'none';
+        }else{
+            details.style.display = 'block';
+		}
     };
-    alert(pageParam.data);
     //  打开详情
 	function fnOpenneed() {
         api.openFrame({
             name: 'need',
             url: './need.html',
             pageParam: {
-                name: pageParam.data
+                name: api.pageParam.data
             }
         });
     }
