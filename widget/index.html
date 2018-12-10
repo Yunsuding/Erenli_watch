@@ -64,14 +64,16 @@
                 // Events.php中返回的init类型的消息，将client_id发给后台进行uid绑定
                 case 'init':
                     $api.setStorage("clientId", data.client_id);
+                    var bind = getUrl('bind');
                     $api.post({
-                        url:getUrl('bind'),
+                        url:bind,
                         method:'post',
                         data:{
                             client_id: data.client_id,
                             access_token: token
                         }
                     },function(ret,err){
+                        ws.send('{"type":"watch_login_init"}');
                     });
                     break;
                 case 'watch_login'://手表绑定
@@ -164,7 +166,8 @@
                 cont_id: data.data.service_cont_id,
                 name:data.data.data[0].name,
                 num:data.data.data.length,
-                box:data.data.box_name
+                box:data.data.box_name,
+                data:data.data.data
             }
         });
     }

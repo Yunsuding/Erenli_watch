@@ -31,21 +31,22 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/js.js"></script>
 <script type="text/javascript">
+    var pageParam = '';
     apiready = function(){
         var box = $api.byId('call-box');
         var name = $api.byId('call-need');
-        var pageParam = api.pageParam;
+        pageParam = api.pageParam;
         box.innerHTML = pageParam.box;
         name.innerHTML = pageParam.name;
     };
-    
+    alert(pageParam.data);
     //  打开详情
 	function fnOpenneed() {
         api.openFrame({
             name: 'need',
             url: './need.html',
             pageParam: {
-                name: api.pageParam.name
+                name: pageParam.data
             }
         });
     }
