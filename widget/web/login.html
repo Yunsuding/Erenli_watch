@@ -30,9 +30,7 @@
 	<script type="text/javascript">
 		apiready = function(){
 			var cid = $api.getStorage('Cid');
-			alert(cid);
 			var clientId = $api.getStorage("clientId");
-			alert(clientId);
 		    var FNScanner = api.require('FNScanner');
 		    var codecontent = clientId+'|'+cid;
 		    FNScanner.encodeImg({
