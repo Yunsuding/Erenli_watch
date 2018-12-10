@@ -41,7 +41,9 @@
         api.addEventListener({
             name:'swiperight'
         }, function(ret, err){
-           api.closeWin();
+            api.closeFrame({
+                name: 'main'
+            });
         });
     };
 </script>
