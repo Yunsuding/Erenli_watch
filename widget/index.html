@@ -150,9 +150,12 @@
     }
     // 打开服务窗
     function goCall(data) {
+        alert(data);
         if(data.data.data.length == 0){
             data.data.data[0].name = '异常';
         }
+        alert('///////');
+        alert(data);
         api.openWin({
             name: 'call',
             url: './web/call.html',

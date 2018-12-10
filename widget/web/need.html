@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>需求页</title>
+	<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <style>
+        body{
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="base-background base-columnAcJc">
+		<img class="back" src="../image/back.png" tapmode onclick="api.closeFrame();">
+		<!-- 所有需求 -->
+		<div class="all-need">
+			<p class="need-num">呼叫内容:</p>
+			<!-- 需要根据具体客人按了多少个需求来循环 -->
+			<ul id="evaluation"></ul>
+		</div>
+	</div>
+</body>
+
+<script id="evaluationtmpl" type="text/x-dot-template">
+	{{ for(var prop in it) { }}
+	<li class="need-num">{{= prop }}.{{= it[prop].name }}</li>
+	{{ } }}
+</script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        var pageParam = api.pageParam;
+        templates(pageParam.name);
+    };
+
+    function templates(data) {
+        var evalText = doT.template($("#evaluationtmpl").text());
+        $("#evaluation").html(evalText(data));
+    }
+</script>
+</html>

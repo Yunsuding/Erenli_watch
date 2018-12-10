@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
-    <title>title</title>
+    <title>需求通知页</title>
     <link rel="stylesheet" type="text/css" href="../css/api.css"/>
     <style>
         body{
@@ -20,28 +20,39 @@
 		<div class="call-allNeed">
 			<img class="call-icon" src="../image/call.png">
 			<p class="call-need" id="call-need"></p>
-			<p class="call-details">详情</p>
+			<p class="call-details" tapmode onclick="fnOpenneed();">详情</p>
 		</div>
 		<!-- 接单按钮 -->
 		<div class="finish-btn">
-			<p class="btn-txet">立即接单</p>
+			<p class="btn-txet" tapmode onclick="fnCallon();">立即接单</p>
 		</div>
 	</div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/js.js"></script>
 <script type="text/javascript">
-	var box = $api.byId('call-box');
-	var name = $api.byId('call-need');
     apiready = function(){
+        var box = $api.byId('call-box');
+        var name = $api.byId('call-need');
         var pageParam = api.pageParam;
-        alert(JSON.stringify(pageParam));
-        alert(pageParam.box);
-        alert(pageParam('box'));
-        var box = pageParam.box;
-        var name = pageParam.name;
-        box.innerHTML = box;
-        name.innerHTML = name;
+        box.innerHTML = pageParam.box;
+        name.innerHTML = pageParam.name;
     };
+    
+    //  打开详情
+	function fnOpenneed() {
+        api.openFrame({
+            name: 'need',
+            url: './need.html',
+            pageParam: {
+                name: api.pageParam.name
+            }
+        });
+    }
+    
+    // 立即接单
+	function fnCallon() {
+		
+    }
 </script>
 </html>
