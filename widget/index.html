@@ -22,53 +22,27 @@
 <script type="text/javascript">
     var domain = 'demo.isaveu.cn';
     apiready = function(){
-        var main = $api.byId('main');
-        var mainPos = $api.offset(main);
-        var uzgetuisdk = api.require('pushGeTui');
-        uzgetuisdk.initialize(function (ret) {
-            var value = "";
-            switch (ret.type) {
-                case 'cid':
-                    // value = 'cid:' + ret.cid;
-                    // window.localStorage.setItem("Cid", ret.cid);
-                    $api.setStorage('Cid', ret.cid);
-                    break;
-                case 'payload':
-                    value = 'payload:' + ret.payload;
-                    break;
-                case 'occurError':
-                    value = 'occurError';
-                    break;
-                case'onNotificationMessageClicked':
-                    value = 'onNotificationMessageClicked' + ret.onNotificationMessageClicked
-                    break;
-                case'onNotificationMessageArrived':
-                    value = 'onNotificationMessageArrived' + ret.onNotificationMessageArrived
-                    break;
-                }
-        });
+        initPushGeTui();  // 初始化个推
+        initPedometer();  //开启计步
+        connect();  //发起WebSocket
+    };
+    var access_token = $api.getStorage('access_token');
+    // 判断当前用户是否登录了
+    if (access_token) {
+        // 登录成功，打开个人中心Window
+        goIndex();
+    } else {
+        // 没有登录，打开登录Window
+        goLogin();
+    }
+    // 开启计步
+    function initPedometer(){
         var pedometer = api.require('pedometer');
         pedometer.startCount(function (ret) {
             // alert(ret.steps);
         });
-        connect();  //发起WebSocket
-        var access_token = $api.getStorage('access_token');
-        // 判断当前用户是否登录了
-        if (access_token) {
-            // 登录成功，打开个人中心Window
-            api.openWin({
-                name: 'index',
-                url: './web/index.html'
-            });
-        } else {
-            // 没有登录，打开登录Window
-            api.openWin({
-                name: 'login',
-                url: './web/login.html'
-            });
-        }
-    };
-    // 连接服务端
+    }
+    // WebSocket连接
     function connect() {
         // 创建websocket
         var ws = new ReconnectingWebSocket('wss://'+domain+':7272');
@@ -104,22 +78,18 @@
                     ws.send('{"type":"watch_login_on","user_id":"'+data.user_id+'"}');
                     break;
                 case 'call'://呼叫服务
-                    alert(JSON.stringify(data));
                     if(data.data.data.length > 0){
                         goCall(data);
                     }else if(data.data.data.length == 0){
                         data.data.data[0].name = '异常';
-                        alert(JSON.stringify(data));
                         goCall(data);
                     }
                     break;
                 case 'pager'://呼叫器呼叫
-                    alert(JSON.stringify(data));
                     if(data.data.data.length > 0){
                         goCall(data);
                     }else if(data.data.data.length == 0){
                         data.data.data[0].name = '异常';
-                        alert(JSON.stringify(data));
                         goCall(data);
                     }
                     break;
@@ -143,11 +113,8 @@
                         $api.rmStorage('user_id');
                         $api.rmStorage('login_time');
                         $api.rmStorage('username');
+                        goLogin();
                         ws.send('{"type":"watch_login_out_ok","getui_id":"'+data.getui_id+'"');
-                        api.openWin({
-                            name: 'login',
-                            url: './web/login.html'
-                        });
                     }
                     break;
                 case 'watch_Login_exit':
@@ -155,11 +122,8 @@
                     $api.rmStorage('user_id');
                     $api.rmStorage('login_time');
                     $api.rmStorage('username');
+                    goLogin();
                     ws.send('{"type":"watch_Login_exit_ok","getui_id":"'+data.getui_id+'"');
-                    api.openWin({
-                            name: 'login',
-                            url: './web/login.html'
-                        });
                     break;
                 // 登录到别的手表后，进行登出
                 default :
@@ -175,14 +139,24 @@
     function onmessage(e) {
 
     }
-
+    // 打开首页窗口
     function goIndex() {
         api.openWin({
             name: 'index',
             url: './web/index.html',
         });
     }
+
+    // 打开登录窗口
+    function goLogin() {
+        api.openWin({
+            name: 'login',
+            url: './web/login.html',
+        });
+    }
+    // 打开服务窗
     function goCall(data) {
+        alert(JSON.stringify(data));
         api.openWin({
             name: 'call',
             url: './web/call.html',
@@ -191,6 +165,35 @@
                 name:data.data.data[0].name,
                 num:data.data.data.length,
                 box:data.data.box_name
+            }
+        });
+    }
+    // 初始化第三方推送模块，个推
+    function initPushGeTui() {
+
+        var pushGeTui = api.require('pushGeTui');
+
+        // 注册设备和应用信息到个推
+        pushGeTui.initialize(function(ret) {
+            var value = "";
+
+            // 区分通知和消息
+            switch (ret.type) {
+                // 返回个推平台上的ID
+                case 'cid':
+                    $api.setStorage('Cid', ret.cid);
+                    break;
+                // 返回消息内容
+                case 'payload':
+                    value = 'payload:' + ret.payload;
+                    // 解析消息体
+                    // fnParsePayLoad(ret.payload);
+                    break;
+                case 'occurError':
+                    value = 'occurError';
+                    break;
+                default:
+                    break;
             }
         });
     }
