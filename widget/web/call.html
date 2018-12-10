@@ -20,7 +20,7 @@
 		<div class="call-allNeed">
 			<img class="call-icon" src="../image/call.png">
 			<p class="call-need" id="call-need"></p>
-			<p id="call-details" class="call-details" tapmode onclick="fnOpenneed();">详情</p>
+			<p id="call-details" class="call-details" tapmode onclick="fnOpenneed(api.pageParam.data);">详情</p>
 		</div>
 		<!-- 接单按钮 -->
 		<div class="finish-btn">
@@ -45,12 +45,13 @@
 		}
     };
     //  打开详情
-	function fnOpenneed() {
+	function fnOpenneed(data) {
+        alert(JSON.stringify(data));
         api.openFrame({
             name: 'need',
             url: './need.html',
             pageParam: {
-                name: api.pageParam.data
+                name: data
             }
         });
     }

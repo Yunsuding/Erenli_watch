@@ -24,13 +24,10 @@
     apiready = function(){
         initPushGeTui();  // 初始化个推
         var Cid = $api.getStorage('Cid');
-        alert(Cid);
         if(!Cid || Cid != 'undefined'){
             fetchClientId();
         }
-        alert(Cid);
         initPedometer();  //开启计步
-        connect();  //发起WebSocket
         var access_token = $api.getStorage('access_token');
         // 判断当前用户是否登录了
         if (access_token && access_token != 'undefined') {
@@ -40,6 +37,7 @@
             // 没有登录，打开登录Window
             goLogin();
         }
+        connect();  //发起WebSocket
     };
 
     // 开启计步
@@ -61,7 +59,6 @@
             var data = eval("(" + e.data + ")");
             var type = data.type || '';
             var token = $api.getStorage("access_token");
-            alert(type);
             switch (type) {
                 // Events.php中返回的init类型的消息，将client_id发给后台进行uid绑定
                 case 'init':
