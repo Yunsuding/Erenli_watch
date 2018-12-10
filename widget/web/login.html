@@ -29,31 +29,35 @@
 	<script type="text/javascript" src="../script/js.js"></script>
 	<script type="text/javascript">
 		apiready = function(){
-			var cid = $api.getStorage('Cid');
-			var clientId = $api.getStorage("clientId");
-		    var FNScanner = api.require('FNScanner');
-		    var codecontent = clientId+'|'+cid;
-		    FNScanner.encodeImg({
-		        content: codecontent,
-		        saveToAlbum: false,
-		            saveImg: {
-		                path: 'fs://ercode.png',
-		                w: 400,
-		                h: 400
-		            }
-		    }, function(ret, err) {
-		        if (ret.status) {
-		            var inimg = $api.byId('Rqcode');
-		            inimg.src = ret.imgPath;
-		        } else {
-		            alert(JSON.stringify(err));
-		        }
-		    });
+            FNScanner();
 		}
+		function FNScanner() {
+            var cid = $api.getStorage('Cid');
+            var clientId = $api.getStorage("clientId");
+            var FNScanner = api.require('FNScanner');
+            var codecontent = clientId+'|'+cid;
+            FNScanner.encodeImg({
+                content: codecontent,
+                saveToAlbum: false,
+                saveImg: {
+                    path: 'fs://ercode.png',
+                    w: 400,
+                    h: 400
+                }
+            }, function(ret, err) {
+                if (ret.status) {
+                    var inimg = $api.byId('Rqcode');
+                    inimg.src = ret.imgPath;
+                } else {
+                    alert(JSON.stringify(err));
+                }
+            });
+        }
 		function ONchagecode(res){
 			var codelogin = $api.byId('qrcode_login'),
 				userlogin = $api.byId('number_login');
 			if(res == 1){
+                FNScanner();
 				codelogin.style.display = 'block';
 				userlogin.style.display = 'none';		
 			}else{
