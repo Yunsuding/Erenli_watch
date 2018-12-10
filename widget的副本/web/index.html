@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>watch</title>
+    <script type=text/javascript src=./../script/api.js></script>
+    <script type=text/javascript src=./../script/reconnecting-websocket.min.js></script>
+    <link href=./static/css/app.ad358ce591b8a301f3292c294d110215.css rel=stylesheet>
+</head>
+<body>
+<div id=app></div>
+<script>apiready = function () {
+    var uzgetuisdk = api.require('pushGeTui');
+    uzgetuisdk.initialize(function (ret) {
+        var value = "";
+        switch (ret.type) {
+            case 'cid':
+                // value = 'cid:' + ret.cid;
+                window.localStorage.setItem("Cid", ret.cid);
+                break;
+            case 'payload':
+                value = 'payload:' + ret.payload;
+                break;
+            case 'occurError':
+                value = 'occurError';
+                break;
+            case'onNotificationMessageClicked':
+                value = 'onNotificationMessageClicked' + ret.onNotificationMessageClicked
+                break;
+            case'onNotificationMessageArrived':
+                value = 'onNotificationMessageArrived' + ret.onNotificationMessageArrived
+                break;
+        }
+    });
+    var pedometer = api.require('pedometer');
+    pedometer.startCount(function (ret) {
+        // alert(ret.steps);
+    });
+}</script>
+<script type=text/javascript src=./static/js/manifest.be6eea592259b04d7a79.js></script>
+<script type=text/javascript src=./static/js/vendor.56333456b9a9f7292ca7.js></script>
+<script type=text/javascript src=./static/js/app.f18613a3fcc74be590a6.js></script>
+</body>
+</html>
