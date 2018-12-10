@@ -59,6 +59,7 @@
             var data = eval("(" + e.data + ")");
             var type = data.type || '';
             var token = $api.getStorage("access_token");
+            alert(type);
             switch (type) {
                 // Events.php中返回的init类型的消息，将client_id发给后台进行uid绑定
                 case 'init':
@@ -150,12 +151,12 @@
     }
     // 打开服务窗
     function goCall(data) {
-        alert(data);
+        alert(JSON.stringify(data));
         if(data.data.data.length == 0){
             data.data.data[0].name = '异常';
         }
         alert('///////');
-        alert(data);
+        alert(JSON.stringify(data));
         api.openWin({
             name: 'call',
             url: './web/call.html',
