@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <style>
+        body{
+            
+        }
+    </style>
+</head>
+<body>
+    <!-- 呼叫时出现弹窗 -->
+	<div class="base-background base-columnAcJc">
+		<!-- 呼叫的包厢名称 -->
+		<div class="call-box" id="call-box"></div>
+		<!-- 呼叫需求 -->
+		<div class="call-allNeed">
+			<img class="call-icon" src="../image/call.png">
+			<p class="call-need" id="call-need"></p>
+			<p class="call-details">详情</p>
+		</div>
+		<!-- 接单按钮 -->
+		<div class="finish-btn">
+			<p class="btn-txet">立即接单</p>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/js.js"></script>
+<script type="text/javascript">
+	var box. = $api.byId('call-box');
+	var name = $api.byId('call-box');
+	box.innerHTML = api.pageParam('box');
+	name.innerHTML = api.pageParam('name');
+    apiready = function(){
+        
+    };
+</script>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+	<!-- <meta name="viewport" content="width=device-width"> -->
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<link rel="stylesheet" type="text/css" href="../css/api.css" />
+</head>
+<body>
+	<div class=" base-columnAcJc" id="number_login" style="display: none;">
+		<div class="user-login">
+			<input class="user-num" id="username" class="input" type="text" placeholder="用户名">
+			<!-- 密码可能要做一个显示隐藏的眼睛 --> 
+			<input class="user-num" id="password" class="input" type="password" placeholder="密码">
+		</div>
+		<button class="login-btn" onclick="fnLogin();">登录</button>
+		<p onclick="ONchagecode(1);" style="color: #A2FE01;font-size: 25px;margin-top: 20px;">切换二维码登录</p>
+	</div>
+	<div class=" base-columnAcJc" id="qrcode_login" style="display: block;">
+		<div class="perform-code" >
+			<img src="" alt="" id="Rqcode">
+			<p onclick="ONchagecode(2);" style="color: #A2FE01;font-size: 20px;margin-top: 10px;text-align: center;">切换账号登录</p>
+		</div>
+		
+	</div>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/js.js"></script>
+	<script type="text/javascript">
+		apiready = function(){
+			var cid = $api.getStorage('Cid');
+			var clientId = $api.getStorage("clientId");
+		    var FNScanner = api.require('FNScanner');
+		    var codecontent = cid+'|'+clientId;
+		    FNScanner.encodeImg({
+		        content: codecontent,
+		        saveToAlbum: false,
+		            saveImg: {
+		                path: 'fs://ercode.png',
+		                w: 400,
+		                h: 400
+		            }
+		    }, function(ret, err) {
+		        if (ret.status) {
+		            var inimg = $api.byId('Rqcode');
+		            inimg.src = ret.imgPath;
+		        } else {
+		            alert(JSON.stringify(err));
+		        }
+		    });
+		}
+		function ONchagecode(res){
+			var codelogin = $api.byId('qrcode_login'),
+				userlogin = $api.byId('number_login');
+			if(res == 1){
+				codelogin.style.display = 'block';
+				userlogin.style.display = 'none';		
+			}else{
+				codelogin.style.display = 'none';
+				userlogin.style.display = 'block';		
+			}
+		}
+		var Cid = $api.getStorage("Cid");
+		var newtime = getNowFormatDate();
+		var loginUrl = getUrl('login');
+		// 登录
+		function fnLogin() {
+			var usernameValue = $api.val($api.byId('username'));
+			var passwordValue = $api.val($api.byId('password'));
+			if(!usernameValue){
+				alert('用户名称不能为空');
+			}
+			if(!passwordValue){
+				alert('密码不能为空');
+			}
+		    api.ajax({
+		        url: loginUrl,
+		        method: 'post',
+		        data: {
+		        	values:{
+		        		account:usernameValue,
+		        		password:passwordValue,
+		        		is_watch:1,
+		        		getui_id:Cid
+		        	}
+		        }
+		    }, function(ret, err) {
+		        if (ret.code == 0) {
+		            // 保存用户信息
+		            $api.setStorage('access_token', ret.data.access_token);
+		            $api.setStorage('user_id', ret.user_id);
+		            $api.setStorage("login_time", newtime);
+		            api.alert({
+		                title: '提示',
+		                msg: '登录成功',
+		            }, function(ret, err) {
+		            	api.openWin({
+	                        name: 'index',
+	                        url: './index.html',
+	                        pageParam: {
+	                            name: 'test'
+	                        }
+	                    });
+		            });
+		        } else {
+		            api.toast({
+		                msg: ret.msg,
+		                duration: 2000,
+		                location: 'middle'
+		            });
+		        }
+		    });
+		}
+	</script>
+</body>
+</html>

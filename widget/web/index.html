@@ -1,45 +1,112 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 <head>
-    <meta charset=utf-8>
-    <meta name=viewport content="width=device-width,initial-scale=1,user-scalable=0">
-    <title>watch</title>
-    <script type=text/javascript src=./../script/api.js></script>
-    <script type=text/javascript src=./../script/reconnecting-websocket.min.js></script>
-    <link href=./static/css/app.ad358ce591b8a301f3292c294d110215.css rel=stylesheet>
+    <meta charset="utf-8">
+	<title>首页</title>
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<link rel="stylesheet" type="text/css" href="../css/api.css" />
+	<style type="text/css">
+		@font-face{
+			font-family: 'fzcyj';
+			src: url('../fontSize/FZCYJ.otf');
+		}
+		/* 首页面=>当前时间 */
+		.real-time{
+			color: #fff;
+			display: flex;
+			font-size: 80px;
+			padding: 40px 0;
+			font-family: fzcyj;
+		}
+	</style>
 </head>
 <body>
-<div id=app></div>
-<script>apiready = function () {
-    var uzgetuisdk = api.require('pushGeTui');
-    uzgetuisdk.initialize(function (ret) {
-        var value = "";
-        switch (ret.type) {
-            case 'cid':
-                // value = 'cid:' + ret.cid;
-                window.localStorage.setItem("Cid", ret.cid);
-                break;
-            case 'payload':
-                value = 'payload:' + ret.payload;
-                break;
-            case 'occurError':
-                value = 'occurError';
-                break;
-            case'onNotificationMessageClicked':
-                value = 'onNotificationMessageClicked' + ret.onNotificationMessageClicked
-                break;
-            case'onNotificationMessageArrived':
-                value = 'onNotificationMessageArrived' + ret.onNotificationMessageArrived
-                break;
-        }
-    });
-    var pedometer = api.require('pedometer');
-    pedometer.startCount(function (ret) {
-        // alert(ret.steps);
-    });
-}</script>
-<script type=text/javascript src=./static/js/manifest.be6eea592259b04d7a79.js></script>
-<script type=text/javascript src=./static/js/vendor.56333456b9a9f7292ca7.js></script>
-<script type=text/javascript src=./static/js/app.f18613a3fcc74be590a6.js></script>
+	<!-- 首页面 -->
+	<div class="base-background base-columnAcJc">
+		<!-- 当前在线 -->
+		<div class="present">
+			当前在线 : <span class="base-green" id="usernames">后台传</span>
+		</div>
+		<!-- 当前时间 -->
+		<div class="real-time">
+			<p class="base-green" id="getHours">00</p>
+			<p class="base-red" id="getSecond">:</p>
+			<p id="getMinutes">00</p>
+		</div>
+		<!-- 实时信息 -->
+		<div class="real-message">
+			<!-- 星期几 -->
+			<span class="base-marTen base-green" id="getDay">星期九</span>
+			<!-- 今天几号 -->
+			<span class="base-marTen" id="getDate">16</span>
+			<!-- 今日步数 -->
+			<div class="pace">
+				<img src="../image/bs.png" class="base-marTen">
+				<!-- 步伐数 -->
+				<p id="marTen">0</p>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/js.js"></script>
+	<script type="text/javascript">
+		var getMinutes = $api.byId('getMinutes');
+		var getHours = $api.byId('getHours');
+		var getday = $api.byId('getDay');
+		var getdate = $api.byId('getDate');
+		var getSecond = $api.byId('getSecond');
+		var marTen = $api.byId('marTen');
+		var clock = new Clock();
+		clock.display(getMinutes,getHours,getday,getdate,getSecond);
+		apiready = function(){
+			getSteps();
+			var access_token = $api.getStorage('access_token');
+			var username = $api.getStorage('username');
+			if(access_token != 'undefined' && username != 'undefined'){
+				api.ajax({
+				    url: getUrl('getUserInfo'),
+				    method: 'post',
+				    data: {
+				    	values:{
+				    		access_token:access_token
+				    	}
+				    }
+				},function(ret, err){
+					// alert(JSON.stringify(ret) );
+				    if (ret.code == 0) {
+				    	// api.toast();
+				    	user = $api.byId('usernames');
+				        user.innerHTML = ret.data.username;
+				        $api.setStorage('username', ret.data.username);
+				    } else {
+				        api.alert(ret.msg);
+			        }
+				});
+			}else{
+				user = $api.byId('usernames');
+				user.innerHTML = username;
+			};
+			
+			api.addEventListener({
+			    name:'swiperight'
+			}, function(ret, err){        
+			   alert('向右轻扫');
+			   api.openWin({
+                    name: 'main',
+                    url: './main.html',
+                    pageParam: {
+                        name: 'main'
+                    }
+                });
+			});
+		}
+ 		function getSteps(){
+ 			var pedometer = api.require('pedometer');
+			pedometer.getSteps(function(ret) {
+			    marTen.innerHTML = ret.steps;
+			});
+ 		}
+	</script>
 </body>
 </html>

@@ -1,1 +1,322 @@
-html{font-family:sans-serif}a,body,center,cite,code,dd,del,div,dl,dt,em,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hr,html,img,input,label,legend,li,mark,ol,p,section,span,strong,textarea,time,ul,var{margin:0;border:0;padding:0;font-style:normal;color:#323232}body,html{-webkit-touch-callout:none;-webkit-text-size-adjust:none;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;background-color:#fff}article,aside,details,fieldset,figcaption,figure,footer,header,main,nav,section{display:block}a,button,cite,code,del,em,img,label,mark,small,strong,textarea,time,var{display:inline-block}footer,header,section{position:relative}ol,ul{list-style:none}button,input,textarea{border:0;margin:0;padding:0;font-size:1em;line-height:1em;background-color:transparent}span{display:inline-block}a:active,a:hover{outline:0}a,a:visited{text-decoration:none}.wordWrap,label{word-wrap:break-word;word-break:break-all}table{border-collapse:collapse;border-spacing:0}td,th{padding:0}.clearfix:after{content:' ';display:block;clear:both;visibility:hidden;line-height:0;height:0}.loading_more{display:block;height:1.5em;width:100%}.loading_more:before{background-image:url(../image/loading_more.gif) 30% center;background-repeat:no-repeat;background-size:contain;text-align:center}.loading_more:after{content:'加载更多'}
+html{
+	font-family: sans-serif;
+}
+html,body,header,section,footer,div,ul,ol,li,img,a,span,em,del,legend,center,strong,var,fieldset,form,label,dl,dt,dd,cite,input,hr,time,mark,code,figcaption,figure,textarea,h1,h2,h3,h4,h5,h6,p{
+	margin:0;
+	border:0;
+	padding:0;
+	font-style:normal;
+}
+html,body {
+	-webkit-touch-callout:none;
+	-webkit-text-size-adjust:none;
+	-webkit-tap-highlight-color:rgba(0, 0, 0, 0);
+	-webkit-user-select:none;
+	background-color: #000;
+}
+nav,article,aside,details,main,header,footer,section,fieldset,figcaption,figure{
+	display: block;
+}
+img,a,button,em,del,strong,var,label,cite,small,time,mark,code,textarea{
+	display:inline-block;
+}
+header,section,footer {
+	position:relative;
+}
+ol,ul{
+	list-style:none;
+}
+input,button,textarea {
+	border:0;
+	margin:0;
+	padding:0;
+	font-size:1em;
+	line-height:1em;
+	/*-webkit-appearance:none;*/
+	background-color:rgba(0, 0, 0, 0);
+}
+span{
+	display:inline-block;
+}
+a:active, a:hover {
+  outline: 0;
+}
+a, a:visited{
+	text-decoration:none;
+}
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+
+　　color: #666;font-size:16px;
+
+　　}
+
+　　input:-moz-placeholder, textarea:-moz-placeholder {
+
+　　color:#666;font-size:16px;
+
+　　}
+
+　　input::-moz-placeholder, textarea::-moz-placeholder {
+
+　　color:#666;font-size:16px;
+
+　　}
+
+　　input:-ms-input-placeholder, textarea:-ms-input-placeholder {
+
+　　color:#666;font-size:16px;
+
+　　}
+label, .wordWrap{
+    word-wrap: break-word;
+    word-break: break-all;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td,th {
+  padding: 0;
+}
+.clearfix:after{
+	content: ' ';
+	display: block;
+	clear: both;
+	visibility:hidden;
+	line-height: 0;
+	height:0;
+}
+.loading_more{
+	display: block;
+	height: 1.5em;
+	width: 100%;
+}
+.loading_more:before {
+	display: inline-block; vertical-align: text-bottom;
+	content: ' '; height: 16px; width: 16px; margin-right: 6px;
+	background: url(../image/loading_more.gif) no-repeat center;
+	-webkit-background-size: contain;
+	background-size: contain;
+} 
+.loading_more:after {
+	content: '加载更多';	
+}
+/* 荧光绿 */
+.base-green{
+	color: #A2FE01;
+}
+/* 红色 */
+.base-red{
+	color: red;
+}
+/* 距离右边10px */
+.base-marTen{
+	margin-right: 10px;
+}
+/* 公共垂直竖直平分 */
+.base-columnAcJc{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+/* 公共黑色背景 */
+.base-background{
+	width: 100%;
+	height: 100%;
+	/*background-color: #000;*/
+	/*border-radius: 50%;*/
+}
+/* -------------------首页面--------------------- */
+/* 首页面=>当前在线 */
+.present{
+	color: #fff;
+	font-size: 20px;
+}
+/* 首页面=>实时信息 */
+.real-message{
+	display: flex;
+	align-items: center;
+	color: #fff;
+	font-size: 20px;
+}
+/* 首页面=>实时信息=>今日步数 */
+.pace{
+	display: flex;
+	align-items: center;
+}
+/* ----------------呼叫时出现的页面----------------------- */
+/* 呼叫包厢名称 */
+.call-box{
+	color: #fff;
+	font-size: 20px;
+}
+/* 呼叫总信息 */
+.call-allNeed{
+	display: flex;
+	align-items: center;
+	padding: 40px 0;
+}
+/* 呼叫图标 */
+.call-icon{
+	width: 50px;
+	height: 50px;
+}
+/* 呼叫需求 */
+.call-need{
+	color: #fff;
+	font-size: 20px;
+	padding: 0 20px;
+}
+/* 呼叫需求详情 */
+.call-details{
+	color: #fff;
+	font-size: 16px;
+	background-color: #A2FE01;
+	padding: 2px 5px; 
+	border-radius: 5px;
+}
+/* 接单按钮 */
+.finish-btn{
+	background-image: url('../image/green.png');
+	color: #fff;
+	width: 330px;
+	height: 174px;
+	margin-bottom: -80px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 40px;
+}
+/* 按钮文字 */
+.btn-txet{
+	margin-top: -55px;
+}
+/* ----------------已处理和误操作按钮----------------------- */
+.well-btn{
+	background-image: url('../image/left.png');
+	color: #fff;
+	width: 391px;
+	height: 154px;
+	margin-bottom: -97px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 40px;
+}
+.fault-left{
+	margin-top: -40px;
+}
+.fault-right{
+	margin-left: 60px;
+	margin-top: -40px;
+}
+/* ------------------操作界面------------------- */
+.all-operation{
+	display: flex;
+	flex-wrap: wrap;
+}
+.operation-detail{
+	width: 50%;
+    text-align: center;
+    padding:  10px 0;
+}
+.operation-text{
+	margin-top: 10px;
+	font-size: 20px;
+    color: #fff;
+}
+/* ----------------需求详情页----------------------- */
+/* 需求数量列表 */
+.need-num{
+	font-size: 20px;
+	color: #fff;
+	padding: 3px 0;
+}
+/* ----------------------下班页面---------------------- */
+.off-icon{
+	width: 100px;
+	height: 100px;
+}
+.off-txet{
+	margin-top: 20px;
+	color: #fff;
+	font-size: 30px;
+}
+/* ------------工作状态值------------- */
+/* 选中时样式 */
+.working-green{
+	font-size: 35px;
+	color: #fff;
+	padding: 10px 50px; 
+	margin-bottom: 15px;
+	border-radius: 5px;
+	background-color: #A2FE01;
+}
+/* 未选中时样式 */
+.working-gray{
+	font-size: 35px;
+	color: #fff;
+	padding: 10px 50px; 
+	margin-bottom: 15px;
+	border-radius: 5px;
+	background-color: #ccc;
+}
+/* ---------服务完成以后出现的二维码页面----------- */
+.perform-code{
+	width: 70.71%;
+	height: 70.71%;
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+
+}
+#Rqcode{
+	width: 100%
+}
+/* 账号密码登录页面 */
+.user-login{
+	display: flex;
+	flex-direction: column;
+}
+.user-num{
+	padding: 5px 10px;
+	font-size: 18px;
+	margin-bottom: 20px;
+	color: #fff
+}
+.login-btn{
+	width: 243px;
+	font-size: 18px;
+	padding: 10px 30px;
+	border-radius: 5px;
+	background-color: #A2FE01;
+	color: #fff;
+	border: none;
+}
+/* -------------修改提醒方式页面------------------ */
+.voice-warn{
+	display: flex;
+	align-items: center;
+}
+.shake-warn{
+	display: flex;
+	align-items: center;
+}
+.warn-txet{
+	color: #A2FE01;
+	font-size: 40px;
+	padding: 20px 0;
+	margin-right: 10px;
+}
+.warn-btn{
+	width: 40px;
+	height: 40px;
+	margin-top: 8px;
+}
+

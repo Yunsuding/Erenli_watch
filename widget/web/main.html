@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>操作界面</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        body{
+            
+        }
+    </style>
+</head>
+<body>
+   <div class="base-background base-columnAcJc">
+		<!-- 可以固定写死 -->
+		<ul class="all-operation">
+			<li class="operation-detail">
+				<img src="../image/zht.png">
+				<p class="operation-text" id="Zht">状态</p>
+			</li>
+			<li class="operation-detail">
+				<img src="../image/rili.png">
+				<p class="operation-text">日历</p>
+			</li>
+			<li class="operation-detail">
+				<img src="../image/tixing.png">
+				<p class="operation-text">提醒</p>
+			</li>
+			<li class="operation-detail">
+				<img src="../image/xiaban.png">
+				<p class="operation-text" id="Xiabn">下班</p>
+			</li>
+		</ul>
+	</div> 
+</body>
+
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        api.addEventListener({
+            name:'swipeleft'
+        }, function(ret, err){        
+           alert('向左轻扫');
+           api.closeWin();
+        });
+    };
+</script>
+</html>

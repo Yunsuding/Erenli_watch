@@ -1,101 +1,220 @@
 <!doctype html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
-    <title>E人力手表版</title>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>E人力智能人力系统</title>
     <link rel="stylesheet" type="text/css" href="./css/api.css" />
-    <link rel="stylesheet" type="text/css" href="./css/common.css" />
-	<style>
-		.center{
-			display:-webkit-box;
-			-webkit-box-orient:vertical;
-			-webkit-box-pack:center;
-			-webkit-box-align:center;
-		}
-	</style>
+    
 </head>
-<body style='background:#EDEDED;'>
+<body>
     <div id="wrap">
-        <div id="main" class='center'>
-                <img id='loading' src='image/loading.gif' width=65 height=65>
+        <div id="header"></div>
+        <div id="main">
+                
         </div>
     </div>
 </body>
 <script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/reconnecting-websocket.min.js"></script>
+<script type="text/javascript" src="./script/js.js"></script>
 <script type="text/javascript">
-    
-    var launchRemoved = false;
-    var loadingRemoved = false;
-    
-	apiready = function(){
-        api.setStatusBarStyle({
-            style: 'light'
+    var domain = 'demo.isaveu.cn';
+    apiready = function(){
+        connect();  //发起WebSocket
+        var main = $api.byId('main');
+        var mainPos = $api.offset(main);
+        // var uzgetuisdk = api.require('pushGeTui');
+        // uzgetuisdk.initialize(function (ret) {
+        //     var value = "";
+        //     switch (ret.type) {
+        //         case 'cid':
+        //             // value = 'cid:' + ret.cid;
+        //             window.localStorage.setItem("Cid", ret.cid);
+        //             $api.setStorage('Cid', ret.cid);
+        //             break;
+        //         case 'payload':
+        //             value = 'payload:' + ret.payload;
+        //             break;
+        //         case 'occurError':
+        //             value = 'occurError';
+        //             break;
+        //         case'onNotificationMessageClicked':
+        //             value = 'onNotificationMessageClicked' + ret.onNotificationMessageClicked
+        //             break;
+        //         case'onNotificationMessageArrived':
+        //             value = 'onNotificationMessageArrived' + ret.onNotificationMessageArrived
+        //             break;
+        //         }
+        // });
+        var pedometer = api.require('pedometer');
+        pedometer.startCount(function (ret) {
+            // alert(ret.steps);
         });
-        api.openFrame({
-            name: 'main',
-            url: 'https://demo.isaveu.cn/wcsources/#/home',
-            bounces: false,
-            rect: {
-                w: 'auto',
-                h: 'auto'
-            },
-            progress:{
-                type:'page'
-            }
-        });
-		api.setFrameClient({
-		    frameName:'main'
-		},function(ret){
-		    onBrowserStateChange(ret);
-		});
-		removeLogic();
-        api.addEventListener({
-            name: 'keyback'
-        }, function(ret, err){
-            api.historyBack({
-                frameName:'main'
-            },function(ret,err){
-                if(!ret.status){
-                    api.closeWidget();
-                }
+
+        var access_token = $api.getStorage('access_token');
+        // 判断当前用户是否登录了
+        if (access_token) {
+            // 登录成功，打开个人中心Window
+            api.openWin({
+                name: 'index',
+                url: './web/index.html'
             });
-        });
-		removeLogic();
+        } else {
+            // 没有登录，打开登录Window
+            api.openWin({
+                name: 'login',
+                url: './web/login.html'
+            });
+        }
     };
-
-	function onBrowserStateChange(ret){
-    	if(0 == ret.state){//开始加载
-			if(!launchRemoved){
-				launchRemoved = true;
-				removeLaunch();
-			}
-    	}
-    	if(2 == ret.state){
-    		if(!loadingRemoved){
-    			loadingRemoved = true;
-    			document.getElementById('loading').style.display = 'none';
-    		}
-    	}
+     // 连接服务端
+    function connect() {
+        // 创建websocket
+        var ws = new ReconnectingWebSocket('wss://'+domain+':7272');
+        // 当socket连接打开时，输入用户名
+        //ws.onopen = onopen;
+        // 当有消息时根据消息类型显示不同信息
+        ws.onmessage = function(e){
+            // json数据转换成js对象
+            var data = eval("(" + e.data + ")");
+            var type = data.type || '';
+            var token = $api.getStorage("access_token");
+            switch (type) {
+                // Events.php中返回的init类型的消息，将client_id发给后台进行uid绑定
+                case 'init':
+                    $api.setStorage("clientId", data.client_id);
+                    $api.post({
+                        url:getUrl('bind'),
+                        method:'post',
+                        data:{
+                            client_id: data.client_id,
+                            access_token: token
+                        }
+                    },function(ret,err){
+                            alert(res.data);
+                            console.log(res.data);
+                    });
+                    break;
+                case 'watch_login'://手表绑定
+                    $api.setStorage("access_token", data.access_token);
+                    $api.setStorage("user_id", data.user_id);
+                    var newtime = getNowFormatDate();
+                    $api.setStorage("login_time", newtime);
+                    ws.send('{"type":"watch_login_on","user_id":"'+data.user_id+'"}');
+                    api.openWin({
+                        name: 'main',
+                        url: './web/index.html',
+                        bounces: true,
+                        rect: {
+                            x: 0,
+                            y: 0,
+                            w: 'auto',
+                            h: mainPos.h
+                        }
+                    });
+                    break;
+                case 'call'://呼叫服务
+                    // alert(data.msg);
+                    if(data.data.data.length > 0){
+                        api.openWin({
+                            name: 'call',
+                            url: './web/call.html',
+                            bounces: true,
+                            rect: {
+                                x: 0,
+                                y: 0,
+                                w: 'auto',
+                                h: mainPos.h
+                            },
+                            pageParam: {
+                                cont_id:data.data.service_cont_id,
+                                name:data.data.data[0].name,
+                                num:data.data.data.length,
+                                box:data.data.box_name
+                            }
+                        });
+                        // window.location.href = window.location.href + '?cont_id=' + data.data.service_cont_id + '&name=' + data.data.data[0].name + '&num=' + data.data.data.length + '&box=' + data.data.box_name;
+                    }
+                    if(data.data.data.length == 0){
+                        // window.location.href = window.location.href + '?cont_id=' + data.data.service_cont_id + '&name=' + '异常' + '&num=' + data.data.data.length + '&box=' + data.data.box_name;
+                        api.openFrame({
+                            name: 'call',
+                            url: './web/call.html',
+                            bounces: true,
+                            rect: {
+                                x: 0,
+                                y: 0,
+                                w: 'auto',
+                                h: mainPos.h
+                            },
+                            pageParam: {
+                                cont_id: data.data.service_cont_id,
+                                name:'异常',
+                                num:data.data.data.length,
+                                box:data.data.box_name
+                            }
+                        });
+                    }
+                    console.log(data);
+                    break;
+                case 'pager'://呼叫器呼叫
+                    // alert(data.msg);
+                    console.log(data);
+                    if(data.data.data.length > 0){
+                        console.log(111)
+                        window.location.href = window.location.href + '?cont_id=' + data.data.service_cont_id + '&name=' + data.data.data[0].name + '&num=' + data.data.data.length + '&box=' + data.data.box_name;
+                    }
+                    if(data.data.data.length == 0){
+                        console.log(222)
+                        window.location.href = window.location.href + '?cont_id=' + data.data.service_cont_id + '&name=' + '异常' + '&num=' + data.data.data.length + '&box=' + data.data.box_name;
+                    }
+                    break;
+                case 'alarm'://报警
+                    console.log(data);
+                    break;
+                case 'admit'://接单
+                    console.log(data);
+                    break;
+                // 服务端ping客户端
+                case 'ping':
+                    var user_id = window.localStorage.getItem("user_id");
+                    // console.log("type:pong");
+                    ws.send('{"type":"pong","user_id":"'+user_id+'"}');
+                    break;
+                // 当mvc框架调用GatewayClient发消息时直接alert出来
+                case 'watch_login_out':
+                    if(data.getui_id != window.localStorage.getItem('Cid')){
+                        localStorage.removeItem('access_token');
+                        localStorage.removeItem('user_id');
+                        localStorage.removeItem('login_time');
+                        ws.send('{"type":"watch_login_out_ok","getui_id":"'+data.getui_id+'"');
+                        window.location.href = '#/login';
+                    }
+                    break;
+                case 'watch_Login_exit':
+                    localStorage.removeItem('access_token');
+                    localStorage.removeItem('user_id');
+                    localStorage.removeItem('login_time');
+                    ws.send('{"type":"watch_Login_exit_ok","getui_id":"'+data.getui_id+'"');
+                    window.location.href = '#/login';
+                    break;
+                // 登录到别的手表后，进行登出
+                default :
+                    //console.log('当mvc框架调用GatewayClient发消息');
+                    break;
+            }
+        };
+        ws.onerror = function () {
+            console.log("出现错误");
+        };
     }
-	
-	function removeLogic(){
-		setTimeout(function(){
-			if(!launchRemoved){
-				launchRemoved = true;
-				removeLaunch();
-			}
-		}, 3000);
-	}
 
-	function removeLaunch(){
-		api.removeLaunchView({
-			animation:{
-				type:"fade",
-				subType:"from_right",
-				duration:300
-			}
-		});
-	}
+
+    // 服务端发来消息时
+    function onmessage(e) {
+       
+    }
 </script>
 </html>
