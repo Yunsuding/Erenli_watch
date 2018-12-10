@@ -111,7 +111,7 @@
                 case 'call'://呼叫服务
                     // alert(data.msg);
                     if(data.data.data.length > 0){
-                        api.openWin({
+                        api.openFrame({
                             name: 'call',
                             url: './web/call.html',
                             pageParam: {
@@ -151,7 +151,7 @@
                     if(data.data.data.length > 0){
                         // console.log(111)
                         // window.location.href = window.location.href + '?cont_id=' + data.data.service_cont_id + '&name=' + data.data.data[0].name + '&num=' + data.data.data.length + '&box=' + data.data.box_name;
-                        api.openWin({
+                        api.openFrame({
                             name: 'call',
                             url: './web/call.html',
                             bounces: true,
