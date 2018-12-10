@@ -32,10 +32,12 @@
 <script type="text/javascript" src="../script/js.js"></script>
 <script type="text/javascript">
 	var box = $api.byId('call-box');
-	var name = $api.byId('call-box');
+	var name = $api.byId('call-need');
     apiready = function(){
         var pageParam = api.pageParam;
         alert(JSON.stringify(pageParam));
+        alert(pageParam.box);
+        alert(pageParam('box'));
         var box = pageParam.box;
         var name = pageParam.name;
         box.innerHTML = box;

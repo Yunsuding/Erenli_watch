@@ -23,6 +23,10 @@
     var domain = 'demo.isaveu.cn';
     apiready = function(){
         initPushGeTui();  // 初始化个推
+        var Cid = $api.getStorage('Cid');
+        if(Cid && Cid != 'undefined'){
+            initPushGeTui();
+        }
         initPedometer();  //开启计步
         connect();  //发起WebSocket
         var access_token = $api.getStorage('access_token');
@@ -55,7 +59,6 @@
             var data = eval("(" + e.data + ")");
             var type = data.type || '';
             var token = $api.getStorage("access_token");
-            alert(type);
             switch (type) {
                 // Events.php中返回的init类型的消息，将client_id发给后台进行uid绑定
                 case 'init':
@@ -79,20 +82,10 @@
                     ws.send('{"type":"watch_login_on","user_id":"'+data.user_id+'"}');
                     break;
                 case 'call'://呼叫服务
-                    if(data.data.data.length > 0){
-                        goCall(data);
-                    }else if(data.data.data.length == 0){
-                        data.data.data[0].name = '异常';
-                        goCall(data);
-                    }
+                    goCall(data);
                     break;
                 case 'pager'://呼叫器呼叫
-                    if(data.data.data.length > 0){
-                        goCall(data);
-                    }else if(data.data.data.length == 0){
-                        data.data.data[0].name = '异常';
-                        goCall(data);
-                    }
+                    goCall(data);
                     break;
                 case 'alarm'://报警
                     console.log(data);
@@ -157,7 +150,9 @@
     }
     // 打开服务窗
     function goCall(data) {
-        alert(JSON.stringify(data));
+        if(data.data.data.length == 0){
+            data.data.data[0].name = '异常';
+        }
         api.openWin({
             name: 'call',
             url: './web/call.html',
