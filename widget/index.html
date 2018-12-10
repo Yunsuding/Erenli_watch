@@ -6,15 +6,15 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>E人力智能人力系统</title>
     <link rel="stylesheet" type="text/css" href="./css/api.css" />
-    
+
 </head>
 <body>
-    <div id="wrap">
-        <div id="header"></div>
-        <div id="main">
-                
-        </div>
+<div id="wrap">
+    <div id="header"></div>
+    <div id="main">
+
     </div>
+</div>
 </body>
 <script type="text/javascript" src="./script/api.js"></script>
 <script type="text/javascript" src="./script/reconnecting-websocket.min.js"></script>
@@ -25,29 +25,29 @@
         connect();  //发起WebSocket
         var main = $api.byId('main');
         var mainPos = $api.offset(main);
-        var uzgetuisdk = api.require('pushGeTui');
-        uzgetuisdk.initialize(function (ret) {
-            var value = "";
-            switch (ret.type) {
-                case 'cid':
-                    // value = 'cid:' + ret.cid;
-                    // window.localStorage.setItem("Cid", ret.cid);
-                    $api.setStorage('Cid', ret.cid);
-                    break;
-                case 'payload':
-                    value = 'payload:' + ret.payload;
-                    break;
-                case 'occurError':
-                    value = 'occurError';
-                    break;
-                case'onNotificationMessageClicked':
-                    value = 'onNotificationMessageClicked' + ret.onNotificationMessageClicked
-                    break;
-                case'onNotificationMessageArrived':
-                    value = 'onNotificationMessageArrived' + ret.onNotificationMessageArrived
-                    break;
-                }
-        });
+        // var uzgetuisdk = api.require('pushGeTui');
+        // uzgetuisdk.initialize(function (ret) {
+        //     var value = "";
+        //     switch (ret.type) {
+        //         case 'cid':
+        //             // value = 'cid:' + ret.cid;
+        //             window.localStorage.setItem("Cid", ret.cid);
+        //             $api.setStorage('Cid', ret.cid);
+        //             break;
+        //         case 'payload':
+        //             value = 'payload:' + ret.payload;
+        //             break;
+        //         case 'occurError':
+        //             value = 'occurError';
+        //             break;
+        //         case'onNotificationMessageClicked':
+        //             value = 'onNotificationMessageClicked' + ret.onNotificationMessageClicked
+        //             break;
+        //         case'onNotificationMessageArrived':
+        //             value = 'onNotificationMessageArrived' + ret.onNotificationMessageArrived
+        //             break;
+        //         }
+        // });
         var pedometer = api.require('pedometer');
         pedometer.startCount(function (ret) {
             // alert(ret.steps);
@@ -69,7 +69,7 @@
             });
         }
     };
-     // 连接服务端
+    // 连接服务端
     function connect() {
         // 创建websocket
         var ws = new ReconnectingWebSocket('wss://'+domain+':7272');
@@ -93,8 +93,8 @@
                             access_token: token
                         }
                     },function(ret,err){
-                            alert(res.data);
-                            console.log(res.data);
+                        alert(res.data);
+                        console.log(res.data);
                     });
                     break;
                 case 'watch_login'://手表绑定
@@ -163,12 +163,46 @@
                     // alert(data.msg);
                     console.log(data);
                     if(data.data.data.length > 0){
-                        console.log(111)
-                        window.location.href = window.location.href + '?cont_id=' + data.data.service_cont_id + '&name=' + data.data.data[0].name + '&num=' + data.data.data.length + '&box=' + data.data.box_name;
+                        // console.log(111)
+                        // window.location.href = window.location.href + '?cont_id=' + data.data.service_cont_id + '&name=' + data.data.data[0].name + '&num=' + data.data.data.length + '&box=' + data.data.box_name;
+                        api.openWin({
+                            name: 'call',
+                            url: './web/call.html',
+                            bounces: true,
+                            rect: {
+                                x: 0,
+                                y: 0,
+                                w: 'auto',
+                                h: mainPos.h
+                            },
+                            pageParam: {
+                                cont_id:data.data.service_cont_id,
+                                name:data.data.data[0].name,
+                                num:data.data.data.length,
+                                box:data.data.box_name
+                            }
+                        });
                     }
                     if(data.data.data.length == 0){
-                        console.log(222)
-                        window.location.href = window.location.href + '?cont_id=' + data.data.service_cont_id + '&name=' + '异常' + '&num=' + data.data.data.length + '&box=' + data.data.box_name;
+                        api.openFrame({
+                            name: 'call',
+                            url: './web/call.html',
+                            bounces: true,
+                            rect: {
+                                x: 0,
+                                y: 0,
+                                w: 'auto',
+                                h: mainPos.h
+                            },
+                            pageParam: {
+                                cont_id: data.data.service_cont_id,
+                                name:'异常',
+                                num:data.data.data.length,
+                                box:data.data.box_name
+                            }
+                        });
+                        // console.log(222)
+                        // window.location.href = window.location.href + '?cont_id=' + data.data.service_cont_id + '&name=' + '异常' + '&num=' + data.data.data.length + '&box=' + data.data.box_name;
                     }
                     break;
                 case 'alarm'://报警
@@ -214,7 +248,7 @@
 
     // 服务端发来消息时
     function onmessage(e) {
-       
+
     }
 </script>
 </html>
