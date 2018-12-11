@@ -13,7 +13,7 @@
 </head>
 <body>
     <div class="base-background base-columnAcJc">
-		<img class="back" src="../image/back.png" tapmode onclick="api.closeFrame();">
+		<img style="width: 60px" class="back" src="../image/back.png" tapmode onclick="api.closeFrame();">
 		<!-- 所有需求 -->
 		<div class="all-need">
 			<p class="need-num">呼叫内容:</p>
@@ -24,22 +24,19 @@
 </body>
 
 <script id="evaluationtmpl" type="text/x-dot-template">
-	{{ for(var prop in it) { }}
-	<li class="need-num">{{= prop }}.{{= it[prop].name }}</li>
+	{{ for(var key in it) { }}
+	<li class="need-num">{{= key }}.{{= it[key].name }}</li>
 	{{ } }}
 </script>
 <script type="text/javascript" src="../script/api.js"></script>
+<script src="https://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
 <script type="text/javascript" src="../script/doT.min.js"></script>
 <script type="text/javascript">
     apiready = function(){
         var pageParam = api.pageParam;
-        alert(JSON.stringify(pageParam.name));
         templates(pageParam.name);
     };
-
     function templates(data) {
-
-        alert(JSON.stringify(data));
         var evalText = doT.template($("#evaluationtmpl").text());
         $("#evaluation").html(evalText(data));
     }
