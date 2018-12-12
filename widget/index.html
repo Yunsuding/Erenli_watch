@@ -22,6 +22,7 @@
 <script type="text/javascript">
     var domain = 'demo.isaveu.cn';
     apiready = function(){
+        $api.rmStorage("clientId");
         initPushGeTui();  // 初始化个推
         initPedometer();  //开启计步
         var Cid = $api.getStorage('Cid');
@@ -46,7 +47,6 @@
     }
     // WebSocket连接
     function connect() {
-        $api.rmStorage("clientId");
         // 创建websocket
         var ws = new ReconnectingWebSocket('wss://'+domain+':7272');
         // 当socket连接打开时，输入用户名
