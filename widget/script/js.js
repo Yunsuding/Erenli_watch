@@ -33,6 +33,9 @@ function getUrl(e){
         case 'bind':
             return domain+'/human/api.index/bind';
         break;
+        case 'getSteps':
+            return domain+'/human/api.watch/steps';
+            break;
         default :
             return domain+'/human/api.watch/watch_Login_out';
         break;

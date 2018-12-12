@@ -100,14 +100,46 @@
                 });
 			});
 		}
+        var Steps = 0;
+		var getI = 0;
  		function getSteps(){
  			var pedometer = api.require('pedometer');
 			pedometer.getSteps(function(ret) {
 			    // alert(ret.steps);
-			    marTen.innerHTML = ret.steps;
+                Steps = ret.steps;
+                if(Steps == 0 && getI == 0){
+                    var getSteps = getSteps();
+                    if(getSteps != 0){
+                        $api.setStorage('getSteps', getSteps);
+                        Steps = getSteps + Steps;
+					}
+				}
+			    marTen.innerHTML = Steps;
 			});
+            getI++;
             window.setTimeout(function() {getSteps();}, 5000);
  		}
+ 		function getSteps() {
+ 		    var data = 0;
+            api.ajax({
+                url: getUrl('getSteps'),
+                method: 'post',
+                data: {
+                    values:{
+                        access_token:access_token
+                    }
+                }
+            },function(ret, err){
+                // alert(JSON.stringify(ret) );
+                if (ret.code == 0) {
+                    // api.toast();
+                    data =  ret.data;
+                } else {
+                    api.alert(ret.msg);
+                }
+            });
+            return data;
+        }
 	</script>
 </body>
 </html>
