@@ -21,6 +21,7 @@
 <script type="text/javascript" src="./script/js.js"></script>
 <script type="text/javascript">
     var domain = 'demo.isaveu.cn';
+    $api.rmStorage('clientId');
     apiready = function(){
         initPushGeTui();  // 初始化个推
         initPedometer();  //开启计步
@@ -59,7 +60,7 @@
             switch (type) {
                 // Events.php中返回的init类型的消息，将client_id发给后台进行uid绑定
                 case 'init':
-                    if($api.getStorage('clientId')){
+                    if($api.getStorage('clientId') && $api.getStorage('clientId') != 'undefined'){
                         $api.rmStorage('clientId');
                     }
                     $api.setStorage("clientId", data.client_id);
@@ -169,7 +170,7 @@
 
     // 打开登录窗口
     function goLogin() {
-        if($api.getStorage('clientId')){
+        if($api.getStorage('clientId') && $api.getStorage('clientId') != 'undefined'){
             api.openWin({
                 name: 'login',
                 url: './web/login.html',
