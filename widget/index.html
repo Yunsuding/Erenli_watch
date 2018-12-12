@@ -70,10 +70,9 @@
                     }
                     break;
                 case 'watch_login'://手表绑定
+                    alert(type);
                     $api.setStorage("access_token", data.access_token);
                     $api.setStorage("user_id", data.user_id);
-                    var newtime = getNowFormatDate();
-                    $api.setStorage("login_time", newtime);
                     getBind();
                     goIndex();
                     ws.send('{"type":"watch_login_on","user_id":"'+data.user_id+'"}');
