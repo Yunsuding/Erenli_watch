@@ -90,9 +90,17 @@
                     break;
                 // 服务端ping客户端
                 case 'ping':
-                    var user_id = $api.getStorage('user_id');
-                    // console.log("type:pong");
-                    ws.send('{"type":"pong","user_id":"'+user_id+'"}');
+                    if(token && token != 'undefined'){
+                        var user_id = $api.getStorage('user_id');
+                        var pedometer = api.require('pedometer');
+                        var steps = 0;
+                        pedometer.getSteps(function(ret) {
+                            steps = ret.steps;
+                        });
+                        ws.send('{"type":"pong","is_watch":"1","user_id":"'+user_id+'","Countsteps":"'+ steps +'"}');
+                    }else{
+                        ws.send('{"type":"pong","is_watch":"1"}');
+                    }
                     break;
                 // 当mvc框架调用GatewayClient发消息时直接alert出来
                 case 'watch_login_out':

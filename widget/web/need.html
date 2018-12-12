@@ -25,11 +25,10 @@
 
 <script id="evaluationtmpl" type="text/x-dot-template">
 	{{ for(var key in it) { }}
-	<li class="need-num">{{= key }}.{{= it[key].name }}</li>
+	<li class="need-num">{{= key }}.{{= it[key].name }}*{{= it[key].num }}</li>
 	{{ } }}
 </script>
 <script type="text/javascript" src="../script/api.js"></script>
-<script src="https://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
 <script type="text/javascript" src="../script/doT.min.js"></script>
 <script type="text/javascript">
     apiready = function(){
