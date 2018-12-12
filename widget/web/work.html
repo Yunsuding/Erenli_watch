@@ -14,17 +14,20 @@
 </head>
 <body>
     <div class="base-background base-columnAcJc">
-        <ul>
+        <p class="working-gray" id="Idle" tapmode onclick="fnWorkStatus(2);">空闲</p>
+        <p class="working-gray" id="Busy" tapmode onclick="fnWorkStatus(1);">繁忙</p>
+        <p class="working-gray" id="Leave" tapmode onclick="fnWorkStatus(0);">离开</p>
+        <!-- <ul>
             <li><input type="radio" name="radio" value="2" data-labelauty="空闲"></li>
             <li><input type="radio" name="radio" value="1" data-labelauty="繁忙"></li>
             <li><input type="radio" name="radio" value="0" data-labelauty="离开"></li>
-        </ul>
+        </ul> -->
 	</div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/js.js"></script>
-<script src="../script/jquery-1.8.3.min.js"></script>
-<script src="../script/jquery-labelauty.js"></script>
+<!-- <script src="../script/jquery-1.8.3.min.js"></script>
+<script src="../script/jquery-labelauty.js"></script> -->
 <script type="text/javascript">
     var Idle = $api.byId('Idle');
     var Busy = $api.byId('Busy');
@@ -33,9 +36,10 @@
         getMine();
 
     };
-    $(function(){
-        $(':input').labelauty();
-    });
+    // $(function(){
+    //     $(':input').labelauty();
+    // });
+
     function getMine() {
         api.ajax({
             url: getUrl('getMine'),
@@ -48,15 +52,11 @@
         },function(ret, err){
             if (ret.code == 0) {
                 switch (ret.data.work_status) {
-                    // 返回个推平台上的ID
                     case '0':
                         Leave.addCls('working-green');
                         break;
-                    // 返回消息内容
                     case '1':
                         Busy.addCls('working-green');
-                        // 解析消息体
-                        // fnParsePayLoad(ret.payload);
                         break;
                     case '2':
                         Idle.addCls('working-green');
@@ -64,13 +64,41 @@
                     default:
                         break;
                 }
+                // var input = $(':input');
+                // var selectvalue=null; 
+                // for (var i = input.length - 1; i >= 0; i--) {
+                //      if(radio[i].val==ret.data.work_status) {
+                //             $("input[name='radio']").eq(i).attr("checked","checked");
+                //             $("input[name='radio']").eq(i).click();
+                //              break;
+                //    }
+                // }
             } else {
                 api.alert(ret.msg);
             }
         });
     };
     function fnWorkStatus(e) {
-        $api.getElementsByClassName('')
+        $api.getElementsByClassName('base-columnAcJc').removeCls('working-green');
+        $(this).addCls('working-green');
+        api.ajax({
+            url: getUrl('editWorkStatus'),
+            method: 'post',
+            data: {
+                values:{
+                    work_status:e,
+                    access_token:access_token
+                }
+            }
+        },function(ret, err){
+            if (ret.code == 0) {
+                api.toast('更改成功！');
+                api.closeFrame(); 
+            } else {
+                api.alert(ret.msg);
+            }
+        });
     }
+
 </script>
 </html>

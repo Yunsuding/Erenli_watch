@@ -92,7 +92,7 @@
                 case 'ping':
                     if(token && token != 'undefined'){
                         var user_id = $api.getStorage('user_id');
-                        var allSteps = $api.getStorage('getSteps');
+                        var allSteps = window.localStorage.getItem("getSteps");
                         if(!allSteps || allSteps == 'undefined'){
                             allSteps = 0;
                         }

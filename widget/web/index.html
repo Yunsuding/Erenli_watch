@@ -112,7 +112,7 @@
                     if(getSteps != 0){
                         Steps = getSteps + Steps;
 					}
-                    $api.setStorage('getSteps', Steps);
+                    window.localStorage.setItem("getSteps", Steps);
 				}
 			    marTen.innerHTML = Steps;
 			});
