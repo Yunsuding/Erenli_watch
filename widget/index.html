@@ -20,7 +20,6 @@
 <script type="text/javascript" src="./script/reconnecting-websocket.min.js"></script>
 <script type="text/javascript" src="./script/js.js"></script>
 <script type="text/javascript">
-    $api.rmStorage("clientId");
     var domain = 'demo.isaveu.cn';
     apiready = function(){
         initPushGeTui();  // 初始化个推
@@ -60,6 +59,9 @@
             switch (type) {
                 // Events.php中返回的init类型的消息，将client_id发给后台进行uid绑定
                 case 'init':
+                    if($api.getStorage('clientId')){
+                        $api.rmStorage('clientId');
+                    }
                     $api.setStorage("clientId", data.client_id);
                     ws.send('{"type":"watch_login_init","clientId":"'+data.client_id+'"}');
                     if(token && token != 'undefined'){
