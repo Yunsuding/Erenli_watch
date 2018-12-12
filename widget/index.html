@@ -101,7 +101,7 @@
                         if(allSteps && allSteps != 'undefined'){
                             steps = steps + allSteps;
                         }
-                        ws.send('{"type":"pong","is_watch":"1","user_id":"'+user_id+'","Countsteps":"'+ steps +'"}');
+                        ws.send('{"type":"pong","is_watch":"1","user_id":"'+user_id+'","count_steps":"'+ steps +'"}');
                     }else{
                         ws.send('{"type":"pong","is_watch":"1"}');
                     }
