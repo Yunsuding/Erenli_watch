@@ -169,10 +169,15 @@
 
     // 打开登录窗口
     function goLogin() {
-        api.openWin({
-            name: 'login',
-            url: './web/login.html',
-        });
+        if($api.getStorage('clientId')){
+            api.openWin({
+                name: 'login',
+                url: './web/login.html',
+            });
+        }else{
+            window.setTimeout(function() {goLogin();}, 500);
+        }
+
     }
     // 打开服务窗
     function goCall(data) {
