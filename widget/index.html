@@ -25,6 +25,7 @@
         initPushGeTui();  // 初始化个推
         initPedometer();  //开启计步
         var Cid = $api.getStorage('Cid');
+        connect();  //发起WebSocket
         var access_token = $api.getStorage('access_token');
         // 判断当前用户是否登录了
         if (access_token && access_token != 'undefined') {
@@ -34,7 +35,6 @@
             // 没有登录，打开登录Window
             goLogin();
         }
-        connect();  //发起WebSocket
     };
 
     // 开启计步
@@ -46,6 +46,7 @@
     }
     // WebSocket连接
     function connect() {
+        $api.rmStorage("clientId");
         // 创建websocket
         var ws = new ReconnectingWebSocket('wss://'+domain+':7272');
         // 当socket连接打开时，输入用户名
@@ -66,6 +67,7 @@
                     }
                     break;
                 case 'watch_login'://手表绑定
+                    alert(type);
                     $api.setStorage("access_token", data.access_token);
                     $api.setStorage("user_id", data.user_id);
                     var newtime = getNowFormatDate();
@@ -194,7 +196,6 @@
     }
     // 初始化第三方推送模块，个推
     function initPushGeTui() {
-
         var pushGeTui = api.require('pushGeTui');
 
         // 注册设备和应用信息到个推

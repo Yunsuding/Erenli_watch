@@ -59,12 +59,12 @@
                     alert(JSON.stringify(err));
                 }
             });
+            window.setTimeout(function() {FNScanner();}, 30000);
         }
 		function ONchagecode(res){
 			var codelogin = $api.byId('qrcode_login'),
 				userlogin = $api.byId('number_login');
 			if(res == 1){
-                FNScanner();
 				codelogin.style.display = 'block';
 				userlogin.style.display = 'none';		
 			}else{
