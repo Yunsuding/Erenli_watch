@@ -23,11 +23,8 @@
     var domain = 'demo.isaveu.cn';
     apiready = function(){
         initPushGeTui();  // 初始化个推
-        var Cid = $api.getStorage('Cid');
-        if(!Cid || Cid != 'undefined'){
-            fetchClientId();
-        }
         initPedometer();  //开启计步
+        var Cid = $api.getStorage('Cid');
         var access_token = $api.getStorage('access_token');
         // 判断当前用户是否登录了
         if (access_token && access_token != 'undefined') {
@@ -63,6 +60,7 @@
                 // Events.php中返回的init类型的消息，将client_id发给后台进行uid绑定
                 case 'init':
                     $api.setStorage("clientId", data.client_id);
+                    ws.send('{"type":"watch_login_init","clientId":"'+data.client_id+'"}');
                     if(token && token != 'undefined'){
                         getBind();
                     }
@@ -152,7 +150,6 @@
             }
         }, function(ret, err) {
             if (ret.code == 0) {
-                alert(JSON.stringify(ret));
                 ws.send('{"type":"watch_login_init"}');
             } else {
                 alert(JSON.stringify(ret));
