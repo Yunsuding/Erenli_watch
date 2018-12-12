@@ -98,7 +98,7 @@
                         pedometer.getSteps(function(ret) {
                             steps = ret.steps;
                         });
-                        if(allSteps && allStep != 'undefined'){
+                        if(allSteps && allSteps != 'undefined'){
                             steps = steps + allSteps;
                         }
                         ws.send('{"type":"pong","is_watch":"1","user_id":"'+user_id+'","Countsteps":"'+ steps +'"}');

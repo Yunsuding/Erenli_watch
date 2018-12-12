@@ -3,8 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
-    <title>title</title>
-    <link rel="stylesheet" type="text/css" href="api.css"/>
+    <title>工作状态</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" href="../css/jquery-labelauty.css">
     <style>
         body{
             
@@ -13,17 +14,63 @@
 </head>
 <body>
     <div class="base-background base-columnAcJc">
-		<!-- 高总请注意=> 选中的时候class=>working-green -->
-		<!-- 高总请注意=> 未选中时候class=>working-gray -->
-		<p class="working-green">空闲</p>
-		<p class="working-gray">繁忙</p>
-		<p class="working-gray">离开</p>
+        <ul>
+            <li><input type="radio" name="radio" value="2" data-labelauty="空闲"></li>
+            <li><input type="radio" name="radio" value="1" data-labelauty="繁忙"></li>
+            <li><input type="radio" name="radio" value="0" data-labelauty="离开"></li>
+        </ul>
 	</div>
 </body>
-<script type="text/javascript" src="api.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/js.js"></script>
+<script src="../script/jquery-1.8.3.min.js"></script>
+<script src="../script/jquery-labelauty.js"></script>
 <script type="text/javascript">
+    var Idle = $api.byId('Idle');
+    var Busy = $api.byId('Busy');
+    var Leave = $api.byId('Leave');
     apiready = function(){
-        
+        getMine();
+
     };
+    $(function(){
+        $(':input').labelauty();
+    });
+    function getMine() {
+        api.ajax({
+            url: getUrl('getMine'),
+            method: 'post',
+            data: {
+                values:{
+                    access_token:access_token
+                }
+            }
+        },function(ret, err){
+            if (ret.code == 0) {
+                switch (ret.data.work_status) {
+                    // 返回个推平台上的ID
+                    case '0':
+                        Leave.addCls('working-green');
+                        break;
+                    // 返回消息内容
+                    case '1':
+                        Busy.addCls('working-green');
+                        // 解析消息体
+                        // fnParsePayLoad(ret.payload);
+                        break;
+                    case '2':
+                        Idle.addCls('working-green');
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                api.alert(ret.msg);
+            }
+        });
+    };
+    function fnWorkStatus(e) {
+        $api.getElementsByClassName('')
+    }
 </script>
 </html>

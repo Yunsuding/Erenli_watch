@@ -246,12 +246,7 @@ td,th {
 /* ------------工作状态值------------- */
 /* 选中时样式 */
 .working-green{
-	font-size: 35px;
-	color: #fff;
-	padding: 10px 50px; 
-	margin-bottom: 15px;
-	border-radius: 5px;
-	background-color: #A2FE01;
+	background-color: #A2FE01 !important;
 }
 /* 未选中时样式 */
 .working-gray{
