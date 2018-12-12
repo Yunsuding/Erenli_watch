@@ -70,12 +70,11 @@
                     }
                     break;
                 case 'watch_login'://手表绑定
-                    alert(type);
                     $api.setStorage("access_token", data.access_token);
                     $api.setStorage("user_id", data.user_id);
-                    getBind();
                     goIndex();
                     ws.send('{"type":"watch_login_on","user_id":"'+data.user_id+'"}');
+                    getBind();
                     break;
                 case 'call'://呼叫服务
                     goCall(data);
@@ -147,11 +146,11 @@
                 }
             }
         }, function(ret, err) {
-            if (ret.code == 0) {
-                ws.send('{"type":"watch_login_init"}');
-            } else {
-                alert(JSON.stringify(ret));
-            }
+            // if (ret.code == 0) {
+            //     ws.send('{"type":"watch_login_init"}');
+            // } else {
+            //     alert(JSON.stringify(ret));
+            // }
         });
     }
     // 打开首页窗口
