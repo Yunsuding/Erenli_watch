@@ -33,6 +33,13 @@
 		}
 		function FNScanner() {
             var cid = $api.getStorage('Cid');
+            if(!cid){
+            	var uzgetuisdk = api.require('pushGeTui');
+            	uzgetuisdk.fetchClientId(function(ret, err) {
+            		cid = ret.cid;
+            	    $api.setStorage('Cid', ret.cid);
+            	});
+            }
             var clientId = $api.getStorage("clientId");
             var FNScanner = api.require('FNScanner');
             var codecontent = clientId+'|'+cid;
