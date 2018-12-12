@@ -110,9 +110,9 @@
                 if(Steps == 0 && getI == 0){
                     var getSteps = getStepsnum();
                     if(getSteps != 0){
-                        $api.setStorage('getSteps', getSteps);
                         Steps = getSteps + Steps;
 					}
+                    $api.setStorage('getSteps', Steps);
 				}
 			    marTen.innerHTML = Steps;
 			});
