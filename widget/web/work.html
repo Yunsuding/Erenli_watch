@@ -13,17 +13,15 @@
 </head>
 <body>
     <div class="base-background base-columnAcJc">
-        <p class="working-gray" id="Idle" tapmode onclick="fnWorkStatus(2);">空闲</p>
-        <p class="working-gray" id="Busy" tapmode onclick="fnWorkStatus(1);">繁忙</p>
-        <p class="working-gray" id="Leave" tapmode onclick="fnWorkStatus(0);">离开</p>
+        <p class="working-gray" data-value='2' >空闲</p>
+        <p class="working-gray" data-value='1'>繁忙</p>
+        <p class="working-gray" data-value='0'>离开</p>
 	</div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/js.js"></script>
+<script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
 <script type="text/javascript">
-    var Idle = $api.byId('Idle');
-    var Busy = $api.byId('Busy');
-    var Leave = $api.byId('Leave');
     apiready = function(){
         getMine();
         api.addEventListener({
@@ -38,8 +36,9 @@
             });
         });
     };
-
+     // 初始化选中
     function getMine() {
+        var classname = document.getElementsByClassName("working-gray");
         api.ajax({
             url: getUrl('getMine'),
             method: 'post',
@@ -50,45 +49,45 @@
             }
         },function(ret, err){
             if (ret.code == 0) {
-                switch (ret.data.work_status) {
-                    case '0':
-                        Leave.addCls('working-green');
-                        break;
-                    case '1':
-                        Busy.addCls('working-green');
-                        break;
-                    case '2':
-                        Idle.addCls('working-green');
-                        break;
-                    default:
-                        break;
+                for (var i = classname.length - 1; i >= 0; i--) {
+                    if(classname[i].dataset.value == ret.data.work_status){
+                        classname[i].classList.add("working-green");
+                    }
                 }
             } else {
                 api.alert(ret.msg);
             }
         });
     };
-    function fnWorkStatus(e) {
-        $api.getElementsByClassName('base-columnAcJc').removeCls('working-green');
-        $(this).addCls('working-green');
+    $(".working-gray").click(function(){
+        var work_status = $(this).data('value');
         api.ajax({
             url: getUrl('editWorkStatus'),
             method: 'post',
             data: {
                 values:{
-                    work_status:e,
+                    work_status: work_status,
                     access_token:access_token
                 }
             }
         },function(ret, err){
             if (ret.code == 0) {
-                api.toast('更改成功！');
-                api.closeFrame(); 
+                $(this).addClass("working-green").siblings().removeClass("working-green");
+                api.alert({
+                    title: '提示',
+                    msg: '更改成功',
+                }, function(ret, err) {
+                    api.openWin({
+                        name: 'index',
+                        url: './index.html'
+                    });
+                });
             } else {
                 api.alert(ret.msg);
             }
         });
-    }
+    });
+    
 
 </script>
 </html>
