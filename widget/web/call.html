@@ -23,12 +23,8 @@
 			<p id="call-details" class="call-details" tapmode onclick="fnOpenneed(api.pageParam.data);">详情</p>
 		</div>
 		<!-- 接单按钮 -->
-		<div class="finish-btn" style="display: block">
-			<p class="btn-txet" tapmode onclick="fnCallon(api.pageParam.cont_id);">立即接单</p>
-		</div>
-		<div class="well-btn" style="display: none">
-			<p class="fault-left" tapmode onclick="fnhandle(api.pageParam.cont_id);">已处理</p>
-			<p class="fault-right" tapmode onclick="fnMisoperation(api.pageParam.cont_id);">误操作</p>
+		<div class="finish-btn">
+			<p class="btn-txet" tapmode onclick="fnCallon(api.pageParam);">立即接单</p>
 		</div>
 	</div>
 </body>
@@ -61,8 +57,6 @@
     
     // 立即接单
 	function fnCallon(data) {
-        var finish = $api.getElementsByClassName('finish-btn');
-        var well = $api.getElementsByClassName('well-btn');
         api.ajax({
             url: getUrl('admit'),
             method: 'post',
@@ -74,83 +68,19 @@
             }
         },function(ret, err){
             if (ret.code == 0) {
-                finish.style.display = 'none';
-                well.style.display = 'block';
+                api.closeFrame();
+                api.openFrame({
+                    name: 'callon',
+                    url: './callon.html',
+                    pageParam: {
+                        data: data
+                    }
+                });
             } else {
                 api.alert(ret.msg);
             }
         });
     }
-    function fnhandle(data) {
-        api.confirm({
-            title: '服务提示',
-            msg: '是否完成了服务？',
-            buttons: ['确定', '取消']
-        }, function(ret, err) {
-            var index = ret.buttonIndex;
-            if(index == 1){
-                api.ajax({
-                    url: getUrl('call_deal'),
-                    method: 'post',
-                    data: {
-                        values:{
-                            id: data,
-                            status: 1,
-                            access_token:$api.getStorage('access_token')
-                        }
-                    }
-                }, function(ret, err) {
-                    if (ret.code == 0) {
-                        // 保存用户信息
-                        api.closeFrame();
-                        api.openFrame({
-                            name: 'award',
-                            url: './award.html'
-                        });
-                    } else {
-                        api.toast({
-                            msg: ret.msg,
-                            duration: 2000,
-                            location: 'middle'
-                        });
-                    }
-                });
-            }
-        });
-    }
-
-    function fnMisoperation() {
-        api.confirm({
-            title: '服务提示',
-            msg: '是否确定客人误按了？',
-            buttons: ['确定', '取消']
-        }, function(ret, err) {
-            var index = ret.buttonIndex;
-            if(index == 1){
-                api.ajax({
-                    url: getUrl('call_deal'),
-                    method: 'post',
-                    data: {
-                        values:{
-                            id: data,
-                            status: 2,
-                            access_token:$api.getStorage('access_token')
-                        }
-                    }
-                }, function(ret, err) {
-                    if (ret.code == 0) {
-                        // 保存用户信息
-                        api.closeFrame();
-                    } else {
-                        api.toast({
-                            msg: ret.msg,
-                            duration: 2000,
-                            location: 'middle'
-                        });
-                    }
-                });
-            }
-        });
-    }
+    
 </script>
 </html>
