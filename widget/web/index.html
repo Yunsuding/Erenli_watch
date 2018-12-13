@@ -112,8 +112,8 @@
                     if(getSteps != 0){
                         Steps = getSteps + Steps;
 					}
-                    window.localStorage.setItem("getSteps", Steps);
 				}
+                $api.setStorage("getSteps", Steps);
 			    marTen.innerHTML = Steps;
 			});
             getI++;
