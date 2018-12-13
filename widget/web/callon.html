@@ -66,7 +66,10 @@
                     if (ret.code == 0) {
                         api.openFrame({
                             name: 'award',
-                            url: './award.html'
+                            url: './award.html',
+                            pageParam: {
+		                        id: data
+		                    }
                         });
                     } else {
                         api.toast({

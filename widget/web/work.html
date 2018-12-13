@@ -28,18 +28,12 @@
         api.addEventListener({
             name:'swiperight'
         }, function(ret, err){
-            api.openFrame({
-                name: 'main',
-                url: './main.html',
-            });
+            api.closeFrame();
         });
         api.addEventListener({
             name:'keyback'
         }, function(ret, err){
-            api.openFrame({
-                name: 'main',
-                url: './main.html',
-            });
+            api.closeFrame();
         });
     };
      // 初始化选中

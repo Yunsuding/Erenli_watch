@@ -72,6 +72,7 @@
                 case 'watch_login'://手表绑定
                     $api.setStorage("access_token", data.access_token);
                     $api.setStorage("user_id", data.user_id);
+                    $api.setStorage("shop_id", data.shop_id);
                     goIndex();
                     ws.send('{"type":"watch_login_on","user_id":"'+data.user_id+'"}');
                     getBind();
@@ -107,8 +108,8 @@
                     if(data.getui_id != Cid){
                         $api.rmStorage('access_token');
                         $api.rmStorage('user_id');
-                        $api.rmStorage('login_time');
                         $api.rmStorage('username');
+                        $api.rmStorage('shop_id');
                         goLogin();
                         ws.send('{"type":"watch_login_out_ok","getui_id":"'+data.getui_id+'"');
                     }
@@ -116,8 +117,8 @@
                 case 'watch_Login_exit':
                     $api.rmStorage('access_token');
                     $api.rmStorage('user_id');
-                    $api.rmStorage('login_time');
                     $api.rmStorage('username');
+                    $api.rmStorage('shop_id');
                     goLogin();
                     ws.send('{"type":"watch_Login_exit_ok","getui_id":"'+data.getui_id+'"');
                     break;
