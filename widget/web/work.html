@@ -13,8 +13,8 @@
 </head>
 <body>
     <div class="base-background base-columnAcJc">
-        <p class="working-gray" data-value='2' >空闲</p>
-        <p class="working-gray" data-value='1'>繁忙</p>
+        <p class="working-gray" data-value='2'>繁忙</p>
+        <p class="working-gray" data-value='1' >空闲</p>
         <p class="working-gray" data-value='0'>离开</p>
 	</div>
 </body>
@@ -28,9 +28,14 @@
         api.addEventListener({
             name:'swiperight'
         }, function(ret, err){
-            api.closeFrame({
-                name: 'work'
+            api.openFrame({
+                name: 'main',
+                url: './main.html',
             });
+        });
+        api.addEventListener({
+            name:'keyback'
+        }, function(ret, err){
             api.openFrame({
                 name: 'main',
                 url: './main.html',
@@ -61,6 +66,7 @@
         });
     };
     $(".working-gray").click(function(){
+        $(this).addClass("working-green").siblings().removeClass("working-green");
         var work_status = $(this).data('value');
         api.ajax({
             url: getUrl('editWorkStatus'),
@@ -73,14 +79,13 @@
             }
         },function(ret, err){
             if (ret.code == 0) {
-                $(this).addClass("working-green").siblings().removeClass("working-green");
                 api.alert({
                     title: '提示',
                     msg: '更改成功',
                 }, function(ret, err) {
-                    api.openWin({
-                        name: 'index',
-                        url: './index.html'
+                    api.openFrame({
+                        name: 'main',
+                        url: './main.html',
                     });
                 });
             } else {
