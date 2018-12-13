@@ -68,13 +68,15 @@
             }
         },function(ret, err){
             if (ret.code == 0) {
-                api.closeFrame();
                 api.openFrame({
                     name: 'callon',
                     url: './callon.html',
                     pageParam: {
                         data: data
                     }
+                });
+                api.closeFrame({
+                    name: 'call'
                 });
             } else {
                 api.alert(ret.msg);
