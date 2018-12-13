@@ -26,7 +26,17 @@
     var Leave = $api.byId('Leave');
     apiready = function(){
         getMine();
-
+        api.addEventListener({
+            name:'swiperight'
+        }, function(ret, err){
+            api.closeFrame({
+                name: 'work'
+            });
+            api.openFrame({
+                name: 'main',
+                url: './main.html',
+            });
+        });
     };
 
     function getMine() {

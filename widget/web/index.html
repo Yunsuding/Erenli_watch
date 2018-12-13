@@ -107,7 +107,7 @@
 			pedometer.getSteps(function(ret) {
 			    // alert(ret.steps);
                 Steps = ret.steps;
-                if(Steps == 0 && getI == 0){
+                if(getI == 0){
                     var getSteps = getStepsnum();
                     if(getSteps != 0){
                         Steps = getSteps + Steps;
