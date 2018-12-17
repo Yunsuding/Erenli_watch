@@ -43,6 +43,9 @@
         }else{
             details.style.display = 'block';
 		}
+        api.closeFrame({
+            name: 'call'
+        });
     };
     function fnhandle(data) {
         api.confirm({

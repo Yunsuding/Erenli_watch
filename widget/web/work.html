@@ -55,7 +55,11 @@
                     }
                 }
             } else {
-                api.alert(ret.msg);
+                if(ret.data.code == '1001'){
+                    getOut();
+                }else{
+                    api.alert(ret.msg);
+                }
             }
         });
     };

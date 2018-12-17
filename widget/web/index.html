@@ -80,7 +80,12 @@
 				        user.innerHTML = ret.data.username;
 				        $api.setStorage('username', ret.data.username);
 				    } else {
-				        api.alert(ret.msg);
+
+				        if(ret.data.code == '1001'){
+                            getOut();
+						}else{
+                            api.alert(ret.msg);
+						}
 			        }
 				});
 			}else{
@@ -99,7 +104,36 @@
                     }
                 });
 			});
+            exitApp();
 		}
+        function exitApp(){
+            api.addEventListener({
+                name: 'keyback'
+            }, function(ret, err){
+                api.toast({
+                    msg: '在次点击返回键退出APP',
+                    duration:2000,
+                    location: 'bottom'
+                });
+
+                api.addEventListener({
+                    name: 'keyback'
+                }, function(ret, err){
+                    $api.setStorage("gesture",false);
+                    api.closeWidget({
+                        id: 'A6097552195788', //这里需要修改为自己的应用ID
+                        retData: {name:'closeWidget'},
+                        silent:true
+                    });
+                });
+
+                setTimeout(function(){
+                    exitApp();
+                },3000)
+            });
+        }
+
+
         var Steps = 0;
 		var getI = 0;
  		function getSteps(){
@@ -135,7 +169,11 @@
                     // api.toast();
                     data =  ret.data;
                 } else {
-                    api.alert(ret.msg);
+                    if(ret.data.code == '1001'){
+                        getOut();
+                    }else{
+                        api.alert(ret.msg);
+                    }
                 }
             });
             return data;

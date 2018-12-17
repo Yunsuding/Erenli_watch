@@ -44,6 +44,11 @@
         }, function(ret, err){
             api.closeFrame();
         });
+        api.addEventListener({
+            name:'keyback'
+        }, function(ret, err){
+            api.closeFrame();
+        });
     };
     // 点击状态
     function fnZht() {
