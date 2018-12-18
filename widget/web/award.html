@@ -23,6 +23,10 @@
 	<script type="text/javascript" src="../script/js.js"></script>
 <script type="text/javascript">
     apiready = function(){
+        api.closeFrame({
+                name: 'callon'
+            }
+        );
         FNScanner(api.pageParam.id);
     }
     function FNScanner(id) {
@@ -47,10 +51,7 @@
         });
     }
     function ONchage(){
-        api.openWin({
-            name: 'index',
-            url: './index.html',
-        });
+        api.closeFrame();
     }
 </script>
 </html>
