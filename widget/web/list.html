@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+	<title>服务订单列表</title>
+	<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+	<style>
+		body{
+
+		}
+	</style>
+</head>
+<body>
+	<div class="base-background base-columnAcJc">
+		<ul id="orderlist">
+			<li class="code-box">
+				<div class="code-left">
+					<p class="code-weizhi">201包厢</p>
+					<p class="code-weizhi">开水<span class="code-details">详情</span></p>
+				</div>
+				<div class="code-right">
+					<p class="code-txt">已核销</p>
+					<p class="call-time">18-11/10:00</p>
+				</div>
+			</li>
+			<li class="code-box">
+				<div class="code-left">
+					<p class="code-weizhi">201包厢</p>
+					<p class="code-weizhi">开水<span class="code-details">详情</span></p>
+				</div>
+				<div class="code-right">
+					<p class="code-txt">已核销</p>
+					<p class="call-time">18-11/10:00</p>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/js.js"></script>
+	<script type="text/javascript">
+        var page =0;
+        var limit = 3;
+        var imgDomain = APPconfig.ApiDomain.ajaxDomain;
+        apiready = function(){
+            api.parseTapmode();
+            //第一页数据
+            initData();
+            //滚动到底部数据
+            scrolltobottomEvent();
+
+
+        };
+        //获取第一页数据
+        function initData(){
+            loadingFullScreen(true);
+            page = 0;
+            var saveName = +'_snsGameID'+api.pageParam.snsGameID+'_page'+page;
+            var saveFolder =  APPconfig.cachefolder.channelVideoList;
+            var ajaxData =  {page:page,snsGameID:api.pageParam.snsGameID};
+            //console.log("---AJAXdATA---"+JSON.stringify(ajaxData));
+            ajaxCacheData2(saveFolder,saveName,'/getshares/bygame',"post",ajaxData,'initData()',function(ret){
+                console.log("--/getshares/bycatalog--"+JSON.stringify(ret));
+                var html = getHtml(ret.data);
+                $api.html($api.byId("videolist"), html);
+                page = page+1;
+            });
+        }
+
+
+        //非第一页 加载更多
+        function getDataByPage(){
+            var ajaxData =  {page:page,snsGameID:api.pageParam.snsGameID};
+            ajaxRequest("/getshares/bygame", "post", ajaxData, function(ret,err){
+                if(ret){
+                    if(ret.code == 200){
+                        if(ret.code.length>0){
+                            var html = getHtml(ret.data);
+                            $api.append($api.byId("videolist"), html);
+                            page = page+1;
+                        }else{
+                            showAllStatus(3);
+                            //mytoast("没有更多数据");
+                        }
+                    }else{
+                        showAllStatus(1);
+                        //mytoast("加载失败");
+                    }
+                }else{
+                    showAllStatus(2);
+                    //mytoast("网络异常");
+                }
+            });
+        }
+        function scrolltobottomEvent() {
+            //滚动更多
+            api.addEventListener({
+                name: 'scrolltobottom',
+                extra: {
+                    threshold: 100 //设置距离底部多少距离时触发，默认值为0，数字类型
+                }
+            }, function(ret, err) {
+                showAllStatus(0);
+                getDataByPage();
+                //alert('已滚动到底部');
+            });
+        }
+        function getHtml(data){
+            var html = '';
+            for(var i=0;i<data.length;i++){
+                var tagHtml = '';
+                if(data[i].topic.snsTags.length>0){
+                    for(var b=0;b<data[i].topic.snsTags.length;b++){
+                        tagHtml += '<div>'+data[i].topic.snsTags[b].snsTagName+'</div>';
+                    }
+                }
+                //console.log("tag：：：：" + tagHtml);
+                var oneHtml =
+                    '<li class="aui-border-b" onclick="showOneVideo('+data[i].snsShareID+','+data[i].snsTopicID+','+ data[i].snsUserID+')">'
+                    +'  <img src="'+data[i].snsShareImageUrl+'"  class="leftImg"/>'
+                    +'  <div class="text">'
+                    +'    <div class="item1 aui-ellipsis-2">'+(data[i].snsShareDesc == null ? '' : data[i].snsShareDesc)+'</div>'
+                    +'    <div class="item2">'+tagHtml+'</div>'
+                    +'    <div class="item3">'
+                    +'      <div class="time">'+dateFtt("yyyy-MM-dd hh:mm:ss",data[i].topic.snsAddTime)+'</div>'
+                    +'      <div class="count"><img src="../../image/icon/vedio/views.png" alt="" class="aui-margin-r-5">'+data[i].topic.snsViews+'</div>'
+                    +'    </div>'
+                    +'  </div>'
+                    +'</li>';
+                html += oneHtml;
+            }
+            //console.log("html：：：" + html);
+            return html;
+        }
+        //隐藏所有上拉提示
+        function showAllStatus(loadstatus){
+            var loadstatus0 =  $api.byId('loadstatus0');
+            var loadstatus1 =  $api.byId('loadstatus1');
+            var loadstatus2 =  $api.byId('loadstatus2');
+            var loadstatus3 =  $api.byId('loadstatus3');
+            var loadstatus4 =  $api.byId('loadstatus4');
+            $api.addCls(loadstatus0, 'aui-hide');
+            $api.addCls(loadstatus1, 'aui-hide');
+            $api.addCls(loadstatus2, 'aui-hide');
+            $api.addCls(loadstatus3, 'aui-hide');
+            $api.addCls(loadstatus4, 'aui-hide');
+
+
+            var currentIdName = 'loadstatus'+loadstatus;
+            var showDom = $api.byId(currentIdName);
+            $api.removeCls(showDom, 'aui-hide');
+        }
+	</script>
+</body>
+</html>

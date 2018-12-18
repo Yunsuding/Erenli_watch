@@ -29,7 +29,7 @@
 	<script type="text/javascript" src="../script/js.js"></script>
 	<script type="text/javascript">
 		apiready = function(){
-            FNScanner();
+            window.setTimeout(function() {FNScanner();}, 1000);
 		}
 		function FNScanner() {
             var cid = $api.getStorage('Cid');
@@ -39,7 +39,7 @@
             		cid = ret.cid;
             	    $api.setStorage('Cid', ret.cid);
             	});
-            	window.setTimeout(function() {FNScanner();}, 10000);
+            	window.setTimeout(function() {FNScanner();}, 1000);
             }
             var clientId = $api.getStorage("clientId");
             var FNScanner = api.require('FNScanner');

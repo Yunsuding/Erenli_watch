@@ -39,6 +39,9 @@ function getUrl(e){
         case 'toUrl':
             return domain+'/mobile/#/userEvaluation';    
             break;
+        case 'Order':
+            return domain+'/human/api.watch/my_order';
+            break;
         default :
             return domain+'/human/api.watch/watch_Login_out';
         break;

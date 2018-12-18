@@ -39,44 +39,44 @@ span{
 	display:inline-block;
 }
 a:active, a:hover {
-  outline: 0;
+	outline: 0;
 }
 a, a:visited{
 	text-decoration:none;
 }
 input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
 
-　　color: #666;font-size:16px;
+	　　color: #666;font-size:16px;
 
-　　}
+	　　}
 
 　　input:-moz-placeholder, textarea:-moz-placeholder {
 
-　　color:#666;font-size:16px;
+	　　color:#666;font-size:16px;
 
-　　}
+	　　}
 
 　　input::-moz-placeholder, textarea::-moz-placeholder {
 
-　　color:#666;font-size:16px;
+	　　color:#666;font-size:16px;
 
-　　}
+	　　}
 
 　　input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 
-　　color:#666;font-size:16px;
+	　　color:#666;font-size:16px;
 
-　　}
+	　　}
 label, .wordWrap{
-    word-wrap: break-word;
-    word-break: break-all;
+	word-wrap: break-word;
+	word-break: break-all;
 }
 table {
-  border-collapse: collapse;
-  border-spacing: 0;
+	border-collapse: collapse;
+	border-spacing: 0;
 }
 td,th {
-  padding: 0;
+	padding: 0;
 }
 .clearfix:after{
 	content: ' ';
@@ -97,9 +97,9 @@ td,th {
 	background: url(../image/loading_more.gif) no-repeat center;
 	-webkit-background-size: contain;
 	background-size: contain;
-} 
+}
 .loading_more:after {
-	content: '加载更多';	
+	content: '加载更多';
 }
 /* 荧光绿 */
 .base-green{
@@ -125,7 +125,7 @@ td,th {
 	width: 100%;
 	height: 100%;
 	padding-top: 15%;
-	/*background-color: #000;*/
+	background-color: #000;
 	/*border-radius: 50%;*/
 }
 /* -------------------首页面--------------------- */
@@ -150,7 +150,7 @@ td,th {
 /* 呼叫包厢名称 */
 .call-box{
 	color: #fff;
-	font-size: 20px;
+	font-size: 40px;
 }
 /* 呼叫总信息 */
 .call-allNeed{
@@ -166,7 +166,7 @@ td,th {
 /* 呼叫需求 */
 .call-need{
 	color: #fff;
-	font-size: 20px;
+	font-size: 40px;
 	padding: 0 20px;
 }
 /* 呼叫需求详情 */
@@ -174,7 +174,7 @@ td,th {
 	color: #fff;
 	font-size: 16px;
 	background-color: #A2FE01;
-	padding: 2px 5px; 
+	padding: 2px 5px;
 	border-radius: 5px;
 }
 /* 接单按钮 */
@@ -183,7 +183,7 @@ td,th {
 	color: #fff;
 	width: 330px;
 	height: 174px;
-	margin-bottom: -80px;
+	margin-bottom: -45px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -199,18 +199,20 @@ td,th {
 	color: #fff;
 	width: 391px;
 	height: 154px;
-	margin-bottom: -97px;
+	margin-bottom: -65px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	font-size: 40px;
 }
 .fault-left{
-	margin-top: -40px;
+	margin-top: -50px;
+	font-size: 30px;
 }
 .fault-right{
+	font-size: 30px;
 	margin-left: 60px;
-	margin-top: -40px;
+	margin-top: -50px;
 }
 /* ------------------操作界面------------------- */
 .all-operation{
@@ -219,13 +221,13 @@ td,th {
 }
 .operation-detail{
 	width: 50%;
-    text-align: center;
-    padding:  10px 0;
+	text-align: center;
+	padding:  10px 0;
 }
 .operation-text{
 	margin-top: 10px;
 	font-size: 20px;
-    color: #fff;
+	color: #fff;
 }
 /* ----------------需求详情页----------------------- */
 /* 需求数量列表 */
@@ -253,7 +255,7 @@ td,th {
 .working-gray{
 	font-size: 35px;
 	color: #fff;
-	padding: 10px 50px; 
+	padding: 10px 50px;
 	margin-bottom: 15px;
 	border-radius: 5px;
 	background-color: #ccc;
@@ -263,13 +265,13 @@ td,th {
 	width: 70.71%;
 	height: 70.71%;
 	position: absolute;
-    top: 50%;
-    left: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    -o-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
 
 }
 #Rqcode{
@@ -314,5 +316,33 @@ td,th {
 	width: 40px;
 	height: 40px;
 	margin-top: 8px;
+}
+/* ----------服务二维码--------------------- */
+.code-weizhi{
+	color: #fff;
+	padding: 5px 0;
+}
+.code-txt{
+	color: #C76900;
+	padding: 5px 0;
+}
+.code-box{
+	display: flex;
+	border-bottom: 1px solid #ccc;
+	padding: 5px 0;
+}
+.code-right{
+	text-align: right;
+	margin-left: 20px;
+}
+.call-time{
+	height: 26px;
+	line-height: 26px;
+	color: #fff;
+}
+.code-details{
+	background-color: #3998FC;
+	border-radius: 10px;
+	padding: 0 3px;
 }
 
