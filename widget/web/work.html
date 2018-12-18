@@ -81,10 +81,11 @@
                     title: '提示',
                     msg: '更改成功',
                 }, function(ret, err) {
-                    api.openFrame({
-                        name: 'main',
-                        url: './main.html',
-                    });
+                    // api.openFrame({
+                    //     name: 'main',
+                    //     url: './main.html',
+                    // });
+                    api.closeFrame();
                 });
             } else {
                 api.alert(ret.msg);
