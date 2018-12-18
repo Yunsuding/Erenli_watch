@@ -44,15 +44,13 @@
         var pedometer = api.require('pedometer');
         pedometer.startCount(function (ret) {
             // alert(ret.steps);
-            var Steps = ret.steps;
-            if(getI == 0){
+            if(getI == 0) {
                 var getSteps = getStepsnum();
-                if(getSteps != 0){
-                    Steps = getSteps + Steps;
+                if (getSteps.code == 0 && getSteps.data != 0) {
+                    $api.setStorage("oldgetSteps", getSteps);
                 }
             }
-            getI++;
-            $api.setStorage("getSteps", Steps);
+            getI++;;
         });
     }
 
@@ -61,8 +59,11 @@
         pedometer.getSteps(function(ret) {
             // alert(ret.steps);
             Steps = ret.steps;
-            var all = $api.getStorage("getSteps") + Steps;
-            $api.setStorage("getSteps", all);
+            var oldgetSteps = $api.getStorage("oldgetSteps");
+            if(oldgetSteps && oldgetSteps != 'undefined'){
+                Steps = oldgetSteps + Steps;
+            }
+            $api.setStorage("getSteps", Steps);
         });
 
     }
@@ -81,7 +82,7 @@
             // alert(JSON.stringify(ret) );
             if (ret.code == 0) {
                 // api.toast();
-                data =  ret.data;
+                data =  ret;
             } else {
                 if(ret.data.code == '1001'){
                     getOut();
