@@ -20,6 +20,7 @@
 <script type="text/javascript" src="./script/reconnecting-websocket.min.js"></script>
 <script type="text/javascript" src="./script/js.js"></script>
 <script type="text/javascript">
+    var getI = 0;
     var domain = 'demo.isaveu.cn';
     $api.rmStorage('clientId');
     apiready = function(){
@@ -43,23 +44,27 @@
         var pedometer = api.require('pedometer');
         pedometer.startCount(function (ret) {
             // alert(ret.steps);
-        });
-    }
-    var getI = 0;
-    function getCounts() {
-        var pedometer = api.require('pedometer');
-        pedometer.getSteps(function(ret) {
-            // alert(ret.steps);
-            Steps = ret.steps;
+            var Steps = ret.steps;
             if(getI == 0){
                 var getSteps = getStepsnum();
                 if(getSteps != 0){
                     Steps = getSteps + Steps;
                 }
             }
+            getI++;
             $api.setStorage("getSteps", Steps);
         });
-        getI++;
+    }
+
+    function getCounts() {
+        var pedometer = api.require('pedometer');
+        pedometer.getSteps(function(ret) {
+            // alert(ret.steps);
+            Steps = ret.steps;
+            var all = $api.getStorage("getSteps") + Steps;
+            $api.setStorage("getSteps", all);
+        });
+
     }
 
     function getStepsnum() {
