@@ -79,9 +79,15 @@
                     break;
                 case 'call'://呼叫服务
                     goCall(data);
+                    api.notification({
+                        vibrate:[100, 500, 200, 500, 300, 500, 400, 500]
+                    });
                     break;
                 case 'pager'://呼叫器呼叫
                     goCall(data);
+                    api.notification({
+                        vibrate:[100, 500, 200, 500, 300, 500, 400, 500]
+                    });
                     break;
                 case 'alarm'://报警
                     console.log(data);
