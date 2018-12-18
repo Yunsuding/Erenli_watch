@@ -44,6 +44,7 @@
             details.style.display = 'block';
 		}
     };
+    var urls = getUrl('call_deal');
     function fnhandle(data) {
         api.confirm({
             title: '服务提示',
@@ -53,7 +54,7 @@
             var index = ret.buttonIndex;
             if(index == 1){
                 api.ajax({
-                    url: getUrl('call_deal'),
+                    url: urls,
                     method: 'post',
                     data: {
                         values:{
@@ -83,7 +84,7 @@
         });
     }
 
-    function fnMisoperation() {
+    function fnMisoperation(data) {
         api.confirm({
             title: '服务提示',
             msg: '是否确定客人误按了？',
@@ -92,7 +93,7 @@
             var index = ret.buttonIndex;
             if(index == 1){
                 api.ajax({
-                    url: getUrl('call_deal'),
+                    url: urls,
                     method: 'post',
                     data: {
                         values:{
@@ -102,10 +103,10 @@
                         }
                     }
                 }, function(ret, err) {
-                    alert(JSON.stringify(ret));
                     if (ret.code == 0) {
-                        alert(2);
-                        api.closeFrame();
+                        api.closeWin({
+                            name: 'call'
+                        });
                     } else {
                         api.toast({
                             msg: ret.msg,
