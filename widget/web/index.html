@@ -137,51 +137,12 @@
             });
         }
 
-
-        var Steps = 0;
-		var getI = 0;
  		function getSteps(){
- 			var pedometer = api.require('pedometer');
-			pedometer.getSteps(function(ret) {
-			    // alert(ret.steps);
-                Steps = ret.steps;
-                if(getI == 0){
-                    var getSteps = getStepsnum();
-                    if(getSteps != 0){
-                        Steps = getSteps + Steps;
-					}
-				}
-                $api.setStorage("getSteps", Steps);
-			    marTen.innerHTML = Steps;
-			});
-            getI++;
+            var Steps = $api.getStorage("getSteps");
+ 			marTen.innerHTML = Steps;
             window.setTimeout(function() {getSteps();}, 5000);
  		}
- 		function getStepsnum() {
- 		    var data = 0;
-            api.ajax({
-                url: getUrl('getSteps'),
-                method: 'post',
-                data: {
-                    values:{
-                        access_token:access_token
-                    }
-                }
-            },function(ret, err){
-                // alert(JSON.stringify(ret) );
-                if (ret.code == 0) {
-                    // api.toast();
-                    data =  ret.data;
-                } else {
-                    if(ret.data.code == '1001'){
-                        getOut();
-                    }else{
-                        api.alert(ret.msg);
-                    }
-                }
-            });
-            return data;
-        }
+
 	</script>
 </body>
 </html>
