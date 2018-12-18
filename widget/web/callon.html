@@ -90,7 +90,6 @@
             buttons: ['确定', '取消']
         }, function(ret, err) {
             var index = ret.buttonIndex;
-            alert(index);
             if(index == 1){
                 api.ajax({
                     url: getUrl('call_deal'),
@@ -103,6 +102,7 @@
                         }
                     }
                 }, function(ret, err) {
+                    alert(JSON.stringify(ret));
                     if (ret.code == 0) {
                         alert(2);
                         api.closeFrame();
