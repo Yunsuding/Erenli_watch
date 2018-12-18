@@ -32,6 +32,9 @@
 <script type="text/javascript" src="../script/js.js"></script>
 <script type="text/javascript">
     apiready = function(){
+        api.closeFrame({
+            name: 'call'
+        });
         var box = $api.byId('call-box');
         var name = $api.byId('call-need');
         var details = $api.byId('call-details');
@@ -43,9 +46,6 @@
         }else{
             details.style.display = 'block';
 		}
-        api.closeFrame({
-            name: 'call'
-        });
     };
     function fnhandle(data) {
         api.confirm({
