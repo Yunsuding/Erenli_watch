@@ -23,7 +23,7 @@
 				<img src="../image/rili.png">
 				<p class="operation-text">日历</p>
 			</li>
-			<li class="operation-detail">
+			<li class="operation-detail"  tapmode onclick="fnOrder();">
 				<img src="../image/tixing.png">
 				<p class="operation-text">订单</p>
 			</li>
@@ -58,7 +58,7 @@
         });
     }
     // 点击订单
-    function fnZht() {
+    function fnOrder() {
         api.openFrame({
             name: 'order',
             url: './list.html',
