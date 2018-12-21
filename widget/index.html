@@ -85,7 +85,7 @@
                 data =  ret;
             } else {
                 if(ret.data.code == '1001'){
-                    getOut();
+                    getOuts();
                 }else{
                     api.alert(ret.msg);
                 }
@@ -216,7 +216,20 @@
             url: './web/index.html',
         });
     }
-
+    function getOuts() {
+        $api.rmStorage('access_token');
+        $api.rmStorage('user_id');
+        $api.rmStorage('username');
+        $api.rmStorage('shop_id');
+        if($api.getStorage('clientId') && $api.getStorage('clientId') != 'undefined'){
+            api.openWin({
+                name: 'login',
+                url: './web/login.html',
+            });
+        }else{
+            window.setTimeout(function() {getOuts();}, 500);
+        }
+    }
     // 打开登录窗口
     function goLogin() {
         if($api.getStorage('clientId') && $api.getStorage('clientId') != 'undefined'){

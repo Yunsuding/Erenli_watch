@@ -25,7 +25,7 @@
 			</li>
 			<li class="operation-detail">
 				<img src="../image/tixing.png">
-				<p class="operation-text">提醒</p>
+				<p class="operation-text">订单</p>
 			</li>
 			<li class="operation-detail" tapmode onclick="fnLoginOut();">
 				<img src="../image/xiaban.png">
@@ -55,6 +55,13 @@
         api.openFrame({
             name: 'work',
             url: './work.html',
+        });
+    }
+    // 点击订单
+    function fnZht() {
+        api.openFrame({
+            name: 'order',
+            url: './list.html',
         });
     }
     // 点击下班

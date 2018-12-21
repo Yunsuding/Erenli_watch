@@ -117,7 +117,7 @@ function getOut() {
     if($api.getStorage('clientId') && $api.getStorage('clientId') != 'undefined'){
         api.openWin({
             name: 'login',
-            url: './web/login.html',
+            url: './login.html',
         });
     }else{
         window.setTimeout(function() {getOut();}, 500);

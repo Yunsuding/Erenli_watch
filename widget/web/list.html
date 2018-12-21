@@ -9,40 +9,37 @@
 		body{
 
 		}
+		.load-footer{line-height: 1.5rem;}
 	</style>
 </head>
 <body>
 	<div class="base-background base-columnAcJc">
-		<ul id="orderlist">
-			<li class="code-box">
-				<div class="code-left">
-					<p class="code-weizhi">201包厢</p>
-					<p class="code-weizhi">开水<span class="code-details">详情</span></p>
-				</div>
-				<div class="code-right">
-					<p class="code-txt">已核销</p>
-					<p class="call-time">18-11/10:00</p>
-				</div>
-			</li>
-			<li class="code-box">
-				<div class="code-left">
-					<p class="code-weizhi">201包厢</p>
-					<p class="code-weizhi">开水<span class="code-details">详情</span></p>
-				</div>
-				<div class="code-right">
-					<p class="code-txt">已核销</p>
-					<p class="call-time">18-11/10:00</p>
-				</div>
-			</li>
-		</ul>
+		<ul id="orderlist"></ul>
 	</div>
+	<footer class="load-footer aui-font-size-14 ">
+		      <div class="span aui-hide" id="loadstatus0">
+		          <div class="loadingBtn"></div>
+		      </div>
+		      <div class="morestatus aui-hide" id="loadstatus1">----- 加载失败 -----</div>
+		      <div class="morestatus aui-hide" id="loadstatus2">----- 网络异常 -----</div>
+		      <div class="morestatus aui-hide" id="loadstatus3">----- 没有新内容 -----</div>
+		    </footer>
 	<script type="text/javascript" src="../script/api.js"></script>
 	<script type="text/javascript" src="../script/js.js"></script>
 	<script type="text/javascript">
         var page =0;
         var limit = 3;
-        var imgDomain = APPconfig.ApiDomain.ajaxDomain;
         apiready = function(){
+            api.addEventListener({
+                name:'swiperight'
+            }, function(ret, err){
+                api.closeFrame();
+            });
+            api.addEventListener({
+                name:'keyback'
+            }, function(ret, err){
+                api.closeFrame();
+            });
             api.parseTapmode();
             //第一页数据
             initData();
@@ -55,42 +52,65 @@
         function initData(){
             loadingFullScreen(true);
             page = 0;
-            var saveName = +'_snsGameID'+api.pageParam.snsGameID+'_page'+page;
-            var saveFolder =  APPconfig.cachefolder.channelVideoList;
-            var ajaxData =  {page:page,snsGameID:api.pageParam.snsGameID};
-            //console.log("---AJAXdATA---"+JSON.stringify(ajaxData));
-            ajaxCacheData2(saveFolder,saveName,'/getshares/bygame',"post",ajaxData,'initData()',function(ret){
-                console.log("--/getshares/bycatalog--"+JSON.stringify(ret));
-                var html = getHtml(ret.data);
-                $api.html($api.byId("videolist"), html);
-                page = page+1;
+            api.ajax({
+                url: getUrl('Order'),
+                method: 'post',
+                data: {
+                    values:{
+                        page:page,
+                        limit:limit,
+                        access_token:access_token
+                    }
+                }
+            },function(ret, err){
+                // alert(JSON.stringify(ret) );
+                if (ret.code == 0) {
+                    // api.toast();
+                    var html = getHtml(ret.data);
+                    $api.html($api.byId("orderlist"), html);
+                    page = page+1;
+                } else {
+                    if(ret.data.code == '1001'){
+                        getOut();
+                    }else{
+                        api.alert(ret.msg);
+                    }
+                }
             });
         }
 
 
         //非第一页 加载更多
         function getDataByPage(){
-            var ajaxData =  {page:page,snsGameID:api.pageParam.snsGameID};
-            ajaxRequest("/getshares/bygame", "post", ajaxData, function(ret,err){
-                if(ret){
-                    if(ret.code == 200){
-                        if(ret.code.length>0){
-                            var html = getHtml(ret.data);
-                            $api.append($api.byId("videolist"), html);
-                            page = page+1;
-                        }else{
-                            showAllStatus(3);
-                            //mytoast("没有更多数据");
-                        }
-                    }else{
-                        showAllStatus(1);
-                        //mytoast("加载失败");
+            api.ajax({
+                url: getUrl('Order'),
+                method: 'post',
+                data: {
+                    values:{
+                        page:page,
+                        limit:limit,
+                        access_token:access_token
                     }
-                }else{
-                    showAllStatus(2);
-                    //mytoast("网络异常");
+                }
+            },function(ret, err){
+                // alert(JSON.stringify(ret) );
+                if (ret.code == 0) {
+                    if(ret.data.length>0){
+                        var html = getHtml(ret.data);
+                        $api.html($api.byId("orderlist"), html);
+                        page = page+1;
+					}else{
+                        showAllStatus(3);
+					}
+                } else {
+                    if(ret.data.code == '1001'){
+                        getOut();
+                    }else{
+                        api.alert(ret.msg);
+                    }
                 }
             });
+
         }
         function scrolltobottomEvent() {
             //滚动更多
@@ -108,28 +128,19 @@
         function getHtml(data){
             var html = '';
             for(var i=0;i<data.length;i++){
-                var tagHtml = '';
-                if(data[i].topic.snsTags.length>0){
-                    for(var b=0;b<data[i].topic.snsTags.length;b++){
-                        tagHtml += '<div>'+data[i].topic.snsTags[b].snsTagName+'</div>';
-                    }
-                }
-                //console.log("tag：：：：" + tagHtml);
-                var oneHtml =
-                    '<li class="aui-border-b" onclick="showOneVideo('+data[i].snsShareID+','+data[i].snsTopicID+','+ data[i].snsUserID+')">'
-                    +'  <img src="'+data[i].snsShareImageUrl+'"  class="leftImg"/>'
-                    +'  <div class="text">'
-                    +'    <div class="item1 aui-ellipsis-2">'+(data[i].snsShareDesc == null ? '' : data[i].snsShareDesc)+'</div>'
-                    +'    <div class="item2">'+tagHtml+'</div>'
-                    +'    <div class="item3">'
-                    +'      <div class="time">'+dateFtt("yyyy-MM-dd hh:mm:ss",data[i].topic.snsAddTime)+'</div>'
-                    +'      <div class="count"><img src="../../image/icon/vedio/views.png" alt="" class="aui-margin-r-5">'+data[i].topic.snsViews+'</div>'
-                    +'    </div>'
-                    +'  </div>'
-                    +'</li>';
-                html += oneHtml;
+                var onehtml=
+					'<li class="code-box">\n' +
+                    '\t\t\t\t<div class="code-left">\n' +
+                    '\t\t\t\t\t<p class="code-weizhi">'+ data[i].weizhi +'</p>\n' +
+                    '\t\t\t\t\t<p class="code-weizhi">'+ data[i].data[0].name +'<span class="code-details">详情</span></p>\n' +
+                    '\t\t\t\t</div>\n' +
+                    '\t\t\t\t<div class="code-right">\n' +
+                    '\t\t\t\t\t<p class="code-txt">'+ data[i].status_text +'</p>\n' +
+                    '\t\t\t\t\t<p class="call-time">'+ data[i].hujiao_time +'</p>\n' +
+                    '\t\t\t\t</div>\n' +
+                    '\t\t\t</li>';
+                html += onehtml;
             }
-            //console.log("html：：：" + html);
             return html;
         }
         //隐藏所有上拉提示
