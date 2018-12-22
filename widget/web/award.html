@@ -28,12 +28,12 @@
     function FNScanner(id) {
         var shop_id = $api.getStorage('shop_id');
         var FNScanner = api.require('FNScanner');
-        var codecontent = getUrl('call_deal') + '?shopId=' + shop_id + '&id=' + id;
+        var codecontent = getUrl('toUrl') + '?shopId=' + shop_id + '&id=' + id;
         FNScanner.encodeImg({
             content: codecontent,
             saveToAlbum: false,
             saveImg: {
-                path: 'fs://ercode.png',
+                path: 'fs://award.png',
                 w: 400,
                 h: 400
             }

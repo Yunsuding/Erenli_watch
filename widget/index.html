@@ -22,6 +22,8 @@
 <script type="text/javascript">
     var getI = 1;
     var domain = 'demo.isaveu.cn';
+    var winWidth = 0;
+    var winHeight = 0;
     $api.rmStorage('clientId');
     apiready = function(){
         initPushGeTui();  // 初始化个推
@@ -29,6 +31,8 @@
         var Cid = $api.getStorage('Cid');
         connect();  //发起WebSocket
         var access_token = $api.getStorage('access_token');
+        winWidth = api.winWidth;
+        winHeight = api.winHeight;
         // 判断当前用户是否登录了
         if (access_token && access_token != 'undefined') {
             // 登录成功，打开个人中心Window
