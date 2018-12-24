@@ -250,10 +250,14 @@
     function goCall(data) {
         // alert(JSON.stringify(data));
         var name = '';
-        if(data.data.data.length == 0){
-            name = '投诉或建议';
+        if(data.data.type == 'normal_order'){
+            if(data.data.data.length == 0){
+                name = '投诉或建议';
+            }else{
+                name = data.data.data[0].name;
+            }
         }else{
-            name = data.data.data[0].name;
+            name = '超市派单';
         }
         api.openWin({
             name: 'call',
