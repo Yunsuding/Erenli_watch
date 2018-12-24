@@ -29,6 +29,7 @@
 	<script type="text/javascript">
         var page =0;
         var limit = 3;
+        var urls = getUrl('Order');
         apiready = function(){
             api.addEventListener({
                 name:'swiperight'
@@ -40,7 +41,6 @@
             }, function(ret, err){
                 api.closeFrame();
             });
-            api.parseTapmode();
             //第一页数据
             initData();
             //滚动到底部数据
@@ -50,40 +50,39 @@
         };
         //获取第一页数据
         function initData(){
-            loadingFullScreen(true);
-            page = 0;
-            api.ajax({
-                url: getUrl('Order'),
-                method: 'post',
-                data: {
-                    values:{
-                        page:page,
-                        limit:limit,
-                        access_token:access_token
+            if(page == 0){
+                api.ajax({
+                    url: urls,
+                    method: 'post',
+                    data: {
+                        values:{
+                            page:page,
+                            limit:limit,
+                            access_token:access_token
+                        }
                     }
-                }
-            },function(ret, err){
-                // alert(JSON.stringify(ret) );
-                if (ret.code == 0) {
-                    // api.toast();
-                    var html = getHtml(ret.data);
-                    $api.html($api.byId("orderlist"), html);
-                    page = page+1;
-                } else {
-                    if(ret.data.code == '1001'){
-                        getOut();
-                    }else{
-                        api.alert(ret.msg);
+                }, function(ret, err) {
+                    if (ret.code == 0) {
+                        // api.toast();
+                        var html = getHtml(ret.data);
+                        $api.html($api.byId("orderlist"), html);
+                        page = page+1;
+                    } else {
+                        if(ret.data.code == '1001'){
+                            getOut();
+                        }else{
+                            api.alert(ret.msg);
+                        }
                     }
-                }
-            });
+                });
+			}
         }
 
 
         //非第一页 加载更多
         function getDataByPage(){
             api.ajax({
-                url: getUrl('Order'),
+                url: urls,
                 method: 'post',
                 data: {
                     values:{
