@@ -41,7 +41,28 @@
             // 没有登录，打开登录Window
             goLogin();
         }
+        logs();
     };
+
+    function logs() {
+        var logModule = api.require('codeLog');
+        logModule.writeLog(
+            {
+                "tag":"info",
+                "text":"content"
+            },
+            function(ret,err)
+            {
+                if (err){
+                    //写入失败
+                    alert(JSON.stringify(err));
+                }
+                else{
+                    //写入成功
+                    alert(JSON.stringify(ret));
+                }
+            });
+    }
 
     // 开启计步
     function initPedometer(){

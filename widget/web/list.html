@@ -50,6 +50,7 @@
         };
         //获取第一页数据
         function initData(){
+            alert(page);
             if(page == 0){
                 api.ajax({
                     url: urls,
@@ -62,6 +63,7 @@
                         }
                     }
                 }, function(ret, err) {
+                    alert(JSON.stringify(ret) );
                     if (ret.code == 0) {
                         // api.toast();
                         var html = getHtml(ret.data);
@@ -74,7 +76,7 @@
                             api.alert(ret.msg);
                         }
                     }
-                });
+                })
 			}
         }
 
