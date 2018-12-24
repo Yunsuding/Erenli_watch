@@ -29,7 +29,8 @@
 	<script type="text/javascript" src="../script/js.js"></script>
 	<script type="text/javascript">
 		apiready = function(){
-            window.setTimeout(function() {FNScanner();}, 1000);
+            FNScanner();
+            exitApp();
 		}
 		function FNScanner() {
             var cid = $api.getStorage('Cid');
@@ -120,6 +121,36 @@
 		        }
 		    });
 		}
+        function exitApp(){
+            api.addEventListener({
+                name: 'keyback'
+            }, function(ret, err){
+                api.toast({
+                    msg: '在次点击返回键退出APP',
+                    duration:2000,
+                    location: 'bottom'
+                });
+
+                api.addEventListener({
+                    name: 'keyback'
+                }, function(ret, err){
+                    $api.setStorage("gesture",false);
+                    $api.rmStorage('access_token');
+                    $api.rmStorage('user_id');
+                    $api.rmStorage('username');
+                    $api.rmStorage('shop_id');
+                    api.closeWidget({
+                        id: 'A6097552195788', //这里需要修改为自己的应用ID
+                        retData: {name:'closeWidget'},
+                        silent:true
+                    });
+                });
+
+                setTimeout(function(){
+                    exitApp();
+                },3000)
+            });
+        }
 	</script>
 </body>
 </html>

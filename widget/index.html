@@ -188,16 +188,16 @@
             }
         };
         ws.onerror = function () {
-            api.alert({
-                title: '提示',
-                msg: '无服务，请联网！',
-            }, function(ret, err) {
-                api.closeWidget({
-                    id: 'A6097552195788', //这里需要修改为自己的应用ID
-                    retData: {name:'closeWidget'},
-                    silent:true
-                });
-            });
+            // api.alert({
+            //     title: '提示',
+            //     msg: '远程服务连接失败，请重试！',
+            // }, function(ret, err) {
+            //     api.closeWidget({
+            //         id: 'A6097552195788', //这里需要修改为自己的应用ID
+            //         retData: {name:'closeWidget'},
+            //         silent:true
+            //     });
+            // });
         };
     }
     // 服务端发来消息时
