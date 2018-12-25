@@ -144,7 +144,7 @@
                     weizhi = '超市'
                 }
                 var onehtml=
-                    '<li class="code-box" tapmode onclick="ONclick("'+JSON.stringify(data[i])+'");">\n' +
+                    '<li class="code-box" tapmode onclick="ONclick("'+data[i].id+'");">\n' +
                     '\t\t\t\t<div class="code-left">\n' +
                     '\t\t\t\t\t<p class="code-weizhi">'+ weizhi +'</p>\n' +
                     '\t\t\t\t\t<p class="code-weizhi">'+ name +'</p>\n' +
@@ -159,79 +159,83 @@
             return html;
         }
 
-        function ONclick(data) {
+        function ONclick(id) {
+            var data = '';
+            var cont_id = '';
+            var name = '';
+            var num = '';
+            var box = '';
+            api.ajax({
+                url: getUrl('info'),
+                method: 'post',
+                data: {
+                    values:{
+                        id:id,
+                        access_token:access_token
+                    }
+                }
+            }, function(ret, err) {
+                if (ret.code == 0) {
+                    // 保存用户信息
+                    data = ret.data.data;
+                    cont_id = ret.data.id;
+                    if(ret.data.order_type == 0){
+                        if(ret.data.call_status == 1){
+                            name = ret.data.data[0].name;
+                        }else{
+                            name = '投诉与建议';
+                        }
+                        box = ret.data.weizhi;
+                    }else{
+                        name = '超市派单';
+                        box = '超市'
+                    }
+                    num = ret.data.data.length;
+                } else {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'middle'
+                    });
+                }
+            });
             switch (data.status) {
                 case '3':
-                    goCall(data);
+                    goCall(cont_id,name,num,box,data);
                     break;
                 case '4':
-                    goCallon(data);
+                    goCallon(cont_id,name,num,box,data);
                     break;
                 case '0':
-                    goCall(data);
+                    goCall(cont_id,name,num,box,data);
                     break;
             }
 
-			//
-			//
-            // var time = Date.parse(new Date()) / 1000;
-            // var lasttime = time - data.hujiao_time_str;
-            // if(lasttime <= 1200){
-            //     api.openFrame({
-            //         name: 'award',
-            //         url: './award.html',
-            //         pageParam: {
-            //             id: data.id
-            //         }
-            //     });
-			// }else{
-            //     $api.toast('超时，无法二维码~')
-			// }
-
         }
-		function goCall(data) {
-            var name = '';
-            if(data.order_type == '1'){
-                if(data.data.data.length == 0){
-                    name = '投诉或建议';
-                }else{
-                    name = data.data[0].name;
-                }
-            }else{
-                name = '超市派单';
-            }
+		function goCall(cont_id,name,num,box,data) {
+
             api.openWin({
                 name: 'call',
                 url: './callon.html',
                 pageParam: {
-                    cont_id: data.id,
+                    cont_id: cont_id,
                     name:name,
-                    num:data.data.length,
-                    box:data.weizhi,
-                    data:data.data
+                    num:num,
+                    box:box,
+                    data:data
                 }
             });
         }
-        function goCallon(data) {
-            var name = '';
-            if(data.order_type == '1'){
-                if(data.data.data.length == 0){
-                    name = '投诉或建议';
-                }else{
-                    name = data.data[0].name;
-                }
-            }else{
-                name = '超市派单';
-            }
+        function goCallon(cont_id,name,num,box,data) {
             api.openWin({
                 name: 'call',
                 url: './call.html',
                 pageParam: {
-                    cont_id: data.id,
+                    cont_id: cont_id,
                     name:name,
-                    num:data.data.length,
-                    box:data.weizhi,
-                    data:data.data
+                    num:num,
+                    box:box,
+                    data:data
                 }
             });
         }

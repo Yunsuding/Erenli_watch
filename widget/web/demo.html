@@ -31,6 +31,7 @@
     var page =0;
     var limit = 3;
     var urls = getUrl('Order');
+    var infourl = getUrl('info');
     // var access_token = $api.getStorage('access_token');
     var access_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcl9pZCI6MTg0NjQzLCJhcmVhX2lkIjowLCJkZXBhcnRtZW50X2lkIjoxOSwicm9sZV9pZCI6NCwiYWNjb3VudCI6IjEzMDIzOTY3NTIxIiwidXNlcm5hbWUiOiJcdTlhZDhcdTZlYWFcdTRlMWMiLCJzaG9wX2lkIjo0Mywiam9iX251bWJlciI6IjEwMDAwIiwiaGVhZF9pbWciOiJodHRwczpcL1wvaW1nLmlzYXZldS5jblwvaW1hZ2VcL3VzZXJoZWFkXC8yMDE4MTIxMlwvZDRcLzI2MGUzZTkxODRjNzJmZWU5YjFhYWFiYmE0NTdmMC5qcGVnIiwiYXJlYV9uYW1lIjpudWxsLCJyb2xlX25hbWUiOiJcdTY3MGRcdTUyYTFcdTU0NTgiLCJhY3RfbGlzdCI6WyIxIiwiOCIsIjIyIiwiMyIsIjE5IiwiMjQiLCIxOCIsIjIwIiwiMjEiXSwiZGVwYXJ0bWVudF9uYW1lIjoiXHU2NzBkXHU1MmExXHU5MGU4IiwiSW50ZXJ2YWwiOiIwOTowMH4xODowMCIsImlhdCI6MTU0NTcwOTg2MywiZXhwIjoxNTQ2MzE0NjYzfQ.O409t2_93Poj3n2QKR_PHr8p_xJ1t0sIdebaYYBAfEU';
     apiready = function(){
@@ -199,7 +200,7 @@
                 name = '超市派单';
             }
             var onehtml=
-                '<li class="code-box" onclick="ONclick("'+JSON.stringify(data[i])+'");">\n' +
+                '<li class="code-box" onclick="ONclick('+data[i].id+');">\n' +
                 '\t\t\t\t<div class="code-left">\n' +
                 '\t\t\t\t\t<p class="code-weizhi">'+ data[i].weizhi +'</p>\n' +
                 '\t\t\t\t\t<p class="code-weizhi">'+ name +'</p>\n' +
@@ -212,6 +213,53 @@
             html += onehtml;
         }
         return html;
+    }
+
+    function ONclick(id) {
+        alert(data);
+        $.ajax({
+            type: "post",
+            url:infourl,
+            data:{
+                id:id,
+                access_token:access_token
+            },
+            dataType:'json',
+            success: function(data){
+                if (data.code == 0) {
+                    // api.toast();
+                    if(data.data.length>0){
+                        var html = getHtml(data.data);
+                        alert(html);
+                        $api.html($api.byId("orderlist"), html);
+                    }else{
+                        showAllStatus(3);
+                    }
+
+                    page = page+1;
+                } else {
+                    if(data.data.code == '1001'){
+                        getOut();
+                    }else{
+                        api.alert(data.msg);
+                    }
+                }
+            }
+        });
+        var time = Date.parse(new Date()) / 1000;
+        var lasttime = time - data.hujiao_time_str;
+        if(lasttime <= 1200){
+            api.openWin({
+                name: 'call',
+                url: './award.html',
+                pageParam: {
+                    id: data.id
+                }
+            });
+        }else{
+            $api.toast('超时，无法生成二维码~')
+        }
+
     }
     //隐藏所有上拉提示
     function showAllStatus(loadstatus){

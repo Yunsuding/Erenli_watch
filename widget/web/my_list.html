@@ -144,7 +144,7 @@
                     weizhi = '超市'
                 }
                 var onehtml=
-                    '<li class="code-box" tapmode onclick="ONclick("'+JSON.stringify(data[i])+'");">\n' +
+                    '<li class="code-box" tapmode onclick="ONclick("'+data[i].id+'","'+data[i].hujiao_time_str+'");">\n' +
                     '\t\t\t\t<div class="code-left">\n' +
                     '\t\t\t\t\t<p class="code-weizhi">'+ weizhi +'</p>\n' +
                     '\t\t\t\t\t<p class="code-weizhi">'+ name +'</p>\n' +
@@ -159,15 +159,15 @@
             return html;
         }
 
-        function ONclick(data) {
+        function ONclick(id,time_str) {
             var time = Date.parse(new Date()) / 1000;
-            var lasttime = time - data.hujiao_time_str;
+            var lasttime = time - time_str;
             if(lasttime <= 1200){
                 api.openWin({
                     name: 'call',
                     url: './award.html',
                     pageParam: {
-                        id: data.id
+                        id: id
                     }
                 });
 			}else{
