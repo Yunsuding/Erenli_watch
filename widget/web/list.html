@@ -51,6 +51,7 @@
         //获取第一页数据
         function initData(){
             if(page == 0){
+                alert(page);
                 api.ajax({
                     url: urls,
                     method: 'post',
@@ -62,6 +63,13 @@
                         }
                     }
                 }, function(ret, err) {
+                    alert(111);
+                    if(ret){
+
+					}else{
+                        alert(JSON.stringify(err) );
+					}
+                    alert(122211);
                     alert(JSON.stringify(ret) );
                     if (ret.code == 0) {
                         // api.toast();
