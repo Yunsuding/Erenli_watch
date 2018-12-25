@@ -42,6 +42,9 @@ function getUrl(e){
         case 'Order':
             return domain+'/human/api.watch/my_order';
             break;
+        case 'callList':
+            return domain+'/human/api.servicecall/call_list';
+            break;
         default :
             return domain+'/human/api.watch/watch_Login_out';
         break;

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>服务订单列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <style>
+        body{
+
+        }
+        .load-footer{line-height: 1.5rem;}
+    </style>
+</head>
+<body>
+<div class="base-background base-columnAcJc">
+    <ul id="orderlist"></ul>
+</div>
+<footer class="load-footer aui-font-size-14 ">
+          <div class="span aui-hide" id="loadstatus0">
+              <div class="loadingBtn"></div>
+          </div>
+          <div class="morestatus aui-hide" id="loadstatus1">----- 加载失败 -----</div>
+          <div class="morestatus aui-hide" id="loadstatus2">----- 网络异常 -----</div>
+          <div class="morestatus aui-hide" id="loadstatus3">----- 没有新内容 -----</div>
+        </footer>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/js.js"></script>
+<script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript">
+    var page =0;
+    var limit = 3;
+    var urls = getUrl('Order');
+    // var access_token = $api.getStorage('access_token');
+    var access_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcl9pZCI6MTg0NjQzLCJhcmVhX2lkIjowLCJkZXBhcnRtZW50X2lkIjoxOSwicm9sZV9pZCI6NCwiYWNjb3VudCI6IjEzMDIzOTY3NTIxIiwidXNlcm5hbWUiOiJcdTlhZDhcdTZlYWFcdTRlMWMiLCJzaG9wX2lkIjo0Mywiam9iX251bWJlciI6IjEwMDAwIiwiaGVhZF9pbWciOiJodHRwczpcL1wvaW1nLmlzYXZldS5jblwvaW1hZ2VcL3VzZXJoZWFkXC8yMDE4MTIxMlwvZDRcLzI2MGUzZTkxODRjNzJmZWU5YjFhYWFiYmE0NTdmMC5qcGVnIiwiYXJlYV9uYW1lIjpudWxsLCJyb2xlX25hbWUiOiJcdTY3MGRcdTUyYTFcdTU0NTgiLCJhY3RfbGlzdCI6WyIxIiwiOCIsIjIyIiwiMyIsIjE5IiwiMjQiLCIxOCIsIjIwIiwiMjEiXSwiZGVwYXJ0bWVudF9uYW1lIjoiXHU2NzBkXHU1MmExXHU5MGU4IiwiSW50ZXJ2YWwiOiIwOTowMH4xODowMCIsImlhdCI6MTU0NTcwOTg2MywiZXhwIjoxNTQ2MzE0NjYzfQ.O409t2_93Poj3n2QKR_PHr8p_xJ1t0sIdebaYYBAfEU';
+    apiready = function(){
+        api.addEventListener({
+            name:'swiperight'
+        }, function(ret, err){
+            api.closeFrame();
+        });
+        api.addEventListener({
+            name:'keyback'
+        }, function(ret, err){
+            api.closeFrame();
+        });
+        //第一页数据
+        initData();
+        //滚动到底部数据
+        scrolltobottomEvent();
+
+
+    };
+    initData();
+    //获取第一页数据
+    function initData(){
+        if(page == 0){
+            $.ajax({
+                type: "post",
+                url:urls,
+                data:{
+                    page:page,
+                    limit:limit,
+                    access_token:access_token
+                },
+                dataType:'json',
+                success: function(data){
+                    if (data.code == 0) {
+                        // api.toast();
+                        if(data.data.length>0){
+                            var html = getHtml(data.data);
+                            alert(html);
+                            $api.html($api.byId("orderlist"), html);
+                        }else{
+                            showAllStatus(3);
+                        }
+
+                        page = page+1;
+                    } else {
+                        if(data.data.code == '1001'){
+                            getOut();
+                        }else{
+                            api.alert(data.msg);
+                        }
+                    }
+                }
+            });
+
+            // api.ajax({
+            //     url: urls,
+            //     method: 'post',
+            //     data: {
+            //         values:{
+            //             page:page,
+            //             limit:limit,
+            //             access_token:access_token
+            //         }
+            //     }
+            // }, function(ret, err) {
+            //     if (ret.code == 0) {
+            //         // api.toast();
+            //         if(ret.data.length>0){
+            //             var html = getHtml(ret.data);
+            //             alert(html);
+            //             $api.html($api.byId("orderlist"), html);
+            //         }else{
+            //             showAllStatus(3);
+            //         }
+            //
+            //         page = page+1;
+            //     } else {
+            //         if(ret.data.code == '1001'){
+            //             getOut();
+            //         }else{
+            //             api.alert(ret.msg);
+            //         }
+            //     }
+            // })
+        }
+    }
+
+
+    //非第一页 加载更多
+    function getDataByPage(){
+        api.ajax({
+            url: urls,
+            method: 'post',
+            data: {
+                values:{
+                    page:page,
+                    limit:limit,
+                    access_token:access_token
+                }
+            }
+        },function(ret, err){
+            // alert(JSON.stringify(ret) );
+            if (ret.code == 0) {
+                if(ret.data.length>0){
+                    var html = getHtml(ret.data);
+                    $api.html($api.byId("orderlist"), html);
+                    page = page+1;
+                }else{
+                    showAllStatus(3);
+                }
+            } else {
+                if(ret.data.code == '1001'){
+                    getOut();
+                }else{
+                    api.alert(ret.msg);
+                }
+            }
+        });
+
+    }
+    function scrolltobottomEvent() {
+        //滚动更多
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra: {
+                threshold: 100 //设置距离底部多少距离时触发，默认值为0，数字类型
+            }
+        }, function(ret, err) {
+            showAllStatus(0);
+            getDataByPage();
+            //alert('已滚动到底部');
+        });
+    }
+    function getHtml(data){
+        var html = '';
+        for(var i=0;i<data.length;i++){
+            var name = '';
+            if(data[i].order_type == 0){
+                if(data[i].call_status == 1){
+                    name = data[i].data[0].name;
+                }else{
+                    name = '投诉与建议';
+                }
+            }else{
+                name = '超市派单';
+            }
+            var onehtml=
+                '<li class="code-box">\n' +
+                '\t\t\t\t<div class="code-left">\n' +
+                '\t\t\t\t\t<p class="code-weizhi">'+ data[i].weizhi +'</p>\n' +
+                '\t\t\t\t\t<p class="code-weizhi">'+ name +'</p>\n' +
+                '\t\t\t\t</div>\n' +
+                '\t\t\t\t<div class="code-right">\n' +
+                '\t\t\t\t\t<p class="code-txt">'+ data[i].status_text +'</p>\n' +
+                '\t\t\t\t\t<p class="call-time">'+ data[i].hujiao_time +'</p>\n' +
+                '\t\t\t\t</div>\n' +
+                '\t\t\t</li>';
+            html += onehtml;
+        }
+        return html;
+    }
+    //隐藏所有上拉提示
+    function showAllStatus(loadstatus){
+        var loadstatus0 =  $api.byId('loadstatus0');
+        var loadstatus1 =  $api.byId('loadstatus1');
+        var loadstatus2 =  $api.byId('loadstatus2');
+        var loadstatus3 =  $api.byId('loadstatus3');
+        var loadstatus4 =  $api.byId('loadstatus4');
+        $api.addCls(loadstatus0, 'aui-hide');
+        $api.addCls(loadstatus1, 'aui-hide');
+        $api.addCls(loadstatus2, 'aui-hide');
+        $api.addCls(loadstatus3, 'aui-hide');
+        $api.addCls(loadstatus4, 'aui-hide');
+
+
+        var currentIdName = 'loadstatus'+loadstatus;
+        var showDom = $api.byId(currentIdName);
+        $api.removeCls(showDom, 'aui-hide');
+    }
+</script>
+</body>
+</html>
