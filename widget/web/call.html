@@ -76,7 +76,14 @@
                     }
                 });
             } else {
-                api.alert(ret.msg);
+                api.alert({
+                    title: '提示',
+                    msg: ret.msg,
+                }, function(ret, err) {
+                    api.closeWin({
+                        name: 'call'
+                    });
+                });
             }
         });
     }
