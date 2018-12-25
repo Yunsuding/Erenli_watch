@@ -152,6 +152,26 @@
         });
 
     }
+
+    function ONclick(data) {
+        alert(JSON.stringify(data));
+        var time = Date.parse(new Date()) / 1000;
+        alert(time);
+        var lasttime = time - data.hujiao_time_str;
+        alert(lasttime);
+        if(lasttime <= 1200){
+            api.openWin({
+                name: 'call',
+                url: './award.html',
+                pageParam: {
+                    id: data.id
+                }
+            });
+        }else{
+            $api.toast('超时，无法生成二维码~')
+        }
+
+    }
     function scrolltobottomEvent() {
         //滚动更多
         api.addEventListener({
@@ -179,7 +199,7 @@
                 name = '超市派单';
             }
             var onehtml=
-                '<li class="code-box">\n' +
+                '<li class="code-box" onclick="ONclick("'+JSON.stringify(data[i])+'");">\n' +
                 '\t\t\t\t<div class="code-left">\n' +
                 '\t\t\t\t\t<p class="code-weizhi">'+ data[i].weizhi +'</p>\n' +
                 '\t\t\t\t\t<p class="code-weizhi">'+ name +'</p>\n' +

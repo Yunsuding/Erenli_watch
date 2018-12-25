@@ -144,7 +144,7 @@
                     weizhi = '超市'
                 }
                 var onehtml=
-                    '<li class="code-box" tapmode onclick="ONclick(data[i]);">\n' +
+                    '<li class="code-box" tapmode onclick="ONclick("'+JSON.stringify(data[i])+'");">\n' +
                     '\t\t\t\t<div class="code-left">\n' +
                     '\t\t\t\t\t<p class="code-weizhi">'+ weizhi +'</p>\n' +
                     '\t\t\t\t\t<p class="code-weizhi">'+ name +'</p>\n' +
@@ -163,15 +163,15 @@
             var time = Date.parse(new Date()) / 1000;
             var lasttime = time - data.hujiao_time_str;
             if(lasttime <= 1200){
-                api.openFrame({
-                    name: 'award',
+                api.openWin({
+                    name: 'call',
                     url: './award.html',
                     pageParam: {
                         id: data.id
                     }
                 });
 			}else{
-                $api.toast('超时，无法二维码~')
+                $api.toast('超时，无法生成二维码~')
 			}
 
         }

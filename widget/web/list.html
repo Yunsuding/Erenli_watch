@@ -144,7 +144,7 @@
                     weizhi = '超市'
                 }
                 var onehtml=
-                    '<li class="code-box" tapmode onclick="ONclick(data[i]);">\n' +
+                    '<li class="code-box" tapmode onclick="ONclick("'+JSON.stringify(data[i])+'");">\n' +
                     '\t\t\t\t<div class="code-left">\n' +
                     '\t\t\t\t\t<p class="code-weizhi">'+ weizhi +'</p>\n' +
                     '\t\t\t\t\t<p class="code-weizhi">'+ name +'</p>\n' +
