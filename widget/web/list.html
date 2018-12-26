@@ -129,21 +129,19 @@
             });
         }
         function getHtml(data){
+
             var html = '';
             for(var i=0;i<data.length;i++){
                 var name = '';
-                var weizhi = '';
                 if(data[i].order_type == 0){
                     name = data[i].data[0].name;
-                    weizhi = data[i].weizhi;
                 }else{
                     name = '超市派单';
-                    weizhi = '超市'
                 }
                 var onehtml=
-                    '<li class="code-box" tapmode onclick="ONclick("'+data[i].id+'");">\n' +
+                    '<li class="code-box" onclick="ONclick('+data[i].id+');">\n' +
                     '\t\t\t\t<div class="code-left">\n' +
-                    '\t\t\t\t\t<p class="code-weizhi">'+ weizhi +'</p>\n' +
+                    '\t\t\t\t\t<p class="code-weizhi">'+ data[i].weizhi +'</p>\n' +
                     '\t\t\t\t\t<p class="code-weizhi">'+ name +'</p>\n' +
                     '\t\t\t\t</div>\n' +
                     '\t\t\t\t<div class="code-right">\n' +
@@ -173,7 +171,7 @@
                 }
             }, function(ret, err) {
                 if (ret.code == 0) {
-                    if(ret.data.deal_waiter_id !=0 && ret.data.deal_waiter_id != user_id){
+                    if(ret.data.deal_waiter_id != 0 && ret.data.deal_waiter_id != user_id){
                         $api.toast('别人接单的哦~')
 					}
                     // 保存用户信息

@@ -127,26 +127,51 @@
                 //alert('已滚动到底部');
             });
         }
+        // function getHtml(data){
+        //     var html = '';
+        //     for(var i=0;i<data.length;i++){
+        //         var name = '';
+        //         var weizhi = '';
+        //         if(data[i].order_type == 0){
+        //             if(data[i].call_status == 1){
+        //                 name = data[i].data[0].name;
+        //             }else{
+        //                 name = '投诉与建议';
+        //             }
+        //             weizhi = data[i].weizhi;
+        //         }else{
+        //             name = '超市派单';
+        //             weizhi = '超市'
+        //         }
+        //         var onehtml=
+        //             '<li class="code-box" tapmode onclick="ONclick("'+data[i].id+'","'+data[i].hujiao_time_str+'");">\n' +
+        //             '\t\t\t\t<div class="code-left">\n' +
+        //             '\t\t\t\t\t<p class="code-weizhi">'+ weizhi +'</p>\n' +
+        //             '\t\t\t\t\t<p class="code-weizhi">'+ name +'</p>\n' +
+        //             '\t\t\t\t</div>\n' +
+        //             '\t\t\t\t<div class="code-right">\n' +
+        //             '\t\t\t\t\t<p class="code-txt">'+ data[i].status_text +'</p>\n' +
+        //             '\t\t\t\t\t<p class="call-time">'+ data[i].hujiao_time +'</p>\n' +
+        //             '\t\t\t\t</div>\n' +
+        //             '\t\t\t</li>';
+        //         html += onehtml;
+        //     }
+        //     return html;
+        // }
         function getHtml(data){
+
             var html = '';
             for(var i=0;i<data.length;i++){
                 var name = '';
-                var weizhi = '';
                 if(data[i].order_type == 0){
-                    if(data[i].call_status == 1){
-                        name = data[i].data[0].name;
-                    }else{
-                        name = '投诉与建议';
-                    }
-                    weizhi = data[i].weizhi;
+                    name = data[i].data[0].name;
                 }else{
                     name = '超市派单';
-                    weizhi = '超市'
                 }
                 var onehtml=
                     '<li class="code-box" tapmode onclick="ONclick("'+data[i].id+'","'+data[i].hujiao_time_str+'");">\n' +
                     '\t\t\t\t<div class="code-left">\n' +
-                    '\t\t\t\t\t<p class="code-weizhi">'+ weizhi +'</p>\n' +
+                    '\t\t\t\t\t<p class="code-weizhi">'+ data[i].weizhi +'</p>\n' +
                     '\t\t\t\t\t<p class="code-weizhi">'+ name +'</p>\n' +
                     '\t\t\t\t</div>\n' +
                     '\t\t\t\t<div class="code-right">\n' +
@@ -158,7 +183,6 @@
             }
             return html;
         }
-
         function ONclick(id,time_str) {
             var time = Date.parse(new Date()) / 1000;
             var lasttime = time - time_str;
