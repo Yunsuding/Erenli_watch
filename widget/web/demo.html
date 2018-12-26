@@ -30,7 +30,7 @@
 <script type="text/javascript">
     var page =0;
     var limit = 10;
-    var urls = getUrl('callList');
+    var urls = getUrl('Order');
     var infourl = getUrl('info');
     // var access_token = $api.getStorage('access_token');
     var access_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcl9pZCI6MTg0NjQzLCJhcmVhX2lkIjowLCJkZXBhcnRtZW50X2lkIjoxOSwicm9sZV9pZCI6NCwiYWNjb3VudCI6IjEzMDIzOTY3NTIxIiwidXNlcm5hbWUiOiJcdTlhZDhcdTZlYWFcdTRlMWMiLCJzaG9wX2lkIjo0Mywiam9iX251bWJlciI6IjEwMDAwIiwiaGVhZF9pbWciOiJodHRwczpcL1wvaW1nLmlzYXZldS5jblwvaW1hZ2VcL3VzZXJoZWFkXC8yMDE4MTIxMlwvZDRcLzI2MGUzZTkxODRjNzJmZWU5YjFhYWFiYmE0NTdmMC5qcGVnIiwiYXJlYV9uYW1lIjpudWxsLCJyb2xlX25hbWUiOiJcdTY3MGRcdTUyYTFcdTU0NTgiLCJhY3RfbGlzdCI6WyIxIiwiOCIsIjIyIiwiMyIsIjE5IiwiMjQiLCIxOCIsIjIwIiwiMjEiXSwiZGVwYXJ0bWVudF9uYW1lIjoiXHU2NzBkXHU1MmExXHU5MGU4IiwiSW50ZXJ2YWwiOiIwOTowMH4xODowMCIsImlhdCI6MTU0NTcwOTg2MywiZXhwIjoxNTQ2MzE0NjYzfQ.O409t2_93Poj3n2QKR_PHr8p_xJ1t0sIdebaYYBAfEU';
@@ -178,7 +178,7 @@
                 name = '超市派单';
             }
             var onehtml=
-                '<li class="code-box" onclick="ONclick('+data[i].id+');">\n' +
+                '<li class="code-box" tapmode onclick="ONclick('+data[i].id+','+data[i].hujiao_time_str+');">\n' +
                 '\t\t\t\t<div class="code-left">\n' +
                 '\t\t\t\t\t<p class="code-weizhi">'+ data[i].weizhi +'</p>\n' +
                 '\t\t\t\t\t<p class="code-weizhi">'+ name +'</p>\n' +
@@ -193,7 +193,9 @@
         return html;
     }
 
-    function ONclick(id) {
+    function ONclick(id,times) {
+        console.log(id);
+        console.log(times);
         var data = '';
         var cont_id = '';
         var name = '';
