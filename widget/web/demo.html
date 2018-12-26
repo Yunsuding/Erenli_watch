@@ -29,8 +29,8 @@
 <script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
 <script type="text/javascript">
     var page =0;
-    var limit = 3;
-    var urls = getUrl('Order');
+    var limit = 10;
+    var urls = getUrl('callList');
     var infourl = getUrl('info');
     // var access_token = $api.getStorage('access_token');
     var access_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcl9pZCI6MTg0NjQzLCJhcmVhX2lkIjowLCJkZXBhcnRtZW50X2lkIjoxOSwicm9sZV9pZCI6NCwiYWNjb3VudCI6IjEzMDIzOTY3NTIxIiwidXNlcm5hbWUiOiJcdTlhZDhcdTZlYWFcdTRlMWMiLCJzaG9wX2lkIjo0Mywiam9iX251bWJlciI6IjEwMDAwIiwiaGVhZF9pbWciOiJodHRwczpcL1wvaW1nLmlzYXZldS5jblwvaW1hZ2VcL3VzZXJoZWFkXC8yMDE4MTIxMlwvZDRcLzI2MGUzZTkxODRjNzJmZWU5YjFhYWFiYmE0NTdmMC5qcGVnIiwiYXJlYV9uYW1lIjpudWxsLCJyb2xlX25hbWUiOiJcdTY3MGRcdTUyYTFcdTU0NTgiLCJhY3RfbGlzdCI6WyIxIiwiOCIsIjIyIiwiMyIsIjE5IiwiMjQiLCIxOCIsIjIwIiwiMjEiXSwiZGVwYXJ0bWVudF9uYW1lIjoiXHU2NzBkXHU1MmExXHU5MGU4IiwiSW50ZXJ2YWwiOiIwOTowMH4xODowMCIsImlhdCI6MTU0NTcwOTg2MywiZXhwIjoxNTQ2MzE0NjYzfQ.O409t2_93Poj3n2QKR_PHr8p_xJ1t0sIdebaYYBAfEU';
@@ -70,7 +70,6 @@
                         // api.toast();
                         if(data.data.length>0){
                             var html = getHtml(data.data);
-                            alert(html);
                             $api.html($api.byId("orderlist"), html);
                         }else{
                             showAllStatus(3);
@@ -154,25 +153,6 @@
 
     }
 
-    function ONclick(data) {
-        alert(JSON.stringify(data));
-        var time = Date.parse(new Date()) / 1000;
-        alert(time);
-        var lasttime = time - data.hujiao_time_str;
-        alert(lasttime);
-        if(lasttime <= 1200){
-            api.openWin({
-                name: 'call',
-                url: './award.html',
-                pageParam: {
-                    id: data.id
-                }
-            });
-        }else{
-            $api.toast('超时，无法生成二维码~')
-        }
-
-    }
     function scrolltobottomEvent() {
         //滚动更多
         api.addEventListener({
@@ -187,15 +167,13 @@
         });
     }
     function getHtml(data){
+
         var html = '';
         for(var i=0;i<data.length;i++){
+            console.log(data[i]);
             var name = '';
             if(data[i].order_type == 0){
-                if(data[i].call_status == 1){
-                    name = data[i].data[0].name;
-                }else{
-                    name = '投诉与建议';
-                }
+                name = data[i].data[0].name;
             }else{
                 name = '超市派单';
             }
@@ -216,50 +194,93 @@
     }
 
     function ONclick(id) {
-        alert(data);
+        var data = '';
+        var cont_id = '';
+        var name = '';
+        var num = '';
+        var box = '';
         $.ajax({
-            type: "post",
-            url:infourl,
-            data:{
-                id:id,
-                access_token:access_token
+            url: getUrl('info'),
+            type: 'post',
+            datetype:'json',
+            data: {
+                    id:id,
+                    access_token:access_token
             },
-            dataType:'json',
-            success: function(data){
-                if (data.code == 0) {
-                    // api.toast();
-                    if(data.data.length>0){
-                        var html = getHtml(data.data);
-                        alert(html);
-                        $api.html($api.byId("orderlist"), html);
+            success:function (ret) {
+                console.log(ret);
+                if (ret.code == 0) {
+                    // 保存用户信息
+                    data = ret.data.data;
+                    cont_id = ret.data.id;
+                    if(ret.data.order_type == 0){
+                        name = ret.data.data[0].name;
+                        box = ret.data.weizhi;
                     }else{
-                        showAllStatus(3);
+                        name = '超市派单';
+                        box = '超市'
                     }
-
-                    page = page+1;
+                    num = ret.data.data.length;
+                    console.log(ret.data);
+                    switch (ret.data.status) {
+                        case '3':
+                            goCall(cont_id,name,num,box,data);
+                            break;
+                        case '4':
+                            goCallon(cont_id,name,num,box,data);
+                            break;
+                        case '0':
+                            goCall(cont_id,name,num,box,data);
+                            break;
+                    }
                 } else {
-                    if(data.data.code == '1001'){
-                        getOut();
-                    }else{
-                        api.alert(data.msg);
-                    }
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'middle'
+                    });
                 }
             }
         });
-        var time = Date.parse(new Date()) / 1000;
-        var lasttime = time - data.hujiao_time_str;
-        if(lasttime <= 1200){
-            api.openWin({
-                name: 'call',
-                url: './award.html',
-                pageParam: {
-                    id: data.id
-                }
-            });
-        }else{
-            $api.toast('超时，无法生成二维码~')
+        switch (data.status) {
+            case '3':
+                goCall(cont_id,name,num,box,data);
+                break;
+            case '4':
+                goCallon(cont_id,name,num,box,data);
+                break;
+            case '0':
+                goCall(cont_id,name,num,box,data);
+                break;
         }
 
+    }
+    function goCall(cont_id,name,num,box,data) {
+        console.log('call',name);
+        api.openWin({
+            name: 'call',
+            url: './callon.html',
+            pageParam: {
+                cont_id: cont_id,
+                name:name,
+                num:num,
+                box:box,
+                data:data
+            }
+        });
+    }
+    function goCallon(cont_id,name,num,box,data) {
+        api.openWin({
+            name: 'call',
+            url: './call.html',
+            pageParam: {
+                cont_id: cont_id,
+                name:name,
+                num:num,
+                box:box,
+                data:data
+            }
+        });
     }
     //隐藏所有上拉提示
     function showAllStatus(loadstatus){
