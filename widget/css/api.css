@@ -208,8 +208,10 @@ td,th {
 .fault-left{
 	margin-top: -50px;
 	font-size: 30px;
+	padding: 29px 0;
 }
 .fault-right{
+	padding: 29px 0;
 	font-size: 30px;
 	margin-left: 60px;
 	margin-top: -50px;
