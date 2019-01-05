@@ -1,7 +1,7 @@
 // 获取时间
 
 function getUrl(e){
-    var domain = 'https://demo.isaveu.cn';
+    var domain = 'https://www.isaveu.cn';
     switch(e){
         case 'login':
             return domain+'/human/api.login/index';  //  登录 
