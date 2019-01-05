@@ -2,6 +2,7 @@
 
 function getUrl(e){
     var domain = 'https://www.isaveu.cn';
+    var domains = 'www.isaveu.cn';
     switch(e){
         case 'login':
             return domain+'/human/api.login/index';  //  登录 
@@ -44,6 +45,9 @@ function getUrl(e){
             break;
         case 'callList':
             return domain+'/human/api.servicecall/call_list';
+            break;
+        case 'websocket':
+            return 'wss://'+domains+':7272';
             break;
         default :
             return domain+'/human/api.watch/watch_Login_out';
