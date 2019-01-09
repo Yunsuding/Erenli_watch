@@ -173,6 +173,7 @@
                 if (ret.code == 0) {
                     if(ret.data.deal_waiter_id != 0 && ret.data.deal_waiter_id != user_id){
                         $api.toast('别人接单的哦~')
+						return false;
 					}
                     // 保存用户信息
                     data = ret.data.data;
