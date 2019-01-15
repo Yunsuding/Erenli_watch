@@ -31,13 +31,10 @@
     <feature name="webSocket">
         <param name="isGlobal" value="true"/>
     </feature>
-    <feature name="pushGeTui">
-        <param name="ios_appkey" value="A6ZJECvXrfAtddJu2NfcP5" />
-        <param name="ios_appid" value="NnZ2daRbzv6WSgaUXLaug4" />
-        <param name="ios_appsecret" value="ZPwDeXmNWn53O9gd9kQKu2" />
-        <param name="android_appkey" value="A6ZJECvXrfAtddJu2NfcP5" />
-        <param name="android_appid" value="NnZ2daRbzv6WSgaUXLaug4" />
-        <param name="android_appsecret" value="ZPwDeXmNWn53O9gd9kQKu2" />
-        <param name="android_groupid" value="" />
+    <feature name="aliPush">
+        <param name="AppKey_iOS" value="25521543"/>
+        <param name="AppSecret_iOS" value="191687f87716a4192361cb06b391af2a"/>
+        <param name="AppKey_Android" value="25247327"/>
+        <param name="AppSecret_Android" value="b15caa2429ff80bd980f5935bd633ef2"/>
     </feature>
 </widget>

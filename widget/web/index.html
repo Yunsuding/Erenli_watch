@@ -60,7 +60,6 @@
 		var clock = new Clock();
 		clock.display(getMinutes,getHours,getday,getdate,getSecond);
 		apiready = function(){
-			getSteps();
 			var access_token = $api.getStorage('access_token');
 			var username = $api.getStorage('username');
 			if(access_token != 'undefined' && username != 'undefined'){
@@ -105,6 +104,7 @@
                 });
 			});
             exitApp();
+            getSteps();
 		}
         function exitApp(){
             api.addEventListener({

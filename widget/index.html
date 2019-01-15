@@ -26,7 +26,8 @@
     var winHeight = 0;
     $api.rmStorage('clientId');
     apiready = function(){
-        initPushGeTui();  // 初始化个推
+        aliPush();//阿里云推送
+        // initPushGeTui();  // 初始化个推
         initPedometer();  //开启计步
         var Cid = $api.getStorage('Cid');
         connect();  //发起WebSocket
@@ -283,6 +284,17 @@
             }
         });
     }
+
+    function aliPush() {
+        var aliPushDemo = api.require('aliPush');
+        aliPushDemo.isRegister(function(ret, err) {
+            aliPushDemo.getDeviceId(function (ret) {
+                $api.setStorage('Cid', ret.cid);
+
+            });
+        });
+    }
+
     // 初始化第三方推送模块，个推
     function initPushGeTui() {
         var pushGeTui = api.require('pushGeTui');
