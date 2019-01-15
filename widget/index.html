@@ -31,6 +31,7 @@
         // initPedometer();  //开启计步
         var Cid = $api.getStorage('Cid');
         connect();  //发起WebSocket
+        aliPushListener();
         var access_token = $api.getStorage('access_token');
         winWidth = api.winWidth;
         winHeight = api.winHeight;
@@ -73,31 +74,31 @@
 
     }
 
-    function getStepsnum() {
-        var data = 0;
-        api.ajax({
-            url: getUrl('getSteps'),
-            method: 'post',
-            data: {
-                values:{
-                    access_token:access_token
-                }
-            }
-        },function(ret, err){
-            // alert(JSON.stringify(ret) );
-            if (ret.code == 0) {
-                // api.toast();
-                data =  ret;
-            } else {
-                if(ret.data.code == '1001'){
-                    getOuts();
-                }else{
-                    api.alert(ret.msg);
-                }
-            }
-        });
-        return data;
-    }
+    // function getStepsnum() {
+    //     var data = 0;
+    //     api.ajax({
+    //         url: getUrl('getSteps'),
+    //         method: 'post',
+    //         data: {
+    //             values:{
+    //                 access_token:access_token
+    //             }
+    //         }
+    //     },function(ret, err){
+    //         // alert(JSON.stringify(ret) );
+    //         if (ret.code == 0) {
+    //             // api.toast();
+    //             data =  ret;
+    //         } else {
+    //             if(ret.data.code == '1001'){
+    //                 getOuts();
+    //             }else{
+    //                 api.alert(ret.msg);
+    //             }
+    //         }
+    //     });
+    //     return data;
+    // }
     // WebSocket连接
     function connect() {
         // 创建websocket
@@ -151,13 +152,14 @@
                 // 服务端ping客户端
                 case 'ping':
                     if(token && token != 'undefined'){
-                        getCounts();
-                        var user_id = $api.getStorage('user_id');
-                        var allSteps = $api.getStorage('getSteps');
-                        if(!allSteps || allSteps == 'undefined'){
-                            allSteps = 0;
-                        }
-                        ws.send('{"type":"pong","is_watch":"1","user_id":"'+user_id+'","count_steps":"'+ allSteps +'"}');
+                        ws.send('{"type":"pong","is_watch":"1","user_id":"'+user_id+'","count_steps":"0"}');
+                        // // getCounts();
+                        // var user_id = $api.getStorage('user_id');
+                        // var allSteps = $api.getStorage('getSteps');
+                        // if(!allSteps || allSteps == 'undefined'){
+                        //     allSteps = 0;
+                        // }
+                        // ws.send('{"type":"pong","is_watch":"1","user_id":"'+user_id+'","count_steps":"'+ allSteps +'"}');
                     }else{
                         ws.send('{"type":"pong"}');
                     }
@@ -291,7 +293,6 @@
             if(ret.status){
                 getDeviceId();
             }
-
         });
     }
 
@@ -306,42 +307,72 @@
         });
     }
 
-    // 初始化第三方推送模块，个推
-    function initPushGeTui() {
-        var pushGeTui = api.require('pushGeTui');
-
-        // 注册设备和应用信息到个推
-        pushGeTui.initialize(function(ret) {
-            var value = "";
-
-            // 区分通知和消息
-            switch (ret.type) {
-                // 返回个推平台上的ID
-                case 'cid':
-                    $api.setStorage('Cid', ret.cid);
-                    break;
-                // 返回消息内容
-                case 'payload':
-                    value = 'payload:' + ret.payload;
-                    // 解析消息体
-                    // fnParsePayLoad(ret.payload);
-                    break;
-                case 'occurError':
-                    value = 'occurError';
-                    break;
-                default:
-                    break;
-            }
-        });
+    function screenWake() {
+        var sw = api.require('screenWake');
+        sw.addScreenWake();
     }
-
-
-    // 重新获取Cid
-    function fetchClientId() {
-        var uzgetuisdk = api.require('pushGeTui');
-        uzgetuisdk.fetchClientId(function(ret, err) {
-            $api.setStorage('Cid', ret.cid);
-        });
+    
+    function aliPushListener() {
+        var obj = api.require('aliPush');
+        obj.addEventListener({
+                name: 'onMessage'
+            },
+            function(ret, err) {
+                // alert("onMessage>>>addEventListener>>>>" + JSON.stringify(ret));
+                screenWake();
+            });
+        obj.addEventListener({
+                name: 'onNotification'
+            },
+            function(ret, err) {
+                // alert("onNotification>>>addEventListener>>>>" + JSON.stringify(ret));
+                screenWake();
+            });
+        obj.addEventListener({
+                name: 'onNotificationOpened'
+            },
+            function(ret, err) {
+                // alert("onNotificationOpened>>>addEventListener>>>>" + JSON.stringify(ret));
+                screenWake();
+            });
     }
+    
+    // // 初始化第三方推送模块，个推
+    // function initPushGeTui() {
+    //     var pushGeTui = api.require('pushGeTui');
+    //
+    //     // 注册设备和应用信息到个推
+    //     pushGeTui.initialize(function(ret) {
+    //         var value = "";
+    //
+    //         // 区分通知和消息
+    //         switch (ret.type) {
+    //             // 返回个推平台上的ID
+    //             case 'cid':
+    //                 $api.setStorage('Cid', ret.cid);
+    //                 break;
+    //             // 返回消息内容
+    //             case 'payload':
+    //                 value = 'payload:' + ret.payload;
+    //                 // 解析消息体
+    //                 // fnParsePayLoad(ret.payload);
+    //                 break;
+    //             case 'occurError':
+    //                 value = 'occurError';
+    //                 break;
+    //             default:
+    //                 break;
+    //         }
+    //     });
+    // }
+    //
+    //
+    // // 重新获取Cid
+    // function fetchClientId() {
+    //     var uzgetuisdk = api.require('pushGeTui');
+    //     uzgetuisdk.fetchClientId(function(ret, err) {
+    //         $api.setStorage('Cid', ret.cid);
+    //     });
+    // }
 </script>
 </html>
