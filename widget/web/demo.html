@@ -1,307 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
-    <title>服务订单列表</title>
-    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
-    <style>
-        body{
-
-        }
-        .load-footer{line-height: 1.5rem;}
-    </style>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta name=format-detection content="telephone=yes">
+    <title>人力管理系统</title>
+    <script type=text/javascript src="https://api.map.baidu.com/api?v=2.0&ak=7b92b3afff29988b6d4dbf9a00698ed8"></script>
+    <script type=text/javascript src=https://img.isaveu.cn/js/reconnecting-websocket.min.js></script>
+    <script type=text/javascript
+            src="https://img.cdn.aliyun.dcloud.net.cn/mui/dist/js/mui.min.js?v=2018-01-12 19:32:50 +0800"></script>
+    <link href=./static/css/app.3eb60f9aac72482a1f6878b80ebac079.css rel=stylesheet>
 </head>
 <body>
-<div class="base-background base-columnAcJc">
-    <ul id="orderlist"></ul>
-</div>
-<footer class="load-footer aui-font-size-14 ">
-          <div class="span aui-hide" id="loadstatus0">
-              <div class="loadingBtn"></div>
-          </div>
-          <div class="morestatus aui-hide" id="loadstatus1">----- 加载失败 -----</div>
-          <div class="morestatus aui-hide" id="loadstatus2">----- 网络异常 -----</div>
-          <div class="morestatus aui-hide" id="loadstatus3">----- 没有新内容 -----</div>
-        </footer>
-<script type="text/javascript" src="../script/api.js"></script>
-<script type="text/javascript" src="../script/js.js"></script>
-<script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
-<script type="text/javascript">
-    var page =0;
-    var limit = 10;
-    var urls = getUrl('Order');
-    var infourl = getUrl('info');
-    // var access_token = $api.getStorage('access_token');
-    var access_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcl9pZCI6MTg0NjQzLCJhcmVhX2lkIjowLCJkZXBhcnRtZW50X2lkIjoxOSwicm9sZV9pZCI6NCwiYWNjb3VudCI6IjEzMDIzOTY3NTIxIiwidXNlcm5hbWUiOiJcdTlhZDhcdTZlYWFcdTRlMWMiLCJzaG9wX2lkIjo0Mywiam9iX251bWJlciI6IjEwMDAwIiwiaGVhZF9pbWciOiJodHRwczpcL1wvaW1nLmlzYXZldS5jblwvaW1hZ2VcL3VzZXJoZWFkXC8yMDE4MTIxMlwvZDRcLzI2MGUzZTkxODRjNzJmZWU5YjFhYWFiYmE0NTdmMC5qcGVnIiwiYXJlYV9uYW1lIjpudWxsLCJyb2xlX25hbWUiOiJcdTY3MGRcdTUyYTFcdTU0NTgiLCJhY3RfbGlzdCI6WyIxIiwiOCIsIjIyIiwiMyIsIjE5IiwiMjQiLCIxOCIsIjIwIiwiMjEiXSwiZGVwYXJ0bWVudF9uYW1lIjoiXHU2NzBkXHU1MmExXHU5MGU4IiwiSW50ZXJ2YWwiOiIwOTowMH4xODowMCIsImlhdCI6MTU0NTcwOTg2MywiZXhwIjoxNTQ2MzE0NjYzfQ.O409t2_93Poj3n2QKR_PHr8p_xJ1t0sIdebaYYBAfEU';
-    apiready = function(){
-        api.addEventListener({
-            name:'swiperight'
-        }, function(ret, err){
-            api.closeFrame();
-        });
-        api.addEventListener({
-            name:'keyback'
-        }, function(ret, err){
-            api.closeFrame();
-        });
-        //第一页数据
-        initData();
-        //滚动到底部数据
-        scrolltobottomEvent();
-
-
-    };
-    initData();
-    //获取第一页数据
-    function initData(){
-        if(page == 0){
-            $.ajax({
-                type: "post",
-                url:urls,
-                data:{
-                    page:page,
-                    limit:limit,
-                    access_token:access_token
-                },
-                dataType:'json',
-                success: function(data){
-                    if (data.code == 0) {
-                        // api.toast();
-                        if(data.data.length>0){
-                            var html = getHtml(data.data);
-                            $api.html($api.byId("orderlist"), html);
-                        }else{
-                            showAllStatus(3);
-                        }
-
-                        page = page+1;
-                    } else {
-                        if(data.data.code == '1001'){
-                            getOut();
-                        }else{
-                            api.alert(data.msg);
-                        }
-                    }
-                }
-            });
-
-            // api.ajax({
-            //     url: urls,
-            //     method: 'post',
-            //     data: {
-            //         values:{
-            //             page:page,
-            //             limit:limit,
-            //             access_token:access_token
-            //         }
-            //     }
-            // }, function(ret, err) {
-            //     if (ret.code == 0) {
-            //         // api.toast();
-            //         if(ret.data.length>0){
-            //             var html = getHtml(ret.data);
-            //             alert(html);
-            //             $api.html($api.byId("orderlist"), html);
-            //         }else{
-            //             showAllStatus(3);
-            //         }
-            //
-            //         page = page+1;
-            //     } else {
-            //         if(ret.data.code == '1001'){
-            //             getOut();
-            //         }else{
-            //             api.alert(ret.msg);
-            //         }
-            //     }
-            // })
-        }
+<div id=app></div>
+<script>mui.init({
+    keyEventBind: {
+        backbutton: true  //关闭back按键监听
     }
-
-
-    //非第一页 加载更多
-    function getDataByPage(){
-        api.ajax({
-            url: urls,
-            method: 'post',
-            data: {
-                values:{
-                    page:page,
-                    limit:limit,
-                    access_token:access_token
-                }
-            }
-        },function(ret, err){
-            // alert(JSON.stringify(ret) );
-            if (ret.code == 0) {
-                if(ret.data.length>0){
-                    var html = getHtml(ret.data);
-                    $api.html($api.byId("orderlist"), html);
-                    page = page+1;
-                }else{
-                    showAllStatus(3);
-                }
-            } else {
-                if(ret.data.code == '1001'){
-                    getOut();
-                }else{
-                    api.alert(ret.msg);
-                }
-            }
-        });
-
-    }
-
-    function scrolltobottomEvent() {
-        //滚动更多
-        api.addEventListener({
-            name: 'scrolltobottom',
-            extra: {
-                threshold: 100 //设置距离底部多少距离时触发，默认值为0，数字类型
-            }
-        }, function(ret, err) {
-            showAllStatus(0);
-            getDataByPage();
-            //alert('已滚动到底部');
-        });
-    }
-    function getHtml(data){
-
-        var html = '';
-        for(var i=0;i<data.length;i++){
-            console.log(data[i]);
-            var name = '';
-            if(data[i].order_type == 0){
-                name = data[i].data[0].name;
-            }else{
-                name = '超市派单';
-            }
-            var onehtml=
-                '<li class="code-box" tapmode onclick="ONclick('+data[i].id+','+data[i].hujiao_time_str+');">\n' +
-                '\t\t\t\t<div class="code-left">\n' +
-                '\t\t\t\t\t<p class="code-weizhi">'+ data[i].weizhi +'</p>\n' +
-                '\t\t\t\t\t<p class="code-weizhi">'+ name +'</p>\n' +
-                '\t\t\t\t</div>\n' +
-                '\t\t\t\t<div class="code-right">\n' +
-                '\t\t\t\t\t<p class="code-txt">'+ data[i].status_text +'</p>\n' +
-                '\t\t\t\t\t<p class="call-time">'+ data[i].hujiao_time +'</p>\n' +
-                '\t\t\t\t</div>\n' +
-                '\t\t\t</li>';
-            html += onehtml;
-        }
-        return html;
-    }
-
-    function ONclick(id,times) {
-        console.log(id);
-        console.log(times);
-        var data = '';
-        var cont_id = '';
-        var name = '';
-        var num = '';
-        var box = '';
-        $.ajax({
-            url: getUrl('info'),
-            type: 'post',
-            datetype:'json',
-            data: {
-                    id:id,
-                    access_token:access_token
-            },
-            success:function (ret) {
-                console.log(ret);
-                if (ret.code == 0) {
-                    // 保存用户信息
-                    data = ret.data.data;
-                    cont_id = ret.data.id;
-                    if(ret.data.order_type == 0){
-                        name = ret.data.data[0].name;
-                        box = ret.data.weizhi;
-                    }else{
-                        name = '超市派单';
-                        box = '超市'
-                    }
-                    num = ret.data.data.length;
-                    console.log(ret.data);
-                    switch (ret.data.status) {
-                        case '3':
-                            goCall(cont_id,name,num,box,data);
-                            break;
-                        case '4':
-                            goCallon(cont_id,name,num,box,data);
-                            break;
-                        case '0':
-                            goCall(cont_id,name,num,box,data);
-                            break;
-                    }
-                } else {
-                    api.toast({
-                        msg: ret.msg,
-                        duration: 2000,
-                        location: 'middle'
-                    });
-                }
-            }
-        });
-        switch (data.status) {
-            case '3':
-                goCall(cont_id,name,num,box,data);
+});
+apiready = function () {
+    /*var uzgetuisdk = api.require('pushGeTui');
+    uzgetuisdk.initialize(function(ret) {
+        var value = "";
+        switch (ret.type) {
+            case 'cid':
+                // value = 'cid:' + ret.cid;
+                window.localStorage.setItem("Cid", ret.cid);
                 break;
-            case '4':
-                goCallon(cont_id,name,num,box,data);
+            case 'payload':
+                value = 'payload:' + ret.payload;
                 break;
-            case '0':
-                goCall(cont_id,name,num,box,data);
+            case 'occurError':
+                value = 'occurError';
+                break;
+            case'onNotificationMessageClicked':
+                value = 'onNotificationMessageClicked' + ret.onNotificationMessageClicked
+                break;
+            case'onNotificationMessageArrived':
+                value = 'onNotificationMessageArrived' + ret.onNotificationMessageArrived
                 break;
         }
+    });*/
 
+    var systemType = api.systemType;
+    var version = api.version;
+    if (systemType == 'ios') {
+        window.localStorage.setItem('detectOS', 1);
+    } else if (systemType == 'android') {
+        window.localStorage.setItem('detectOS', 0);
+    } else {
+        window.localStorage.setItem('detectOS', 2);
     }
-    function goCall(cont_id,name,num,box,data) {
-        console.log('call',name);
-        api.openWin({
-            name: 'call',
-            url: './callon.html',
-            pageParam: {
-                cont_id: cont_id,
-                name:name,
-                num:num,
-                box:box,
-                data:data
-            }
-        });
-    }
-    function goCallon(cont_id,name,num,box,data) {
-        api.openWin({
-            name: 'call',
-            url: './call.html',
-            pageParam: {
-                cont_id: cont_id,
-                name:name,
-                num:num,
-                box:box,
-                data:data
-            }
-        });
-    }
-    //隐藏所有上拉提示
-    function showAllStatus(loadstatus){
-        var loadstatus0 =  $api.byId('loadstatus0');
-        var loadstatus1 =  $api.byId('loadstatus1');
-        var loadstatus2 =  $api.byId('loadstatus2');
-        var loadstatus3 =  $api.byId('loadstatus3');
-        var loadstatus4 =  $api.byId('loadstatus4');
-        $api.addCls(loadstatus0, 'aui-hide');
-        $api.addCls(loadstatus1, 'aui-hide');
-        $api.addCls(loadstatus2, 'aui-hide');
-        $api.addCls(loadstatus3, 'aui-hide');
-        $api.addCls(loadstatus4, 'aui-hide');
+    window.localStorage.setItem('version', version);
 
+    var aliPushDemo = api.require('aliPush');
+    aliPushDemo.isRegister(function (ret, err) {
+        if (ret.status) {
+            getDeviceId();
+        }
+    });
 
-        var currentIdName = 'loadstatus'+loadstatus;
-        var showDom = $api.byId(currentIdName);
-        $api.removeCls(showDom, 'aui-hide');
-    }
+}
+function getDeviceId() {
+    var aliPushDemo = api.require('aliPush');
+    aliPushDemo.getDeviceId(function (ret) {
+        if (ret.status) {
+            window.localStorage.setItem('Cid', ret.DeviceId);
+        } else {
+            getDeviceId();
+        }
+    });
+}
 </script>
+<script type=text/javascript src=./static/js/manifest.c77fc1ca59086f429d9b.js></script>
+<script type=text/javascript src=./static/js/vendor.5cad2dd7c4a8112013d8.js></script>
+<script type=text/javascript src=./static/js/app.0843ca7ad291778e4837.js></script>
 </body>
 </html>

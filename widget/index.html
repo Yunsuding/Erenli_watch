@@ -28,7 +28,7 @@
     apiready = function(){
         aliPush();//阿里云推送
         // initPushGeTui();  // 初始化个推
-        initPedometer();  //开启计步
+        // initPedometer();  //开启计步
         var Cid = $api.getStorage('Cid');
         connect();  //发起WebSocket
         var access_token = $api.getStorage('access_token');
@@ -288,10 +288,21 @@
     function aliPush() {
         var aliPushDemo = api.require('aliPush');
         aliPushDemo.isRegister(function(ret, err) {
-            aliPushDemo.getDeviceId(function (ret) {
-                $api.setStorage('Cid', ret.cid);
+            if(ret.status){
+                getDeviceId();
+            }
 
-            });
+        });
+    }
+
+    function getDeviceId() {
+        var aliPushDemo = api.require('aliPush');
+        aliPushDemo.getDeviceId(function (ret) {
+            if(ret.status){
+                $api.setStorage('Cid', ret.DeviceId);
+            }else{
+                getDeviceId();
+            }
         });
     }
 
