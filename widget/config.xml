@@ -34,7 +34,7 @@
     <feature name="aliPush">
         <param name="AppKey_iOS" value="25521543"/>
         <param name="AppSecret_iOS" value="191687f87716a4192361cb06b391af2a"/>
-        <param name="AppKey_Android" value="25247327"/>
-        <param name="AppSecret_Android" value="b15caa2429ff80bd980f5935bd633ef2"/>
+        <param name="AppKey_Android" value="25523560"/>
+        <param name="AppSecret_Android" value="3a3f6e76494e98b91a28633ec751fcef"/>
     </feature>
 </widget>
