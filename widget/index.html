@@ -24,13 +24,12 @@
     var loadingRemoved = false;
     var winWidth = 0;
     var winHeight = 0;
-    $api.rmStorage('clientId');
+    var Cid = $api.getStorage('Cid');
     apiready = function(){
         api.setStatusBarStyle({
             style: 'light'
         });
         aliPush();//阿里云推送
-        var Cid = $api.getStorage('Cid');
         aliPushListener();
         var access_token = $api.getStorage('access_token');
         winWidth = api.winWidth;
@@ -111,7 +110,6 @@
                     break;
                 // 当mvc框架调用GatewayClient发消息时直接alert出来
                 case 'watch_login_out':
-                    var Cid = $api.getStorage('Cid');
                     if(data.data.getui_id != Cid){
                         $api.rmStorage('access_token');
                         $api.rmStorage('user_id');
@@ -124,7 +122,6 @@
                     }
                     break;
                 case 'watch_Login_exit':
-                    var Cid = $api.getStorage('Cid');
                     $api.rmStorage('access_token');
                     $api.rmStorage('user_id');
                     $api.rmStorage('username');
@@ -209,6 +206,7 @@
     function aliPush() {
         var aliPushDemo = api.require('aliPush');
         aliPushDemo.isRegister(function(ret, err) {
+            onBrowserStateChange(1);
             if(ret.status){
                 getDeviceId();
             }
@@ -218,9 +216,9 @@
     function getDeviceId() {
         var aliPushDemo = api.require('aliPush');
         aliPushDemo.getDeviceId(function (ret) {
-            onBrowserStateChange(1);
             if(ret.status){
                 $api.setStorage('Cid', ret.DeviceId);
+                Cid = ret.DeviceId;
                 onBrowserStateChange(2);
                 removeLogic();
             }else{
@@ -250,11 +248,21 @@
                 screenWake();
                 if(ret.status){
                     if(ret.extraMap.type == 'watch_login'){
+                        alert(ret.extraMap.data);
                         var data = JSON.parse(ret.extraMap.data);
-                        $api.setStorage("access_token", data.access_token);
-                        $api.setStorage("user_id", data.user_id);
-                        $api.setStorage("shop_id", data.data.shop_id);
-                        goIndex();
+                        if(data.getui_id == Cid){
+                            $api.setStorage("access_token", data.access_token);
+                            $api.setStorage("user_id", data.user_id);
+                            $api.setStorage("shop_id", data.shop_id);
+                            goIndex();
+                        }else{
+                            $api.rmStorage('access_token');
+                            $api.rmStorage('user_id');
+                            $api.rmStorage('username');
+                            $api.rmStorage('shop_id');
+                            goLogin();
+                        }
+
                     }
                 }
             });
