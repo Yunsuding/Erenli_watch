@@ -11,26 +11,26 @@
 <body>
 <div id="wrap">
     <div id="header"></div>
-    <div id="main">
-
+    <div id="main" class='center'>
+        <img id='loading' src='image/load2.gif' style="width: 100%">
     </div>
 </div>
 </body>
 <script type="text/javascript" src="./script/api.js"></script>
-<script type="text/javascript" src="./script/reconnecting-websocket.min.js"></script>
+<!--<script type="text/javascript" src="./script/reconnecting-websocket.min.js"></script>-->
 <script type="text/javascript" src="./script/js.js"></script>
 <script type="text/javascript">
-    var getI = 1;
-    var websocket = getUrl('websocket');
+    var launchRemoved = false;
+    var loadingRemoved = false;
     var winWidth = 0;
     var winHeight = 0;
     $api.rmStorage('clientId');
     apiready = function(){
+        api.setStatusBarStyle({
+            style: 'light'
+        });
         aliPush();//阿里云推送
-        // initPushGeTui();  // 初始化个推
-        // initPedometer();  //开启计步
         var Cid = $api.getStorage('Cid');
-        // connect();  //发起WebSocket
         aliPushListener();
         var access_token = $api.getStorage('access_token');
         winWidth = api.winWidth;
@@ -44,61 +44,6 @@
             goLogin();
         }
     };
-
-    // 开启计步
-    function initPedometer(){
-        var pedometer = api.require('pedometer');
-        pedometer.startCount(function (ret) {
-            // alert(ret.steps);
-            if(getI == 1) {
-                var getSteps = getStepsnum();
-                if (getSteps.code == 0 && getSteps.data != 0) {
-                    $api.setStorage("oldgetSteps", getSteps);
-                }
-            }
-            getI = getI +1;
-        });
-    }
-
-    function getCounts() {
-        var pedometer = api.require('pedometer');
-        pedometer.getSteps(function(ret) {
-            // alert(ret.steps);
-            Steps = ret.steps;
-            var oldgetSteps = $api.getStorage("oldgetSteps");
-            if(oldgetSteps && oldgetSteps != 'undefined'){
-                Steps = oldgetSteps + Steps;
-            }
-            $api.setStorage("getSteps", Steps);
-        });
-
-    }
-
-    // function getStepsnum() {
-    //     var data = 0;
-    //     api.ajax({
-    //         url: getUrl('getSteps'),
-    //         method: 'post',
-    //         data: {
-    //             values:{
-    //                 access_token:access_token
-    //             }
-    //         }
-    //     },function(ret, err){
-    //         // alert(JSON.stringify(ret) );
-    //         if (ret.code == 0) {
-    //             // api.toast();
-    //             data =  ret;
-    //         } else {
-    //             if(ret.data.code == '1001'){
-    //                 getOuts();
-    //             }else{
-    //                 api.alert(ret.msg);
-    //             }
-    //         }
-    //     });
-    //     return data;
-    // }
     // WebSocket连接
     function connect() {
         // 创建websocket
@@ -273,8 +218,11 @@
     function getDeviceId() {
         var aliPushDemo = api.require('aliPush');
         aliPushDemo.getDeviceId(function (ret) {
+            onBrowserStateChange(1);
             if(ret.status){
                 $api.setStorage('Cid', ret.DeviceId);
+                onBrowserStateChange(2);
+                removeLogic();
             }else{
                 getDeviceId();
             }
@@ -318,43 +266,38 @@
                 screenWake();
             });
     }
-    
-    // // 初始化第三方推送模块，个推
-    // function initPushGeTui() {
-    //     var pushGeTui = api.require('pushGeTui');
-    //
-    //     // 注册设备和应用信息到个推
-    //     pushGeTui.initialize(function(ret) {
-    //         var value = "";
-    //
-    //         // 区分通知和消息
-    //         switch (ret.type) {
-    //             // 返回个推平台上的ID
-    //             case 'cid':
-    //                 $api.setStorage('Cid', ret.cid);
-    //                 break;
-    //             // 返回消息内容
-    //             case 'payload':
-    //                 value = 'payload:' + ret.payload;
-    //                 // 解析消息体
-    //                 // fnParsePayLoad(ret.payload);
-    //                 break;
-    //             case 'occurError':
-    //                 value = 'occurError';
-    //                 break;
-    //             default:
-    //                 break;
-    //         }
-    //     });
-    // }
-    //
-    //
-    // // 重新获取Cid
-    // function fetchClientId() {
-    //     var uzgetuisdk = api.require('pushGeTui');
-    //     uzgetuisdk.fetchClientId(function(ret, err) {
-    //         $api.setStorage('Cid', ret.cid);
-    //     });
-    // }
+    function onBrowserStateChange(ret){
+        if(1 == ret){//开始加载
+            if(!launchRemoved){
+                launchRemoved = true;
+                removeLaunch();
+            }
+        }
+        if(2 == ret){
+            if(!loadingRemoved){
+                loadingRemoved = true;
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+    }
+
+    function removeLogic(){
+        setTimeout(function(){
+            if(!launchRemoved){
+                launchRemoved = true;
+                removeLaunch();
+            }
+        }, 3000);
+    }
+
+    function removeLaunch(){
+        api.removeLaunchView({
+            animation:{
+                type:"fade",
+                subType:"from_right",
+                duration:300
+            }
+        });
+    }
 </script>
 </html>
