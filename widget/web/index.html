@@ -60,6 +60,7 @@
 		var clock = new Clock();
 		clock.display(getMinutes,getHours,getday,getdate,getSecond);
 		apiready = function(){
+            aliPushListener();
 			var access_token = $api.getStorage('access_token');
 			var username = $api.getStorage('username');
 			if(access_token != 'undefined' && username != 'undefined'){
@@ -106,6 +107,31 @@
             exitApp();
             // getSteps();
 		}
+        function screenWake() {
+            var sw = api.require('screenWake');
+            sw.addScreenWake();
+        }
+
+        function aliPushListener() {
+            var obj = api.require('aliPush');
+            obj.isRegister(function(ret, err) {
+            });
+            obj.addEventListener({
+                    name: 'onNotification'
+                },
+                function(ret, err) {
+                    screenWake();
+                    alert("onNotification>>>addEventListener>>>>" + JSON.stringify(ret));
+
+                });
+            obj.addEventListener({
+                    name: 'onNotificationOpened'
+                },
+                function(ret, err) {
+                    alert("onNotificationOpened>>>addEventListener>>>>" + JSON.stringify(ret));
+                    screenWake();
+                });
+        }
         function exitApp(){
             api.addEventListener({
                 name: 'keyback'

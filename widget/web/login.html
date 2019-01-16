@@ -5,152 +5,133 @@
 	<title>登录页</title>
 	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
 	<!-- <meta name="viewport" content="width=device-width"> -->
-    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
 	<link rel="stylesheet" type="text/css" href="../css/api.css" />
 </head>
 <body>
-	<div class=" base-columnAcJc" id="number_login" style="display: none;">
-		<div class="user-login">
-			<input class="user-num" id="username" class="input" type="text" placeholder="用户名">
-			<!-- 密码可能要做一个显示隐藏的眼睛 --> 
-			<input class="user-num" id="password" class="input" type="password" placeholder="密码">
-		</div>
-		<button class="login-btn" onclick="fnLogin();">登录</button>
-		<p tapmode onclick="ONchagecode(1);" style="color: #A2FE01;font-size: 25px;margin-top: 20px;">切换二维码登录</p>
+<div class=" base-columnAcJc" id="number_login" style="display: none;">
+	<div class="user-login">
+		<input class="user-num" id="username" class="input" type="text" placeholder="用户名">
+		<!-- 密码可能要做一个显示隐藏的眼睛 -->
+		<input class="user-num" id="password" class="input" type="password" placeholder="密码">
 	</div>
-	<div class=" base-columnAcJc" id="qrcode_login" style="display: block;">
-		<div class="perform-code" >
-			<img src="" alt="" id="Rqcode">
-			<p tapmode onclick="ONchagecode(2);" style="color: #A2FE01;font-size: 20px;margin-top: 10px;text-align: center;">切换账号登录</p>
-		</div>
-		
+	<button class="login-btn" onclick="fnLogin();">登录</button>
+	<p tapmode onclick="ONchagecode(1);" style="color: #A2FE01;font-size: 25px;margin-top: 20px;">切换二维码登录</p>
+</div>
+<div class=" base-columnAcJc" id="qrcode_login" style="display: block;">
+	<div class="perform-code" >
+		<div id="Rqcode"></div>
+		<!--<p tapmode onclick="ONchagecode(2);" style="color: #A2FE01;font-size: 20px;margin-top: 10px;text-align: center;">切换账号登录</p>-->
 	</div>
-	<script type="text/javascript" src="../script/api.js"></script>
-	<script type="text/javascript" src="../script/js.js"></script>
-	<script type="text/javascript">
-		apiready = function(){
-            FNScanner();
-            exitApp();
-		}
-		function FNScanner() {
-            var cid = $api.getStorage('Cid');
-            if(!cid){
-            	var uzgetuisdk = api.require('pushGeTui');
-            	uzgetuisdk.fetchClientId(function(ret, err) {
-            		cid = ret.cid;
-            	    $api.setStorage('Cid', ret.cid);
-            	});
-            	window.setTimeout(function() {FNScanner();}, 1000);
-            }
-            var clientId = $api.getStorage("clientId");
-            var FNScanner = api.require('FNScanner');
-            var codecontent = clientId+'|'+cid;
-            FNScanner.encodeImg({
-                content: codecontent,
-                saveToAlbum: false,
-                saveImg: {
-                    path: 'fs://ercode.png',
-                    w: 400,
-                    h: 400
-                }
-            }, function(ret, err) {
-                if (ret.status) {
-                    var inimg = $api.byId('Rqcode');
-                    inimg.src = ret.imgPath;
-                } else {
-                    alert(JSON.stringify(err));
-                }
-            });
+
+</div>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/js.js"></script>
+<script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../script/jquery.qrcode.min.js"></script>
+<script type="text/javascript">
+    var cid = $api.getStorage('Cid');
+    apiready = function(){
+        FNScanner();
+        exitApp();
+    }
+    function FNScanner() {
+        $('#Rqcode').qrcode({
+            text : cid , //设置二维码内容
+            render : "canvas",//设置渲染方式
+            background : "#ffffff",//背景颜色
+            foreground : "#000000" //前景颜色
+        });
+    }
+    function ONchagecode(res){
+        var codelogin = $api.byId('qrcode_login'),
+            userlogin = $api.byId('number_login');
+        if(res == 1){
+            codelogin.style.display = 'block';
+            userlogin.style.display = 'none';
+        }else{
+            codelogin.style.display = 'none';
+            userlogin.style.display = 'block';
         }
-		function ONchagecode(res){
-			var codelogin = $api.byId('qrcode_login'),
-				userlogin = $api.byId('number_login');
-			if(res == 1){
-				codelogin.style.display = 'block';
-				userlogin.style.display = 'none';		
-			}else{
-				codelogin.style.display = 'none';
-				userlogin.style.display = 'block';		
-			}
-		}
-		var Cid = $api.getStorage("Cid");
-		var newtime = getNowFormatDate();
-		var loginUrl = getUrl('login');
-		// 登录
-		function fnLogin() {
-			var usernameValue = $api.val($api.byId('username'));
-			var passwordValue = $api.val($api.byId('password'));
-			if(!usernameValue){
-				alert('用户名称不能为空');
-			}
-			if(!passwordValue){
-				alert('密码不能为空');
-			}
-		    api.ajax({
-		        url: loginUrl,
-		        method: 'post',
-		        data: {
-		        	values:{
-		        		account:usernameValue,
-		        		password:passwordValue,
-		        		is_watch:1,
-		        		getui_id:Cid
-		        	}
-		        }
-		    }, function(ret, err) {
-		        if (ret.code == 0) {
-		            // 保存用户信息
-		            $api.setStorage('access_token', ret.data.access_token);
-		            $api.setStorage('user_id', ret.user_id);
-		            $api.setStorage("shop_id", ret.shop_id);
-		            api.alert({
-		                title: '提示',
-		                msg: '登录成功',
-		            }, function(ret, err) {
-		            	api.openWin({
-	                        name: 'index',
-	                        url: './index.html'
-	                    });
-		            });
-		        } else {
-		            api.toast({
-		                msg: ret.msg,
-		                duration: 2000,
-		                location: 'middle'
-		            });
-		        }
-		    });
-		}
-        function exitApp(){
+    }
+    var Cid = $api.getStorage("Cid");
+    var newtime = getNowFormatDate();
+    var loginUrl = getUrl('login');
+    // 登录
+    function fnLogin() {
+        var usernameValue = $api.val($api.byId('username'));
+        var passwordValue = $api.val($api.byId('password'));
+        if(!usernameValue){
+            alert('用户名称不能为空');
+        }
+        if(!passwordValue){
+            alert('密码不能为空');
+        }
+        api.ajax({
+            url: loginUrl,
+            method: 'post',
+            data: {
+                values:{
+                    account:usernameValue,
+                    password:passwordValue,
+                    is_watch:1,
+                    getui_id:Cid
+                }
+            }
+        }, function(ret, err) {
+            if (ret.code == 0) {
+                // 保存用户信息
+                $api.setStorage('access_token', ret.data.access_token);
+                $api.setStorage('user_id', ret.user_id);
+                $api.setStorage("shop_id", ret.shop_id);
+                api.alert({
+                    title: '提示',
+                    msg: '登录成功',
+                }, function(ret, err) {
+                    api.openWin({
+                        name: 'index',
+                        url: getUrl('lujing')+'index.html'
+                    });
+                });
+            } else {
+                api.toast({
+                    msg: ret.msg,
+                    duration: 2000,
+                    location: 'middle'
+                });
+            }
+        });
+    }
+    function exitApp(){
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err){
+            api.toast({
+                msg: '在次点击返回键退出APP',
+                duration:2000,
+                location: 'bottom'
+            });
+
             api.addEventListener({
                 name: 'keyback'
             }, function(ret, err){
-                api.toast({
-                    msg: '在次点击返回键退出APP',
-                    duration:2000,
-                    location: 'bottom'
+                $api.setStorage("gesture",false);
+                $api.rmStorage('access_token');
+                $api.rmStorage('user_id');
+                $api.rmStorage('username');
+                $api.rmStorage('shop_id');
+                api.closeWidget({
+                    id: 'A6097552195788', //这里需要修改为自己的应用ID
+                    retData: {name:'closeWidget'},
+                    silent:true
                 });
-
-                api.addEventListener({
-                    name: 'keyback'
-                }, function(ret, err){
-                    $api.setStorage("gesture",false);
-                    $api.rmStorage('access_token');
-                    $api.rmStorage('user_id');
-                    $api.rmStorage('username');
-                    $api.rmStorage('shop_id');
-                    api.closeWidget({
-                        id: 'A6097552195788', //这里需要修改为自己的应用ID
-                        retData: {name:'closeWidget'},
-                        silent:true
-                    });
-                });
-
-                setTimeout(function(){
-                    exitApp();
-                },3000)
             });
-        }
-	</script>
+
+            setTimeout(function(){
+                exitApp();
+            },3000)
+        });
+    }
+</script>
 </body>
 </html>

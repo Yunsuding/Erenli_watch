@@ -30,7 +30,7 @@
         // initPushGeTui();  // 初始化个推
         // initPedometer();  //开启计步
         var Cid = $api.getStorage('Cid');
-        connect();  //发起WebSocket
+        // connect();  //发起WebSocket
         aliPushListener();
         var access_token = $api.getStorage('access_token');
         winWidth = api.winWidth;
@@ -210,24 +210,7 @@
     function onmessage(e) {
 
     }
-    function getBind() {
-        api.ajax({
-            url:getUrl('bind'),
-            method: 'post',
-            data: {
-                values:{
-                    client_id:$api.getStorage('clientId'),
-                    access_token:$api.getStorage('access_token')
-                }
-            }
-        }, function(ret, err) {
-            // if (ret.code == 0) {
-            //     ws.send('{"type":"watch_login_init"}');
-            // } else {
-            //     alert(JSON.stringify(ret));
-            // }
-        });
-    }
+
     // 打开首页窗口
     function goIndex() {
         api.openWin({
@@ -240,26 +223,17 @@
         $api.rmStorage('user_id');
         $api.rmStorage('username');
         $api.rmStorage('shop_id');
-        if($api.getStorage('clientId') && $api.getStorage('clientId') != 'undefined'){
-            api.openWin({
-                name: 'login',
-                url: './web/login.html',
-            });
-        }else{
-            window.setTimeout(function() {getOuts();}, 500);
-        }
+        api.openWin({
+            name: 'login',
+            url: './web/login.html',
+        });
     }
     // 打开登录窗口
     function goLogin() {
-        if($api.getStorage('clientId') && $api.getStorage('clientId') != 'undefined'){
-            api.openWin({
-                name: 'login',
-                url: './web/login.html',
-            });
-        }else{
-            window.setTimeout(function() {goLogin();}, 500);
-        }
-
+        api.openWin({
+            name: 'login',
+            url: './web/login.html',
+        });
     }
     // 打开服务窗
     function goCall(data) {
@@ -311,7 +285,7 @@
         var sw = api.require('screenWake');
         sw.addScreenWake();
     }
-    
+
     function aliPushListener() {
         var obj = api.require('aliPush');
         obj.addEventListener({
@@ -325,8 +299,16 @@
                 name: 'onNotification'
             },
             function(ret, err) {
-                // alert("onNotification>>>addEventListener>>>>" + JSON.stringify(ret));
                 screenWake();
+                if(ret.status){
+                    if(ret.extraMap.type == 'watch_login'){
+                        var data = JSON.parse(ret.extraMap.data);
+                        $api.setStorage("access_token", data.access_token);
+                        $api.setStorage("user_id", data.user_id);
+                        $api.setStorage("shop_id", data.data.shop_id);
+                        goIndex();
+                    }
+                }
             });
         obj.addEventListener({
                 name: 'onNotificationOpened'

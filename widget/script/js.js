@@ -49,6 +49,9 @@ function getUrl(e){
         case 'websocket':
             return 'wss://'+domains+':7272';
             break;
+        case 'lujing':
+            return domain+'/watch/web/';
+            break;
         default :
             return domain+'/human/api.watch/watch_Login_out';
         break;

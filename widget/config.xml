@@ -6,7 +6,7 @@
     <author email="steven@ihuizong.cn" href="https://www.ihuizong.cn">
         Developer
     </author>
-    <content src="https://www.isaveu.cn/watch/"/>
+    <content src="index.html"/>
     <access origin="*"/>
     <preference name="pageBounce" value="false"/>
     <preference name="appBackground" value="rgba(0,0,0,0.0)"/>

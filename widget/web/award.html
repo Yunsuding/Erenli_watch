@@ -7,20 +7,20 @@
     <link rel="stylesheet" type="text/css" href="../css/api.css"/>
     <style>
         body{
-            
+
         }
     </style>
 </head>
 <body>
- <div class=" base-columnAcJc">
-		<div class="perform-code" >
-			<img src="" alt="" id="Rqcode">
-			<p tapmode onclick="ONchage();" style="color: #A2FE01;font-size: 20px;margin-top: 10px;text-align: center;">返回</p>
-		</div>
-		
-	</div>
-	<script type="text/javascript" src="../script/api.js"></script>
-	<script type="text/javascript" src="../script/js.js"></script>
+<div class=" base-columnAcJc">
+    <div class="perform-code" >
+        <div id="Rqcode"></div>
+        <p tapmode onclick="ONchage();" style="color: #A2FE01;font-size: 20px;margin-top: 10px;text-align: center;">返回</p>
+    </div>
+
+</div>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/js.js"></script>
 <script type="text/javascript">
     apiready = function(){
         FNScanner(api.pageParam.id);
@@ -28,25 +28,36 @@
     function FNScanner(id) {
         var shop_id = $api.getStorage('shop_id');
         var user_id = $api.getStorage('user_id');
-        var FNScanner = api.require('FNScanner');
         var codecontent = getUrl('toUrl') + '?shopId=' + shop_id + '&id=' + id+'&waiterId=' + user_id;
-        FNScanner.encodeImg({
-            content: codecontent,
-            saveToAlbum: false,
-            saveImg: {
-                path: 'fs://award.png',
-                w: 400,
-                h: 400
-            }
-        }, function(ret, err) {
-            if (ret.status) {
-                var inimg = $api.byId('Rqcode');
-                inimg.src = ret.imgPath;
-            } else {
-                alert(JSON.stringify(err));
-            }
+        $('#Rqcode').qrcode({
+            text : codecontent , //设置二维码内容
+            render : "canvas",//设置渲染方式
+            background : "#ffffff",//背景颜色
+            foreground : "#000000" //前景颜色
         });
     }
+    // function FNScanner(id) {
+    //     var shop_id = $api.getStorage('shop_id');
+    //     var user_id = $api.getStorage('user_id');
+    //     var FNScanner = api.require('FNScanner');
+    //     var codecontent = getUrl('toUrl') + '?shopId=' + shop_id + '&id=' + id+'&waiterId=' + user_id;
+    //     FNScanner.encodeImg({
+    //         content: codecontent,
+    //         saveToAlbum: false,
+    //         saveImg: {
+    //             path: 'fs://award.png',
+    //             w: 400,
+    //             h: 400
+    //         }
+    //     }, function(ret, err) {
+    //         if (ret.status) {
+    //             var inimg = $api.byId('Rqcode');
+    //             inimg.src = ret.imgPath;
+    //         } else {
+    //             alert(JSON.stringify(err));
+    //         }
+    //     });
+    // }
     function ONchage(){
         api.closeWin({
             name: 'call'
