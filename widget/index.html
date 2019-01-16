@@ -43,114 +43,70 @@
             goLogin();
         }
     };
-    // WebSocket连接
-    function connect() {
-        // 创建websocket
-        var ws = new ReconnectingWebSocket(websocket);
-        // 当socket连接打开时，输入用户名
-        //ws.onopen = onopen;
-        // 当有消息时根据消息类型显示不同信息
-        ws.onmessage = function(e){
-            // json数据转换成js对象
-            var data = eval("(" + e.data + ")");
-            var type = data.type || '';
-            var token = $api.getStorage("access_token");
-            switch (type) {
-                // Events.php中返回的init类型的消息，将client_id发给后台进行uid绑定
-                case 'init':
-                    if($api.getStorage('clientId') && $api.getStorage('clientId') != 'undefined'){
-                        $api.rmStorage('clientId');
-                    }
-                    $api.setStorage("clientId", data.client_id);
-                    ws.send('{"type":"watch_login_init","clientId":"'+data.client_id+'"}');
-                    if(token && token != 'undefined'){
-                        getBind();
-                    }
-                    break;
-                case 'watch_login'://手表绑定
-                    $api.setStorage("access_token", data.access_token);
-                    $api.setStorage("user_id", data.user_id);
-                    $api.setStorage("shop_id", data.shop_id);
-                    goIndex();
-                    ws.send('{"type":"watch_login_on","user_id":"'+data.user_id+'"}');
-                    getBind();
-                    break;
-                case 'call'://呼叫服务
-                    goCall(data);
-                    // api.notification({
-                    //     vibrate:[500, 500, 200]
-                    // });
-                    break;
-                case 'pager'://呼叫器呼叫
-                    goCall(data);
-                    // api.notification({
-                    //     vibrate:[500, 500, 200]
-                    // });
-                    break;
-                case 'alarm'://报警
-                    console.log(data);
-                    break;
-                case 'admit'://接单
-                    console.log(data);
-                    break;
-                // 服务端ping客户端
-                case 'ping':
-                    if(token && token != 'undefined'){
-                        ws.send('{"type":"pong","is_watch":"1","user_id":"'+user_id+'","count_steps":"0"}');
-                        // // getCounts();
-                        // var user_id = $api.getStorage('user_id');
-                        // var allSteps = $api.getStorage('getSteps');
-                        // if(!allSteps || allSteps == 'undefined'){
-                        //     allSteps = 0;
-                        // }
-                        // ws.send('{"type":"pong","is_watch":"1","user_id":"'+user_id+'","count_steps":"'+ allSteps +'"}');
-                    }else{
-                        ws.send('{"type":"pong"}');
-                    }
-                    break;
-                // 当mvc框架调用GatewayClient发消息时直接alert出来
-                case 'watch_login_out':
-                    if(data.data.getui_id != Cid){
-                        $api.rmStorage('access_token');
-                        $api.rmStorage('user_id');
-                        $api.rmStorage('username');
-                        $api.rmStorage('shop_id');
-                        ws.send('{"type":"watch_login_out_ok","getui_id":"'+Cid+'","out":"OK"}');
-                        goLogin();
-                    }else{
-                        ws.send('{"type":"watch_login_out_ok","getui_id":"'+Cid+'"","out":"is_in"}');
-                    }
-                    break;
-                case 'watch_Login_exit':
-                    $api.rmStorage('access_token');
-                    $api.rmStorage('user_id');
-                    $api.rmStorage('username');
-                    $api.rmStorage('shop_id');
-                    goLogin();
-                    ws.send('{"type":"watch_Login_exit_ok","getui_id":"'+Cid+'","out":"OK"}');
-                    break;
-                // 登录到别的手表后，进行登出
-                default :
-                    //console.log('当mvc框架调用GatewayClient发消息');
-                    break;
-            }
-        };
-        ws.onerror = function () {
-            // api.alert({
-            //     title: '提示',
-            //     msg: '远程服务连接失败，请重试！',
-            // }, function(ret, err) {
-            //     api.closeWidget({
-            //         id: 'A6097552195788', //这里需要修改为自己的应用ID
-            //         retData: {name:'closeWidget'},
-            //         silent:true
-            //     });
-            // });
-        };
-    }
-    // 服务端发来消息时
-    function onmessage(e) {
+    function aliPushListener() {
+        var obj = api.require('aliPush');
+        obj.addEventListener({
+                name: 'onMessage'
+            },
+            function(ret, err) {
+                // alert("onMessage>>>addEventListener>>>>" + JSON.stringify(ret));
+                screenWake();
+            });
+        obj.addEventListener({
+                name: 'onNotification'
+            },
+            function(ret, err) {
+                screenWake();
+                if(ret.status){
+                    var data = JSON.parse(ret.extraMap.data);
+                    switch (ret.extraMap.type) {
+                        case 'watch_login':
+                            if (data.getui_id == Cid) {
+                                $api.setStorage("access_token", data.access_token);
+                                $api.setStorage("user_id", data.user_id);
+                                $api.setStorage("shop_id", data.shop_id);
+                                goIndex();
+                            } else {
+                                $api.rmStorage('access_token');
+                                $api.rmStorage('user_id');
+                                $api.rmStorage('username');
+                                $api.rmStorage('shop_id');
+                                goLogin();
+                            }
+                            break;
+                        case 'call':
+                            alert(JSON.stringify(data));
+                            goCall(data);
+                            break;
+                        case 'pager':
+                            alert(JSON.stringify(data));
+                            goCall(data);
+                            break;
+                        case 'alarm':
 
+                            break;
+                        case 'admit':
+
+                            break;
+                        case 'watch_Login_exit':
+                            $api.rmStorage('access_token');
+                            $api.rmStorage('user_id');
+                            $api.rmStorage('username');
+                            $api.rmStorage('shop_id');
+                            goLogin();
+                            break;
+                        default :
+                            break;
+                    }
+                }
+            });
+        obj.addEventListener({
+                name: 'onNotificationOpened'
+            },
+            function(ret, err) {
+                // alert("onNotificationOpened>>>addEventListener>>>>" + JSON.stringify(ret));
+                screenWake();
+            });
     }
 
     // 打开首页窗口
@@ -232,48 +188,6 @@
         sw.addScreenWake();
     }
 
-    function aliPushListener() {
-        var obj = api.require('aliPush');
-        obj.addEventListener({
-                name: 'onMessage'
-            },
-            function(ret, err) {
-                // alert("onMessage>>>addEventListener>>>>" + JSON.stringify(ret));
-                screenWake();
-            });
-        obj.addEventListener({
-                name: 'onNotification'
-            },
-            function(ret, err) {
-                screenWake();
-                if(ret.status){
-                    if(ret.extraMap.type == 'watch_login'){
-                        alert(ret.extraMap.data);
-                        var data = JSON.parse(ret.extraMap.data);
-                        if(data.getui_id == Cid){
-                            $api.setStorage("access_token", data.access_token);
-                            $api.setStorage("user_id", data.user_id);
-                            $api.setStorage("shop_id", data.shop_id);
-                            goIndex();
-                        }else{
-                            $api.rmStorage('access_token');
-                            $api.rmStorage('user_id');
-                            $api.rmStorage('username');
-                            $api.rmStorage('shop_id');
-                            goLogin();
-                        }
-
-                    }
-                }
-            });
-        obj.addEventListener({
-                name: 'onNotificationOpened'
-            },
-            function(ret, err) {
-                // alert("onNotificationOpened>>>addEventListener>>>>" + JSON.stringify(ret));
-                screenWake();
-            });
-    }
     function onBrowserStateChange(ret){
         if(1 == ret){//开始加载
             if(!launchRemoved){
