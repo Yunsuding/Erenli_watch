@@ -139,7 +139,7 @@
                     name = '超市派单';
                 }
                 var onehtml=
-                    '<li class="code-box" tapmode onclick="ONclick('+data[i].id+','+data[i].hujiao_time_str+','+data[i].status+');">\n' +
+                    '<li class="code-box" tapmode onclick="ONclick('+data[i].id+';">\n' +
                     '\t\t\t\t<div class="code-left">\n' +
                     '\t\t\t\t\t<p class="code-weizhi">'+ data[i].weizhi +'</p>\n' +
                     '\t\t\t\t\t<p class="code-weizhi">'+ name +'</p>\n' +
@@ -153,27 +153,7 @@
             }
             return html;
         }
-        function ONclick(id,time_str,status) {
-            var time = Date.parse(new Date()) / 1000;
-            var lasttime = time - time_str;
-            if(status == 3){
-                ONclick(id);
-			}else{
-                if(lasttime <= 1200){
-                    api.openWin({
-                        name: 'call'+id,
-                        url: './award.html',
-                        pageParam: {
-                            id: id
-                        }
-                    });
-                }else{
-                    $api.toast('超时，无法生成二维码~')
-                }
-			}
 
-
-        }
         function ONclick(id) {
             var data = '';
             var cont_id = '';
