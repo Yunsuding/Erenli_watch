@@ -6,24 +6,12 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>E人力智能人力系统</title>
     <link rel="stylesheet" type="text/css" href="./css/api.css" />
-    <style>
-        .bjtu{
-            background-image: url("launch/launch1080x1882.png");
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background-repeat:no-repeat ;
-            background-position-x:center ;
-            background-position-y:center ;
-            background-size: contain ;
-        }
-    </style>
 </head>
 <body>
 <div id="wrap">
     <div id="header"></div>
-    <div id="main" class='center bjtu' style="">
-        <!--<img id='loading' src='launch/launch1080x1882.png' style="width: 100%">-->
+    <div id="main" class='center' style=" -webkit-box-flex: 1; -webkit-flex: 1;flex: 1;padding: 2em;">
+        <img id='loading' src='image/load.gif' style="width: 100%">
     </div>
 </div>
 </body>
@@ -34,11 +22,6 @@
     var Cid = $api.getStorage('Cid');
     var access_token = $api.getStorage('access_token');
     apiready = function(){
-        var winWidth = api.winWidth;
-        var winHeight = api.winHeight;
-        var main = $api.byId('main');
-        main.style.width = winWidth;
-        main.style.height = winHeight;
         aliPush();//阿里云推送
         aliPushListener();
     };
