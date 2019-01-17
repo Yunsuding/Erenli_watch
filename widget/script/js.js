@@ -85,6 +85,7 @@ function Clock() {
     this.year = date.getFullYear();
     this.month = date.getMonth() + 1;
     this.date = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+    this.DateDay = date.getMonth() + 1 +'月'+this.date+'日';
     this.day = new Array("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六")[date.getDay()];
     this.hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
     this.minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
@@ -104,12 +105,15 @@ function Clock() {
     this.getSeconds = function(){
         return this.second;
     }
+    this.getDateDay = function(){
+        return this.DateDay;
+    }
     this.display = function(getMinutes,getHours,getday,getdate,getSecond) {
         var clock = new Clock();
         getMinutes.innerHTML = clock.getMinutes();
         getHours.innerHTML = clock.getHours();
         getday.innerHTML = clock.getDay();
-        getdate.innerHTML = clock.getDate();
+        getdate.innerHTML = clock.getDateDay();
         if(this.second%2 == 0){
             getSecond.style.color = 'white';
         }else{
