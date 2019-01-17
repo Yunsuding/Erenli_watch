@@ -15,7 +15,7 @@
 <div class=" base-columnAcJc">
     <div class="perform-code" >
         <div id="Rqcode"></div>
-        <p tapmode onclick="ONchage();" style="color: #A2FE01;font-size: 20px;margin-top: 10px;text-align: center;">返回</p>
+        <p tapmode onclick="ONchage(api.pageParam.id);" style="color: #A2FE01;font-size: 20px;margin-top: 10px;text-align: center;">返回</p>
     </div>
 
 </div>
@@ -39,9 +39,9 @@
         });
     }
 
-    function ONchage(){
+    function ONchage(id){
         api.closeWin({
-            name: 'call'
+            name: 'call'+id
         });
     }
 </script>
