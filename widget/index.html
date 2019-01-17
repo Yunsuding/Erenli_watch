@@ -12,7 +12,7 @@
 <div id="wrap">
     <div id="header"></div>
     <div id="main" class='center'>
-        <img id='loading' src='image/load2.gif' style="width: 100%">
+        <img id='loading' src='image/load.gif' style="width: 100%">
     </div>
 </div>
 </body>
@@ -25,23 +25,13 @@
     var winWidth = 0;
     var winHeight = 0;
     var Cid = $api.getStorage('Cid');
+    var access_token = $api.getStorage('access_token');
     apiready = function(){
         api.setStatusBarStyle({
             style: 'light'
         });
         aliPush();//阿里云推送
         aliPushListener();
-        var access_token = $api.getStorage('access_token');
-        winWidth = api.winWidth;
-        winHeight = api.winHeight;
-        // 判断当前用户是否登录了
-        if (access_token && access_token != 'undefined') {
-            // 登录成功，打开个人中心Window
-            goIndex();
-        } else {
-            // 没有登录，打开登录Window
-            goLogin();
-        }
     };
     function aliPushListener() {
         var obj = api.require('aliPush');
@@ -106,6 +96,16 @@
                 screenWake();
             });
     }
+    function Login() {
+        // 判断当前用户是否登录了
+        if (access_token && access_token != 'undefined') {
+            // 登录成功，打开个人中心Window
+            goIndex();
+        } else {
+            // 没有登录，打开登录Window
+            goLogin();
+        }
+    }
 
     // 打开首页窗口
     function goIndex() {
@@ -160,7 +160,6 @@
     function aliPush() {
         var aliPushDemo = api.require('aliPush');
         aliPushDemo.isRegister(function(ret, err) {
-            onBrowserStateChange(1);
             if(ret.status){
                 getDeviceId();
             }
@@ -173,8 +172,7 @@
             if(ret.status){
                 $api.setStorage('Cid', ret.DeviceId);
                 Cid = ret.DeviceId;
-                onBrowserStateChange(2);
-                removeLogic();
+                Login();
             }else{
                 getDeviceId();
             }
@@ -201,23 +199,5 @@
         }
     }
 
-    function removeLogic(){
-        setTimeout(function(){
-            if(!launchRemoved){
-                launchRemoved = true;
-                removeLaunch();
-            }
-        }, 3000);
-    }
-
-    function removeLaunch(){
-        api.removeLaunchView({
-            animation:{
-                type:"fade",
-                subType:"from_right",
-                duration:300
-            }
-        });
-    }
 </script>
 </html>
