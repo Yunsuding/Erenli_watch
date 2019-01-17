@@ -21,6 +21,8 @@
 </div>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/js.js"></script>
+<script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../script/jquery.qrcode.min.js"></script>
 <script type="text/javascript">
     apiready = function(){
         FNScanner(api.pageParam.id);
@@ -36,28 +38,7 @@
             foreground : "#000000" //前景颜色
         });
     }
-    // function FNScanner(id) {
-    //     var shop_id = $api.getStorage('shop_id');
-    //     var user_id = $api.getStorage('user_id');
-    //     var FNScanner = api.require('FNScanner');
-    //     var codecontent = getUrl('toUrl') + '?shopId=' + shop_id + '&id=' + id+'&waiterId=' + user_id;
-    //     FNScanner.encodeImg({
-    //         content: codecontent,
-    //         saveToAlbum: false,
-    //         saveImg: {
-    //             path: 'fs://award.png',
-    //             w: 400,
-    //             h: 400
-    //         }
-    //     }, function(ret, err) {
-    //         if (ret.status) {
-    //             var inimg = $api.byId('Rqcode');
-    //             inimg.src = ret.imgPath;
-    //         } else {
-    //             alert(JSON.stringify(err));
-    //         }
-    //     });
-    // }
+
     function ONchage(){
         api.closeWin({
             name: 'call'
