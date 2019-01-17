@@ -228,15 +228,11 @@
                 }
             });
         }
-        function goCallon(cont_id,name,num,box,data) {
+        function goCallon(cont_id,data) {
             api.openWin({
                 name: 'call' + cont_id,
                 url: './callon.html',
                 pageParam: {
-                    cont_id: cont_id,
-                    name: name,
-                    num: num,
-                    box: box,
                     data: data
                 }
             });

@@ -21,6 +21,7 @@
 <script type="text/javascript">
     var Cid = $api.getStorage('Cid');
     var access_token = $api.getStorage('access_token');
+    var user_id = $api.getStorage('user_id');
     apiready = function(){
         aliPush();//阿里云推送
         aliPushListener();
@@ -47,6 +48,7 @@
                                 $api.setStorage("access_token", data.access_token);
                                 $api.setStorage("user_id", data.user_id);
                                 $api.setStorage("shop_id", data.shop_id);
+                                user_id = data.user_id;
                                 goIndex();
                             } else {
                                 $api.rmStorage('access_token');
@@ -66,9 +68,11 @@
 
                             break;
                         case 'admit':
-                            api.closeWin({
-                                name: 'call'+data.service_cont_id
-                            });
+                            if(data.user_id != user_id){
+                                api.closeWin({
+                                    name: 'call'+data.service_cont_id
+                                });
+                            }
                             break;
                         case 'watch_Login_exit':
                             $api.rmStorage('access_token');
