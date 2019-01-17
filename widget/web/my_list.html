@@ -157,13 +157,7 @@
             var time = Date.parse(new Date()) / 1000;
             var lasttime = time - time_str;
             if(status == 3){
-                api.openWin({
-                    name: 'call'+id,
-                    url: './callon.html',
-                    pageParam: {
-                        id: id
-                    }
-                });
+                ONclick(id);
 			}else{
                 if(lasttime <= 1200){
                     api.openWin({
@@ -180,7 +174,72 @@
 
 
         }
-
+        function ONclick(id) {
+            var data = '';
+            var cont_id = '';
+            var name = '';
+            var num = '';
+            var box = '';
+            api.ajax({
+                url: getUrl('info'),
+                method: 'post',
+                data: {
+                    values: {
+                        id: id,
+                        access_token: access_token
+                    }
+                }
+            }, function (ret, err) {
+                if (ret.code == 0) {
+                    data = ret.data.data;
+                    cont_id = ret.data.id;
+                    if (ret.data.order_type == 0) {
+                        name = ret.data.data[0].name;
+                        box = ret.data.weizhi;
+                    } else {
+                        name = '超市派单';
+                        box = '超市'
+                    }
+                    num = ret.data.data.length;
+                    if (ret.data.status == 0 || ret.data.status == 4) {
+                        goCall(cont_id, name, num, box, data);
+                    } else if (ret.data.status == 3) {
+                        goCallon(cont_id, name, num, box, data);
+                    }
+                } else {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'middle'
+                    });
+                }
+            })
+        };
+        function goCall(cont_id,name,num,box,data) {
+            api.openWin({
+                name: 'call'+cont_id,
+                url: './call.html',
+                pageParam: {
+                    cont_id: cont_id,
+                    name:name,
+                    num:num,
+                    box:box,
+                    data:data
+                }
+            });
+        }
+        function goCallon(cont_id,name,num,box,data) {
+            api.openWin({
+                name: 'call'+cont_id,
+                url: './callon.html',
+                pageParam: {
+                    cont_id: cont_id,
+                    name:name,
+                    num:num,
+                    box:box,
+                    data:data
+                }
+            });
 	</script>
 </body>
 </html>

@@ -36,9 +36,10 @@
         var box = $api.byId('call-box');
         var name = $api.byId('call-need');
         var details = $api.byId('call-details');
-        var pageParam = api.pageParam.data;
-        box.innerHTML = pageParam.box;
-        name.innerHTML = pageParam.name;
+        var on = api.pageParam.on;
+		var pageParam = api.pageParam.data;
+		box.innerHTML = pageParam.box;
+		name.innerHTML = pageParam.name;
         if(pageParam.num == 0 || pageParam.num == 1){
             details.style.display = 'none';
         }else{

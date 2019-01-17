@@ -203,7 +203,7 @@
         }
 		function goCall(cont_id,name,num,box,data) {
             api.openWin({
-                name: 'call',
+                name: 'call'+cont_id,
                 url: './call.html',
                 pageParam: {
                     cont_id: cont_id,
@@ -216,7 +216,7 @@
         }
         function goCallon(cont_id,name,num,box,data) {
             api.openWin({
-                name: 'call',
+                name: 'call'+cont_id,
                 url: './callon.html',
                 pageParam: {
                     cont_id: cont_id,
