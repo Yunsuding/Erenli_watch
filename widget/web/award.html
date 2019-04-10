@@ -30,7 +30,7 @@
     function FNScanner(id) {
         var shop_id = $api.getStorage('shop_id');
         var user_id = $api.getStorage('user_id');
-        var codecontent = getUrl('toUrl') + '?shopId=' + shop_id + '&id=' + id+'&waiterId=' + user_id;
+        var codecontent = getUrl('toUrl') + '?shopId=160&id=' + id+'&waiterId=' + user_id;
         $('#Rqcode').qrcode({
             text : codecontent , //设置二维码内容
             render : "canvas",//设置渲染方式
