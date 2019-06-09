@@ -58,6 +58,7 @@
 		var getSecond = $api.byId('getSecond');
 		var marTen = $api.byId('marTen');
 		var clock = new Clock();
+        exitApp();
 		clock.display(getMinutes,getHours,getday,getdate,getSecond);
 		apiready = function(){
 			var access_token = $api.getStorage('access_token');
