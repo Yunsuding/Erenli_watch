@@ -119,6 +119,8 @@ td,th {
 }
 /* 公共黑色背景*/
 .base-background {
+	max-width: 400px;
+	max-height: 400px;
 	width: 100%;
 	height: 100%;
 	padding-top: 15%;
@@ -169,7 +171,7 @@ td,th {
 /* 呼叫需求详情*/
 .call-details {
 	color: #fff;
-	font-size: 16px;
+	font-size: 15px;
 	background-color: #A2FE01;
 	padding: 2px 5px;
 	border-radius: 5px;
