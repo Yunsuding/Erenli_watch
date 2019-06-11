@@ -105,15 +105,11 @@
         api.addEventListener({
             name: 'keyback'
         }, function(ret, err){
-            api.toast({
-                msg: '在次点击返回键退出APP',
-                duration:2000,
-                location: 'bottom'
-            });
-
-            api.addEventListener({
-                name: 'keyback'
-            }, function(ret, err){
+            api.confirm({
+                title: '是否退出',
+                msg: '您确定要退出APP吗？',
+                buttons: ['确定', '取消']
+            }, function(ret, err) {
                 $api.setStorage("gesture",false);
                 $api.rmStorage('access_token');
                 $api.rmStorage('user_id');
@@ -124,11 +120,7 @@
                     retData: {name:'closeWidget'},
                     silent:true
                 });
-            });
-
-            setTimeout(function(){
-                exitApp();
-            },3000)
+            })
         });
     }
 </script>
