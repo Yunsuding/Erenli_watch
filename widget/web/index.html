@@ -115,16 +115,18 @@
                     msg: '您确定要退出APP吗？',
                     buttons: ['确定', '取消']
                 }, function(ret, err) {
-                    $api.setStorage("gesture",false);
-                    $api.rmStorage('access_token');
-                    $api.rmStorage('user_id');
-                    $api.rmStorage('username');
-                    $api.rmStorage('shop_id');
-                    api.closeWidget({
-                        id: 'A6097552195788', //这里需要修改为自己的应用ID
-                        retData: {name:'closeWidget'},
-                        silent:true
-                    });
+                    if (ret.buttonIndex == 1){
+                        $api.setStorage("gesture",false);
+                        $api.rmStorage('access_token');
+                        $api.rmStorage('user_id');
+                        $api.rmStorage('username');
+                        $api.rmStorage('shop_id');
+                        api.closeWidget({
+                            id: 'A6097552195788', //这里需要修改为自己的应用ID
+                            retData: {name:'closeWidget'},
+                            silent:true
+                        });
+                    }
                 })
             });
         }
