@@ -90,6 +90,7 @@ function Clock() {
     this.hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
     this.minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
     this.second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+    this.dianl = $api.getStorage("scale");
     this.getDate = function(){
         return this.date;
     }
@@ -108,7 +109,10 @@ function Clock() {
     this.getDateDay = function(){
         return this.DateDay;
     }
-    this.display = function(getMinutes,getHours,getday,getdate,getSecond) {
+    this.getDian = function(){
+        return this.dianl;
+    }
+    this.display = function(getMinutes,getHours,getday,getdate,getSecond,getDian) {
         var clock = new Clock();
         getMinutes.innerHTML = clock.getMinutes();
         getHours.innerHTML = clock.getHours();
@@ -119,7 +123,8 @@ function Clock() {
         }else{
             getSecond.style.color = 'red';
         }
-        window.setTimeout(function() {clock.display(getMinutes,getHours,getday,getdate,getSecond);}, 1000);
+        getDian.innerHTML = clock.getDian();
+        window.setTimeout(function() {clock.display(getMinutes,getHours,getday,getdate,getSecond,getDian);}, 1000);
     }; 
 }
 

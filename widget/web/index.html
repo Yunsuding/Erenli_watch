@@ -63,7 +63,7 @@
 		var marTen = $api.byId('marTen');
 		var dian = $api.byId('dian');
 		var clock = new Clock();
-		clock.display(getMinutes,getHours,getday,getdate,getSecond);
+		clock.display(getMinutes,getHours,getday,getdate,getSecond,dian);
 		apiready = function(){
 			var access_token = $api.getStorage('access_token');
 			var username = $api.getStorage('username');
@@ -112,13 +112,6 @@
             // getSteps();
 		}
 
-		function getdian() {
-            var batteryManager = api.require('batteryManager');
-            batteryManager.getBatteryScale(function(ret){
-                dian.innerHTML = ret.scale;
-            });
-            window.setTimeout(function() {getSteps();}, 300000);
-        }
         function exitApp(){
             api.addEventListener({
                 name: 'keyback'

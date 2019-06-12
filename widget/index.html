@@ -227,6 +227,10 @@
     function screenWake() {
         var sw = api.require('screenWake');
         sw.addScreenWake();
+        var batteryManager = api.require('batteryManager');
+        batteryManager.getBatteryScale(function(ret){
+            $api.setStorage('scale', ret.scale);
+        });
     }
 
 
