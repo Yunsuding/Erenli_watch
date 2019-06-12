@@ -25,7 +25,7 @@
     apiready = function(){
         aliPush();//阿里云推送
         aliPushListener();
-        getScale();
+        // getScale();
     };
     function aliPushListener() {
         var obj = api.require('aliPush');
@@ -35,7 +35,7 @@
             function(ret, err) {
                 // alert("onMessage>>>addEventListener>>>>" + JSON.stringify(ret));
                 screenWake();
-                getScale();
+                // getScale();
                 if(ret.status){
                     var data = JSON.parse(ret.extraMap.data);
                     switch (ret.extraMap.type) {
@@ -213,6 +213,7 @@
     function getScale() {
         var batteryManager = api.require('batteryManager');
         batteryManager.getBatteryScale(function(ret){
+            alert(JSON.stringify(ret));
             $api.setStorage('scale', ret.scale);
         });
     }

@@ -123,7 +123,7 @@ function Clock() {
         }else{
             getSecond.style.color = 'red';
         }
-        getDian.innerHTML = clock.getDian();
+        // getDian.innerHTML = clock.getDian();
         window.setTimeout(function() {clock.display(getMinutes,getHours,getday,getdate,getSecond,getDian);}, 1000);
     }; 
 }
