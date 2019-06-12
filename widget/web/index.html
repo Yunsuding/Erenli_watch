@@ -37,7 +37,7 @@
 		<!-- 实时信息 -->
 		<div class="real-message">
 			<!-- 星期几 -->
-			<span class="base-marTen base-green" id="getDay">星期九</span>
+			<span class="base-marTen base-green" id="getDay">星期一</span>
 			<!-- 今天几号 -->
 			<span class="base-marTen" id="getDate">16</span>
 			<!-- 今日步数 -->
@@ -46,6 +46,10 @@
 				<!--&lt;!&ndash; 步伐数 &ndash;&gt;-->
 				<!--<p id="marTen">0</p>-->
 			<!--</div>-->
+		</div>
+		<!--电量-->
+		<div class="present">
+			<p><img src="../image/dian.png" class="base-marTen"><span id="dian">100</span>%</p>
 		</div>
 	</div>
 	<script type="text/javascript" src="../script/api.js"></script>
@@ -57,6 +61,7 @@
 		var getdate = $api.byId('getDate');
 		var getSecond = $api.byId('getSecond');
 		var marTen = $api.byId('marTen');
+		var dian = $api.byId('dian');
 		var clock = new Clock();
 		clock.display(getMinutes,getHours,getday,getdate,getSecond);
 		apiready = function(){
@@ -91,7 +96,7 @@
 				user = $api.byId('usernames');
 				user.innerHTML = username;
 			};
-			
+            getdian();
 			api.addEventListener({
 			    name:'swipeleft'
 			}, function(ret, err){
@@ -106,6 +111,14 @@
             exitApp();
             // getSteps();
 		}
+
+		function getdian() {
+            var batteryManager = api.require('batteryManager');
+            batteryManager.getBatteryScale(function(ret){
+                dian.innerHTML = ret.scale;
+            });
+            window.setTimeout(function() {getSteps();}, 300000);
+        }
         function exitApp(){
             api.addEventListener({
                 name: 'keyback'
@@ -116,6 +129,7 @@
                     buttons: ['确定', '取消']
                 }, function(ret, err) {
                     if (ret.buttonIndex == 1){
+                        go_out();
                         $api.setStorage("gesture",false);
                         $api.rmStorage('access_token');
                         $api.rmStorage('user_id');
@@ -128,6 +142,29 @@
                         });
                     }
                 })
+            });
+        }
+
+        function go_out() {
+            api.ajax({
+                url: getUrl('login_out'),
+                method: 'post',
+                data: {
+                    values:{
+                        user_id:$api.getStorage('user_id'),
+                        getui_id:$api.getStorage('Cid'),
+                        client_id:$api.getStorage('clientId'),
+                        access_token:$api.getStorage('access_token')
+                    }
+                }
+            }, function(ret, err) {
+                if (ret.code != 0) {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'middle'
+                    });
+                }
             });
         }
 
