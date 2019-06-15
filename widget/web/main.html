@@ -94,10 +94,10 @@
                 }, function(ret, err) {
                     if (ret.code == 0) {
                         // 保存用户信息
-                        $api.rmStorage('access_token');
                         $api.rmStorage('user_id');
                         $api.rmStorage('login_time');
                         $api.rmStorage('username');
+                        $api.rmStorage('access_token');
                         api.alert({
                             title: '提示',
                             msg: '您下班啦~',

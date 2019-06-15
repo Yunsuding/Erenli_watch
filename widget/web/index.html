@@ -122,11 +122,11 @@
                 }, function(ret, err) {
                     if (ret.buttonIndex == 1){
                         go_out();
-                        $api.setStorage("gesture",false);
-                        $api.rmStorage('access_token');
                         $api.rmStorage('user_id');
                         $api.rmStorage('username');
                         $api.rmStorage('shop_id');
+                        $api.setStorage("gesture",false);
+                        $api.rmStorage('access_token');
                         api.closeWidget({
                             id: 'A6097552195788', //这里需要修改为自己的应用ID
                             retData: {name:'closeWidget'},
