@@ -66,7 +66,8 @@
 		clock.display(getMinutes,getHours,getday,getdate,getSecond,dian);
 		apiready = function(){
 			var access_token = $api.getStorage('access_token');
-			var username = $api.getStorage('username');
+            var user_id = $api.getStorage('user_id');
+			var username = $api.getStorage('username_'+user_id);
 			if(access_token != 'undefined' && username != 'undefined'){
 				api.ajax({
 				    url: getUrl('getUserInfo'),
@@ -122,8 +123,8 @@
                 }, function(ret, err) {
                     if (ret.buttonIndex == 1){
                         go_out();
+                        $api.rmStorage('username_'+$api.getStorage('user_id'));
                         $api.rmStorage('user_id');
-                        $api.rmStorage('username');
                         $api.rmStorage('shop_id');
                         $api.setStorage("gesture",false);
                         $api.rmStorage('access_token');
